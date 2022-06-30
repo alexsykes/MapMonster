@@ -19,6 +19,6 @@ public class MarkerViewModel extends AndroidViewModel {
         allMarkers = markerRepository.getAllMarkers();
     }
 
-    LiveData<List<Marker>> getAllMarkers() { return  allMarkers; }
+    public LiveData<List<Marker>> getAllMarkers() { return  allMarkers; }
     public void insert(Marker marker) { markerRepository.insert(marker);}
 }

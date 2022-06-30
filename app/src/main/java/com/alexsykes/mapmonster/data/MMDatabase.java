@@ -51,6 +51,24 @@ public abstract class MMDatabase extends RoomDatabase{
                 markerDao.insertMarker(marker);
                 marker = new Marker(-2.61, 52.74,"Place 2", "P2");
                 markerDao.insertMarker(marker);
+                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                markerDao.insertMarker(marker);
+                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                markerDao.insertMarker(marker);
             });
         }
     };
