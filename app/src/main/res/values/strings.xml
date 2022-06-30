@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">MapMonster</string>
-    <string name="permission_rationale_location">Location permission is needed for this app</string>
-    <string name="permission_required_toast">Location permission</string>
-    <string name="location_permission_denied">Permission denied</string>
-</resources>
