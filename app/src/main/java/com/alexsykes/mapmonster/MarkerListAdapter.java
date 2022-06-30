@@ -1,0 +1,42 @@
+package com.alexsykes.mapmonster;
+
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+
+import com.alexsykes.mapmonster.data.Marker;
+
+public class MarkerListAdapter extends ListAdapter<Marker, MarkerViewHolder> {
+    public MarkerListAdapter(@NonNull DiffUtil.ItemCallback<Marker> diffCallback) {
+        super(diffCallback);
+    }
+
+    @Override
+    public MarkerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return MarkerViewHolder.create(parent);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MarkerViewHolder holder, int position) {
+        Marker current= getItem(position);
+        String placename = current.getPlacename();
+        holder.bind(placename);
+    }
+
+    static class WordDiff extends DiffUtil.ItemCallback<Marker> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Marker oldItem, @NonNull Marker newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Marker oldItem, @NonNull Marker newItem) {
+            return oldItem.getPlacename().equals(newItem.getPlacename());
+        }
+    }
+
+
+}
