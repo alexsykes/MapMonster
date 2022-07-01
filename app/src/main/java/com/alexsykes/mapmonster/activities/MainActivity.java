@@ -26,6 +26,7 @@ import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Marker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -353,5 +354,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private void loadMarkerList() {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerList = markerViewModel.getMarkerList();
+    }
+
+    public void onMarkerListItemClicked(Marker marker) {
+        Log.i(TAG, "onMarkerListItemClicked: " + marker.getCode());
+
+        LatLng target = new LatLng(marker.getLatitude(), marker.getLongitude());
+        int padding = 100;
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 18));
+        // Zoom to marker_id
+
+
     }
 }

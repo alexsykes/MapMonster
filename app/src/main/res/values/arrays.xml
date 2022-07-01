@@ -1,12 +1,28 @@
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="view_entries">
+        <item>Normal</item>
+        <item>Terrain</item>
+        <item>Satellite</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="view_values">
+        <item>normal</item>
+        <item>terrain</item>
+        <item>satellite</item>
+    </string-array>
+
+    <string-array name="layer_values">
+        <item>Home</item>
+        <item>Fuel</item>
+        <item>Recreation</item>
+        <item>Navigation</item>
+    </string-array>
+
+    <string-array name="layer_entries">
+        <item>home</item>
+        <item>fuel</item>
+        <item>recreation</item>
+        <item>navigation</item>
     </string-array>
 </resources>
