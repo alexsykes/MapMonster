@@ -85,25 +85,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mapFragment.getMapAsync(this);
     }
 
-    private void loadMarkerList() {
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerList = markerViewModel.getMarkerList();
-    }
-
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     *
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -171,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         Log.i(TAG, "onMapReady: " + markerList.size());
-         addMarkersToMap();
+        addMarkersToMap();
     }
 
     private void getLocationPermission() {
@@ -323,18 +304,21 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
     private void updateCamera() {
-        if (markerList.size() == 0) {
-            return;
+        if (!markerList.isEmpty()) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            LatLng latLng;
+            for (Marker marker : markerList) {
+                latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+                builder.include(latLng);
+            }
+            LatLngBounds bounds =
+                    builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
         }
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        int padding = 100;
-        LatLng latLng;
-        for (Marker marker : markerList) {
-            latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-            builder.include(latLng);
-        }
-        LatLngBounds bounds =
-                builder.build();
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+    }
+    private void loadMarkerList() {
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        markerList = markerViewModel.getMarkerList();
     }
 }
