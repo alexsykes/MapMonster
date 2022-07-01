@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,14 +27,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -85,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerList = markerViewModel.getMarkerList();
     }
 
+
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -101,14 +108,62 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        UiSettings uiSettings = mMap.getUiSettings();
-        uiSettings.setZoomControlsEnabled(true);
-        uiSettings.setCompassEnabled(true);
-        uiSettings.setAllGesturesEnabled(true);
-        uiSettings.setMapToolbarEnabled(true);
-
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        mMap.setOnMapLoadedCallback(this);
+        mMap.setMinZoomPreference(8);
+        mMap.setMaxZoomPreference(20);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+
+        //MARK: MarkerDragListener
+        mMap.setOnMarkerDragListener(
+                new GoogleMap.OnMarkerDragListener() {
+                    final DecimalFormat df = new DecimalFormat("#.#####");
+                    LatLng startPos, endPos;
+
+                    @Override
+                    public void onMarkerDrag(@NonNull com.google.android.gms.maps.model.Marker marker) {
+                        LatLng newpos = marker.getPosition();
+                        String snippet = marker.getSnippet();
+                        String latStr = df.format(newpos.latitude);
+                        String lngStr = df.format(newpos.longitude);
+                    }
+
+                    @Override
+                    public void onMarkerDragEnd(@NonNull com.google.android.gms.maps.model.Marker marker) {
+                        LatLng newpos = marker.getPosition();
+                        String snippet = marker.getSnippet();
+                        String latStr = df.format(newpos.latitude);
+                        String lngStr = df.format(newpos.longitude);
+                    }
+
+                    @Override
+                    public void onMarkerDragStart(@NonNull com.google.android.gms.maps.model.Marker marker) {
+
+                    }
+                }
+        );
+
+        // MarkerClickListener
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                          @Override
+                                          public boolean onMarkerClick(@NonNull com.google.android.gms.maps.model.Marker marker) {
+                                              // marker.setVisible(!marker.isVisible());
+                                              Log.i(TAG, "onMarkerClick: ");
+                                              marker.showInfoWindow();
+                                              return false;
+                                          }
+                                      }
+        );
+
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(@NonNull LatLng latLng) {
+                Log.i(TAG, "onMapLongClick: ");
+            }
+        });
         getLocationPermission();
         mMap.setMyLocationEnabled(locationPermissionGranted);
 
@@ -116,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         Log.i(TAG, "onMapReady: " + markerList.size());
+         addMarkersToMap();
     }
 
     private void getLocationPermission() {
@@ -225,5 +281,60 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .build();                   // Creates a CameraPosition from the builder
 
         return cameraPosition;
+    }
+
+    @Override
+    public void onMapLoaded() {
+        Log.i(TAG, "onMapLoaded: ");
+        updateCamera();
+    }
+
+    // Utility methods
+    private void addMarkersToMap() {
+        if (markerList.size() == 0) {
+            return;
+        }
+        String marker_title, code, type;
+        LatLng latLng;
+
+        mMap.clear();
+        for (Marker marker : markerList) {
+            latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+            code = marker.getCode();
+            type = marker.getPlacename();
+            String snippet = String.valueOf(marker.getMarker_id());
+
+            marker_title = marker.getPlacename() + " " + code;
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(marker_title)
+                    .snippet(snippet)
+                    .visible(true);
+
+            if (type.equals("Car park")) {
+                markerOptions.visible(true);
+                // markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                // markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.airport_runway));
+            } else {
+                markerOptions.visible(true);
+            }
+            markerOptions.draggable(true);
+            mMap.addMarker(markerOptions);
+        }
+    }
+    private void updateCamera() {
+        if (markerList.size() == 0) {
+            return;
+        }
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        int padding = 100;
+        LatLng latLng;
+        for (Marker marker : markerList) {
+            latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+            builder.include(latLng);
+        }
+        LatLngBounds bounds =
+                builder.build();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
     }
 }

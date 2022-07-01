@@ -47,27 +47,25 @@ public abstract class MMDatabase extends RoomDatabase{
                 MarkerDao markerDao = INSTANCE.markerDao();
                 markerDao.deleteAllMarkers();
 
-                Marker marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                Marker marker = new Marker(53.59, -2.61,"Place 1", "P1");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                marker = new Marker(53.6687, -2.509,"Place 2", "P2");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                marker = new Marker(53.6897, -2.535568,"Place 3", "P3");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                marker = new Marker(53.6701, -2.5789,"Place 4", "P4");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                marker = new Marker(53.66, -2.579,"Place 6", "P6");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                marker = new Marker(53.6087, -2.556699,"Place 5", "P5");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                marker = new Marker(53.64257, -2.5789,"Place 7", "P7");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
+                marker = new Marker(53.6889, -2.5245,"Place 8", "P8");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                marker = new Marker(53.616737, -2.3889,"Place 9", "P0");
                 markerDao.insertMarker(marker);
-                marker = new Marker(-2.59, 52.69,"Place 1", "P1");
-                markerDao.insertMarker(marker);
-                marker = new Marker(-2.61, 52.74,"Place 2", "P2");
+                marker = new Marker(53.6877, -2.59,"Place 10", "P10");
                 markerDao.insertMarker(marker);
             });
         }
