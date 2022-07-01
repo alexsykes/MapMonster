@@ -16,6 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MapMonster"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".activities.HelpActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_help" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

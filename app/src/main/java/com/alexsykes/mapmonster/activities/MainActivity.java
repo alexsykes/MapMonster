@@ -1,11 +1,15 @@
 package com.alexsykes.mapmonster.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -57,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
-
-
     private MarkerViewModel markerViewModel;
 
     @Override
@@ -85,8 +87,37 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mapFragment.getMapAsync(this);
     }
 
-    @SuppressLint("MissingPermission")
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help_menu_item:
+                goHelp();
+                return true;
+
+            case R.id.settings_menu_item:
+                goSettings();
+                return true;
+            default:
+        }
+        return false;
+    }
+
+    private void goSettings() {
+        Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+        startActivity(intent);
+    }
+    private void goHelp() {
+        Intent intent = new Intent(MainActivity.this,HelpActivity.class);
+        startActivity(intent);
+    }
+    @SuppressLint("MissingPermission")
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
@@ -291,6 +322,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     .title(marker_title)
                     .snippet(snippet)
                     .visible(true);
+
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.home_72));
 
             if (type.equals("Car park")) {
                 markerOptions.visible(true);

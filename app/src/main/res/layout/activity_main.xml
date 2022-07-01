@@ -23,7 +23,7 @@
         tools:listitem="@layout/marker_item"
         android:elevation="100dp"
         android:background="#ffffff"
-        android:alpha=".7"
+        android:alpha="@dimen/white_value_alpha"
         android:layout_margin="@dimen/small_margin"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
