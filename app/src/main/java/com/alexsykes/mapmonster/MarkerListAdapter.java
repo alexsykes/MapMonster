@@ -21,12 +21,11 @@ public class MarkerListAdapter extends ListAdapter<Marker, MarkerViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MarkerViewHolder holder, int position) {
         Marker current= getItem(position);
-        String placename = current.getPlacename();
-        holder.bind(placename);
+        // String placename = current.getPlacename();
+        holder.bind(current);
     }
 
-    static class WordDiff extends DiffUtil.ItemCallback<Marker> {
-
+    public static class MarkerDiff extends DiffUtil.ItemCallback<Marker> {
         @Override
         public boolean areItemsTheSame(@NonNull Marker oldItem, @NonNull Marker newItem) {
             return oldItem == newItem;
@@ -37,6 +36,4 @@ public class MarkerListAdapter extends ListAdapter<Marker, MarkerViewHolder> {
             return oldItem.getPlacename().equals(newItem.getPlacename());
         }
     }
-
-
 }

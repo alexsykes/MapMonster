@@ -6,19 +6,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Transaction;
+
+import com.alexsykes.mapmonster.data.Marker;
 
 public class MarkerViewHolder extends RecyclerView.ViewHolder {
-    final TextView markerTextView;
+    final TextView markerTextView, codeTextView;
 
 
     private MarkerViewHolder(View itemView)  {
         super(itemView);
         markerTextView = itemView.findViewById(R.id.markerTextView);
+        codeTextView = itemView.findViewById(R.id.codeTextView);
     }
 
-    public void bind(String text) {
-        markerTextView.setText(text);
+    public void bind(Marker marker) {
+        codeTextView.setText(marker.getCode());
+        markerTextView.setText(marker.getPlacename());
     }
 
     static MarkerViewHolder create(ViewGroup parent) {

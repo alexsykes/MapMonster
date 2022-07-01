@@ -21,6 +21,10 @@ public interface MarkerDao {
     LiveData<List<Marker>> allMarkers();
 
 
+    @Query("SELECT * FROM markers ORDER BY placename")
+    List<Marker> getMarkerList();
+
+
 
 
 
