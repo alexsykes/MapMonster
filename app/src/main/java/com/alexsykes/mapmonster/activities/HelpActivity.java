@@ -17,6 +17,7 @@ public class HelpActivity extends AppCompatActivity {
         String url = "https://android.alexsykes.com/mapHelp.html";
 
         webView = findViewById(R.id.webView);
+        String userAgent = webView.getSettings().getUserAgentString();
         webView.loadUrl(url);
     }
 }
