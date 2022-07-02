@@ -16,56 +16,62 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".activities.MapsActivity" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:alpha="@dimen/white_value_alpha"
-        android:background="#ffffff"
-        app:layout_constraintStart_toStartOf="@id/markerLabel"
-        app:layout_constraintTop_toBottomOf="@id/markerLabel"
-        tools:listitem="@layout/marker_item" />
-
     <TextView
         android:id="@+id/markerLabel"
-        android:layout_width="120dp"
+        android:layout_width="@dimen/info_box_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
         android:background="@color/purple_700"
-        android:padding="@dimen/small_margin"
-        android:text="Markers"
+        android:elevation="@dimen/small_margin"
+        android:padding="@dimen/very_small_margin"
+        android:text="@string/markers"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/rv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/markerRv"
+        android:layout_width="@dimen/info_box_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:alpha="@dimen/white_value_alpha"
+        android:background="#ffffff"
+        android:elevation="@dimen/small_margin"
+        android:padding="@dimen/very_small_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/markerLabel"
+        tools:listitem="@layout/marker_item" />
+
     <TextView
         android:id="@+id/layerLabel"
-        android:layout_width="120dp"
+        android:layout_width="@dimen/info_box_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
         android:background="@color/purple_700"
-        android:padding="@dimen/small_margin"
+        android:elevation="@dimen/small_margin"
+        android:padding="@dimen/very_small_margin"
         android:text="@string/layers"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/rv"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv"  />
+        app:layout_constraintTop_toBottomOf="@+id/markerRv" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/layerRecyclerView"
-        android:layout_width="120dp"
+        android:layout_width="@dimen/info_box_width"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
         android:alpha="@dimen/white_value_alpha"
         android:background="#ffffff"
-        app:layout_constraintStart_toStartOf="@id/markerLabel"
-        app:layout_constraintTop_toBottomOf="@id/layerLabel"
+        android:elevation="@dimen/small_margin"
+        android:padding="@dimen/very_small_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layerLabel"
         tools:listitem="@layout/marker_item" />
 
 

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,12 +31,10 @@ import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.Marker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -68,13 +67,33 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     SharedPreferences.Editor editor;
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
+    private TextView markerLabel, layerLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView rv = findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.markerRv);
         RecyclerView layerRV = findViewById(R.id.layerRecyclerView);
+        layerLabel = findViewById(R.id.layerLabel);
+        markerLabel = findViewById(R.id.markerLabel);
+
+        layerLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onLayerLabelClicked");
+                rv.setVisibility(View.GONE);
+                layerRV.setVisibility(View.VISIBLE);
+            }
+        });
+        markerLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onMarkerLabelClicked");
+                layerRV.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
+            }
+        });
 
         final LayerListAdapter layerListAdapter = new LayerListAdapter(new LayerListAdapter.LayerDiff());
         layerRV.setAdapter(layerListAdapter);
