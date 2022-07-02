@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,8 +22,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexsykes.mapmonster.LayerListAdapter;
 import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
+import com.alexsykes.mapmonster.data.Layer;
+import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.Marker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -63,13 +67,18 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
     private MarkerViewModel markerViewModel;
+    private LayerViewModel layerViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         RecyclerView rv = findViewById(R.id.rv);
+        RecyclerView layerRV = findViewById(R.id.layerRecyclerView);
+
+        final LayerListAdapter layerListAdapter = new LayerListAdapter(new LayerListAdapter.LayerDiff());
+        layerRV.setAdapter(layerListAdapter);
+        layerRV.setLayoutManager(new LinearLayoutManager(this));
 
         final MarkerListAdapter adapter = new MarkerListAdapter(new MarkerListAdapter.MarkerDiff());
         rv.setAdapter(adapter);
@@ -81,8 +90,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             adapter.submitList(markers);
         });
 
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        layerViewModel.getAllLayers().observe(this, layers -> {
+            layerListAdapter.submitList(layers);
+        });
+
         // Load markerList
-        loadMarkerList();
+//        loadMarkerList();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -121,7 +135,22 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     @SuppressLint("MissingPermission")
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String maptype = preferences.getString("map_view_type","NORMAL");
+        switch (maptype) {
+            case "normal":
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case "satellite":
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case "terrain":
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            default:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
         mMap.setOnMapLoadedCallback(this);
         mMap.setMinZoomPreference(8);
         mMap.setMaxZoomPreference(20);
@@ -170,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                                       }
         );
 
-
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(@NonNull LatLng latLng) {
@@ -183,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        Log.i(TAG, "onMapReady: " + markerList.size());
-        addMarkersToMap();
+//        Log.i(TAG, "onMapReady: " + markerList.size());
+        // addMarkersToMap();
     }
 
     private void getLocationPermission() {
@@ -299,6 +327,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     @Override
     public void onMapLoaded() {
         Log.i(TAG, "onMapLoaded: ");
+        loadMarkerList();
+        addMarkersToMap();
         updateCamera();
     }
 
@@ -365,5 +395,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         // Zoom to marker_id
 
 
+    }
+    public void onLayerListItemClicked(Layer layer) {
     }
 }

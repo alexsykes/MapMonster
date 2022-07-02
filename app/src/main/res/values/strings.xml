@@ -20,4 +20,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_help">Help</string>
+    <string name="layers">Layers</string>
 </resources>

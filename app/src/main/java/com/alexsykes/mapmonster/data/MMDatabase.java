@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 
 public abstract class MMDatabase extends RoomDatabase{
     public abstract MarkerDao markerDao();
+    public abstract LayerDao layerDao();
 
     private static volatile MMDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -67,6 +68,20 @@ public abstract class MMDatabase extends RoomDatabase{
                 markerDao.insertMarker(marker);
                 marker = new Marker(53.6877, -2.59,"Place 10", "P10");
                 markerDao.insertMarker(marker);
+
+                LayerDao layerDao   = INSTANCE.layerDao();
+                layerDao.deleteAllLayers();
+
+                Layer layer = new Layer("Parking", "P");
+                layerDao.insertLayer(layer);
+                layer = new Layer("Fuel", "FL");
+                layerDao.insertLayer(layer);
+                layer = new Layer("Junction", "JCT");
+                layerDao.insertLayer(layer);
+                layer = new Layer("Food", "FD");
+                layerDao.insertLayer(layer);
+                layer = new Layer("Accommodation", "ACC");
+                layerDao.insertLayer(layer);
             });
         }
     };

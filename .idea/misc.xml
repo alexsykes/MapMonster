@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/layout/activity_help.xml" value="0.4203125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.5317708333333333" />
+        <entry key="app/src/main/res/layout/layer_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/marker_item.xml" value="0.4528985507246377" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.37649063032367974" />
       </map>

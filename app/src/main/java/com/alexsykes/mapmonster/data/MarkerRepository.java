@@ -9,8 +9,6 @@ import java.util.List;
 public class MarkerRepository {
     private MarkerDao markerDao;
     private LiveData<List<Marker>> allMarkers;
-
-
     private List<Marker> markerList;
 
     MarkerRepository(Application application) {
