@@ -15,6 +15,11 @@ public class Marker {
     @NonNull
     @ColumnInfo(name="markerID")
     private int marker_id;
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
     private double latitude, longitude;
     private String placename, code;
     private enum type {
@@ -23,6 +28,12 @@ public class Marker {
         FUEL,
         ACCOMMODATION
     }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    private boolean isVisible;
 
     public int getMarker_id() {
         return marker_id;
@@ -65,5 +76,6 @@ public class Marker {
         this.longitude = longitude;
         this.placename = placename;
         this.code = code;
+        isVisible = true;
     }
 }

@@ -23,4 +23,8 @@ public class LayerViewModel extends AndroidViewModel {
     public LiveData<List<Layer>> getAllLayers() { return allLayers; }
     public void insert(Layer layer) {layerRepository.insert(layer); }
     public List<Layer> getLayerList() { return layerRepository.getLayerList();  }
+
+    public void setVisibility(boolean isVisible, int layerID) {
+        layerRepository.setVisibility(isVisible,layerID);
+    }
 }

@@ -11,13 +11,23 @@ public class Layer {
     @NonNull
     @ColumnInfo(name="layerID")
     private int layer_id;
+    private String layername, code;
+    private boolean isVisible;
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
 
     public Layer(String layername, String code) {
         this.layername = layername;
         this.code = code;
+        isVisible = true;
     }
 
-    private String layername, code;
 
     public String getLayername() {
         return layername;

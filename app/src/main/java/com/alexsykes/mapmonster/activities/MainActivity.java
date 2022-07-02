@@ -27,7 +27,9 @@ import com.alexsykes.mapmonster.LayerListAdapter;
 import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
+import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.Marker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -120,11 +122,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerViewModel.getAllMarkers().observe(this, markers -> {
             adapter.submitList(markers);
         });
-
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         layerViewModel.getAllLayers().observe(this, layers -> {
             layerListAdapter.submitList(layers);
         });
+        layerViewModel.setVisibility(false,4);
 
         // Load markerList
 //        loadMarkerList();
@@ -424,9 +426,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         int padding = 100;
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 18));
         // Zoom to marker_id
-
-
     }
-    public void onLayerListItemClicked(Layer layer) {
+
+//    public void onLayerListItemClicked(Layer layer) {
+//    }
+
+    public void onLayerListItemCheckedChanged(Layer layer, boolean isChecked) {
+        Log.i(TAG, "onLayerListItemCheckedChanged: " + layer.getLayer_id() + isChecked);
+        layerViewModel.setVisibility(isChecked, layer.getLayer_id());
     }
 }

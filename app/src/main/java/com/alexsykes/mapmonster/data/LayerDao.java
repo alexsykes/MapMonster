@@ -22,4 +22,7 @@ public interface LayerDao {
 
     @Query("SELECT * FROM layers ORDER BY layername")
     List<Layer> getLayerList();
+
+    @Query("UPDATE layers SET isVisible = :visibility WHERE layerID = :layerID")
+    void setVisibility (boolean visibility, int layerID);
 }

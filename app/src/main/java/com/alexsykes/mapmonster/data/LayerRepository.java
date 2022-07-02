@@ -27,5 +27,7 @@ public class LayerRepository {
         });
     }
 
-
+    public void setVisibility(boolean isVisible, int layerID) {
+        layerDao.setVisibility(isVisible,layerID);
+    }
 }
