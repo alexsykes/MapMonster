@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     SharedPreferences.Editor editor;
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
-    private TextView markerLabel, layerLabel;
+    private TextView markerLabel, layerLabel, layerDisc, markerDisc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,21 +77,33 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         RecyclerView layerRV = findViewById(R.id.layerRecyclerView);
         layerLabel = findViewById(R.id.layerLabel);
         markerLabel = findViewById(R.id.markerLabel);
+        layerDisc = findViewById(R.id.layerDisc);
+        markerDisc = findViewById(R.id.markerDisc);
 
         layerLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onLayerLabelClicked");
-                rv.setVisibility(View.GONE);
-                layerRV.setVisibility(View.VISIBLE);
+                Log.i(TAG, "onMarkerLabelClicked");
+                if(layerRV.getVisibility() == View.VISIBLE) {
+                    layerRV.setVisibility(View.GONE);
+                    layerDisc.setText("↓");
+                } else {
+                    layerRV.setVisibility(View.VISIBLE);
+                    layerDisc.setText("↑");
+                }
             }
         });
         markerLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onMarkerLabelClicked");
-                layerRV.setVisibility(View.GONE);
-                rv.setVisibility(View.VISIBLE);
+                if(rv.getVisibility() == View.VISIBLE) {
+                    rv.setVisibility(View.GONE);
+                    markerDisc.setText("↓");
+                } else {
+                    rv.setVisibility(View.VISIBLE);
+                    markerDisc.setText("↑");
+                }
             }
         });
 

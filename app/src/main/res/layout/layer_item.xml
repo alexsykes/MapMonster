@@ -23,4 +23,5 @@
         android:textColor="@color/purple_700"
         app:layout_constraintStart_toEndOf="@+id/layerCodeTextView"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
