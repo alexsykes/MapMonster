@@ -1,4 +1,5 @@
 package com.alexsykes.mapmonster.activities;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,9 +27,7 @@ import com.alexsykes.mapmonster.LayerListAdapter;
 import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
-import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerViewModel;
-import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.Marker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -71,12 +69,14 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private LayerViewModel layerViewModel;
     private TextView markerLabel, layerLabel, layerDisc, markerDisc;
 
+
+    RecyclerView rv;
+    RecyclerView layerRV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView rv = findViewById(R.id.markerRv);
-        RecyclerView layerRV = findViewById(R.id.layerRecyclerView);
         layerLabel = findViewById(R.id.layerLabel);
         markerLabel = findViewById(R.id.markerLabel);
         layerDisc = findViewById(R.id.layerDisc);
@@ -112,6 +112,22 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             }
         });
 
+
+
+
+
+        // Load markerList
+//        loadMarkerList();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        rv = findViewById(R.id.markerRv);
+       layerRV = findViewById(R.id.layerRecyclerView);
         final LayerListAdapter layerListAdapter = new LayerListAdapter(new LayerListAdapter.LayerDiff());
         layerRV.setAdapter(layerListAdapter);
         layerRV.setLayoutManager(new LinearLayoutManager(this));
@@ -119,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         final MarkerListAdapter adapter = new MarkerListAdapter(new MarkerListAdapter.MarkerDiff());
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
-
         // List LiveData Markers
         markerViewModel.getAllMarkers().observe(this, markers -> {
             adapter.submitList(markers);
@@ -128,12 +143,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         layerList = layerViewModel.getLayerList();
         layerListAdapter.submitList(layerList);
         layerViewModel.setVisibility(false,4);
-
-        // Load markerList
-//        loadMarkerList();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
@@ -12,7 +13,6 @@ public class LayerRepository {
 
     LayerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
-
         layerDao = db.layerDao();
         allLabels = layerDao.allLayers();
         layerList = layerDao.getLayerList();

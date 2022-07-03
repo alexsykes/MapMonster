@@ -10,7 +10,6 @@ import java.util.List;
 
 public class LayerViewModel extends AndroidViewModel {
     private LayerRepository layerRepository;
-
     private final LiveData<List<Layer>> allLayers;
     private final List<Layer> layerList;
 

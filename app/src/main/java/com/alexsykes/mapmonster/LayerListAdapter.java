@@ -38,14 +38,16 @@ public class LayerListAdapter extends ListAdapter<Layer, LayerViewHolder> {
     public static class LayerDiff extends DiffUtil.ItemCallback<Layer> {
         @Override
         public boolean areItemsTheSame(@NonNull Layer oldItem, @NonNull Layer newItem) {
-            // Log.i("Info", "areItemsTheSame: ");
-            return oldItem == newItem;
+             Log.i("Info", "areItemsTheSame: ");
+//            return oldItem == newItem;
+            return true;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Layer oldItem, @NonNull Layer newItem) {
-            // Log.i("Info", "areContentsTheSame: ");
-            return oldItem.getLayername().equals(newItem.getLayername());
+             Log.i("Info", "areContentsTheSame: ");
+//            return oldItem.getLayername().equals(newItem.getLayername());
+            return true;
         }
     }
 }

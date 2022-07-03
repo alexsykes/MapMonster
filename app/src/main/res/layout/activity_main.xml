@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/small_margin"
         android:elevation="@dimen/small_margin"
-        android:text="↑"
+        android:text="@string/up_arrow"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/markerLabel"
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/small_margin"
         android:elevation="@dimen/small_margin"
-        android:text="↑"
+        android:text="@string/up_arrow"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/layerLabel"
@@ -97,6 +97,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layerLabel"
         tools:listitem="@layout/marker_item" />
+
+    <TextView
+        android:id="@+id/markerInfoLabel"
+        android:layout_width="@dimen/info_box_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:background="@color/purple_700"
+        android:elevation="@dimen/small_margin"
+        android:padding="@dimen/very_small_margin"
+        android:text="@string/marker_info"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layerRecyclerView" />
+
+    <TextView
+        android:id="@+id/markerDetailText"
+        android:layout_width="@dimen/info_box_width"
+        android:layout_height="wrap_content"
+        android:alpha="@dimen/white_value_alpha"
+        android:background="#ffffff"
+        android:elevation="@dimen/small_margin"
+        android:padding="@dimen/small_margin"
+        android:text="@string/details"
+        android:textColor="@color/purple_700"
+        app:layout_constraintStart_toStartOf="@id/markerInfoLabel"
+        app:layout_constraintTop_toBottomOf="@+id/markerInfoLabel"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/saveNewMarkerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        app:layout_constraintEnd_toEndOf="@+id/markerInfoLabel"
+        app:layout_constraintTop_toBottomOf="@+id/markerDetailText"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/cancelNewMarkerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="@id/markerInfoLabel"
+        app:layout_constraintTop_toBottomOf="@+id/markerDetailText"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

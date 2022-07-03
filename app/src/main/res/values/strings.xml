@@ -22,4 +22,9 @@
     <string name="title_activity_help">Help</string>
     <string name="layers">Layers</string>
     <string name="markers">Markers</string>
+    <string name="marker_info">Marker Info</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="up_arrow">↑</string>
+    <string name="details">Marker details</string>
 </resources>
