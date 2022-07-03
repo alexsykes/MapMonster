@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     SharedPreferences.Editor editor;
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
-    private TextView markerLabel, layerLabel, layerDisc, markerDisc;
+    private TextView markerLabel, layerLabel, layerDisc, markerDisc, markerDetailText, markerInfoLabel;
+    private Button cancelNewMarkerButton, saveNewMarkerButton;
 
 
     RecyclerView rv;
@@ -77,10 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        layerLabel = findViewById(R.id.layerLabel);
-        markerLabel = findViewById(R.id.markerLabel);
-        layerDisc = findViewById(R.id.layerDisc);
-        markerDisc = findViewById(R.id.markerDisc);
+setupUIComponents();
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
@@ -121,6 +120,53 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private void setupUIComponents() {
+        layerLabel = findViewById(R.id.layerLabel);
+        markerLabel = findViewById(R.id.markerLabel);
+        layerDisc = findViewById(R.id.layerDisc);
+        markerDisc = findViewById(R.id.markerDisc);
+        markerDetailText = findViewById(R.id.markerDetailText);
+        markerInfoLabel = findViewById(R.id.markerInfoLabel);
+        cancelNewMarkerButton = findViewById(R.id.cancelNewMarkerButton);
+        saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
+        markerDetailText.setVisibility(View.GONE);
+        markerInfoLabel.setVisibility(View.GONE);
+        cancelNewMarkerButton.setVisibility(View.GONE);
+        saveNewMarkerButton.setVisibility(View.GONE);
+
+        saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markerDetailText.setVisibility(View.GONE);
+                markerInfoLabel.setVisibility(View.GONE);
+                cancelNewMarkerButton.setVisibility(View.GONE);
+                saveNewMarkerButton.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
+                layerRV.setVisibility(View.VISIBLE);
+                layerLabel.setVisibility(View.VISIBLE);
+                layerDisc.setVisibility(View.VISIBLE);
+                markerLabel.setVisibility(View.VISIBLE);
+                markerDisc.setVisibility(View.VISIBLE);
+            }
+        });
+
+        cancelNewMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markerDetailText.setVisibility(View.GONE);
+                markerInfoLabel.setVisibility(View.GONE);
+                cancelNewMarkerButton.setVisibility(View.GONE);
+                saveNewMarkerButton.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
+                layerRV.setVisibility(View.VISIBLE);
+                layerLabel.setVisibility(View.VISIBLE);
+                layerDisc.setVisibility(View.VISIBLE);
+                markerLabel.setVisibility(View.VISIBLE);
+                markerDisc.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -213,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         String snippet = marker.getSnippet();
                         String latStr = df.format(newpos.latitude);
                         String lngStr = df.format(newpos.longitude);
+
                     }
 
                     @Override
@@ -226,6 +273,23 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     @Override
                     public void onMarkerDragStart(@NonNull com.google.android.gms.maps.model.Marker marker) {
 
+                        markerDetailText.setVisibility(View.VISIBLE);
+                        markerInfoLabel.setVisibility(View.VISIBLE);
+                        cancelNewMarkerButton.setVisibility(View.VISIBLE);
+                        saveNewMarkerButton.setVisibility(View.VISIBLE);
+                        rv.setVisibility(View.GONE);
+                        layerRV.setVisibility(View.GONE);
+                        layerLabel.setVisibility(View.GONE);
+                        layerDisc.setVisibility(View.GONE);
+                        markerLabel.setVisibility(View.GONE);
+                        markerDisc.setVisibility(View.GONE);
+
+                        String snippet = marker.getSnippet();
+                        String placename = marker.getTitle();
+
+                        String markerText = "Snippet: " + snippet;
+                        markerDetailText.setText(markerText);
+                        markerInfoLabel.setText(placename);
                     }
                 }
         );
