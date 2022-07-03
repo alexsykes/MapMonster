@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 12;
 
-    private LiveData<List<Marker>> liveDataMarkers;
     private List<Marker> markerList;
+    private List<Layer> layerList;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerLabel = findViewById(R.id.markerLabel);
         layerDisc = findViewById(R.id.layerDisc);
         markerDisc = findViewById(R.id.markerDisc);
+
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
 
         layerLabel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,14 +121,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         rv.setLayoutManager(new LinearLayoutManager(this));
 
         // List LiveData Markers
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerViewModel.getAllMarkers().observe(this, markers -> {
             adapter.submitList(markers);
         });
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
-        layerViewModel.getAllLayers().observe(this, layers -> {
-            layerListAdapter.submitList(layers);
-        });
+
+        layerList = layerViewModel.getLayerList();
+        layerListAdapter.submitList(layerList);
         layerViewModel.setVisibility(false,4);
 
         // Load markerList
