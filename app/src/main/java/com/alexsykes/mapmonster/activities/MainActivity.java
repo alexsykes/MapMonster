@@ -250,7 +250,7 @@ setupUIComponents();
         //MARK: MarkerDragListener
         mMap.setOnMarkerDragListener(
                 new GoogleMap.OnMarkerDragListener() {
-                    final DecimalFormat df = new DecimalFormat("#.#####");
+                    final DecimalFormat df = new DecimalFormat("#.00000");
                     LatLng startPos, endPos;
 
                     @Override
@@ -268,6 +268,10 @@ setupUIComponents();
                         String snippet = marker.getSnippet();
                         String latStr = df.format(newpos.latitude);
                         String lngStr = df.format(newpos.longitude);
+                        String marker_id = marker.getId();
+
+                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                + System.lineSeparator() + "Marker id: " + marker_id);
                     }
 
                     @Override
@@ -286,9 +290,13 @@ setupUIComponents();
 
                         String snippet = marker.getSnippet();
                         String placename = marker.getTitle();
+                        LatLng newpos = marker.getPosition();
+                        String latStr = df.format(newpos.latitude);
+                        String lngStr = df.format(newpos.longitude);
 
                         String markerText = "Snippet: " + snippet;
-                        markerDetailText.setText(markerText);
+                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                + System.lineSeparator() + "Marker id: " + snippet);
                         markerInfoLabel.setText(placename);
                     }
                 }

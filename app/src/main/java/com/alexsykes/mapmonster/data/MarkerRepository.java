@@ -29,4 +29,8 @@ public class MarkerRepository {
             markerDao.insertMarker(marker);
         });
     }
+
+    public void deleteMarker(int markerID) {
+        markerDao.deleteMarker(markerID);
+    }
 }

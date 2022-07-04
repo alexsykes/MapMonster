@@ -68,6 +68,7 @@ public abstract class MMDatabase extends RoomDatabase{
                 markerDao.insertMarker(marker);
                 marker = new Marker(53.6877, -2.59,"Place 10", "P10");
                 markerDao.insertMarker(marker);
+                markerDao.deleteMarker(5);
 
                 LayerDao layerDao   = INSTANCE.layerDao();
                 layerDao.deleteAllLayers();
