@@ -27,4 +27,5 @@
     <string name="cancel">Cancel</string>
     <string name="up_arrow">↑</string>
     <string name="details">Marker details</string>
+    <string name="plus_sign">+</string>
 </resources>

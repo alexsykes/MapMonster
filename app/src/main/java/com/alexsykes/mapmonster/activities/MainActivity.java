@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private boolean locationPermissionGranted;
+    private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
     private LatLng defaultLocation = new LatLng(53.59,-2.56);
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
-    private TextView markerLabel, layerLabel, layerDisc, markerDisc, markerDetailText, markerInfoLabel;
+    private TextView markerLabel, markerPlus, layerLabel, layerDisc, markerDisc, markerDetailText, markerInfoLabel;
     private Button cancelNewMarkerButton, saveNewMarkerButton;
 
 
@@ -137,11 +137,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerInfoLabel = findViewById(R.id.markerInfoLabel);
         cancelNewMarkerButton = findViewById(R.id.cancelNewMarkerButton);
         saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
+        markerPlus = findViewById(R.id.markerPlus);
+
         markerDetailText.setVisibility(View.GONE);
         markerInfoLabel.setVisibility(View.GONE);
         cancelNewMarkerButton.setVisibility(View.GONE);
         saveNewMarkerButton.setVisibility(View.GONE);
-
+        
         saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +177,40 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 layerDisc.setVisibility(View.VISIBLE);
                 markerLabel.setVisibility(View.VISIBLE);
                 markerDisc.setVisibility(View.VISIBLE);
+            }
+        });
+        
+        markerPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: Add new marker");
+                curLocation = mMap.getCameraPosition().target;
+                MarkerOptions newMarker = new MarkerOptions()
+                        .position(curLocation)
+                        .draggable(true);
+
+                mMap.addMarker(newMarker);
+
+                //MARK: MarkerDragListener
+                mMap.setOnMarkerDragListener(
+                        new GoogleMap.OnMarkerDragListener() {
+                            final DecimalFormat df = new DecimalFormat("#.#####");
+
+                            @Override
+                            public void onMarkerDrag(@NonNull Marker marker) {
+                            }
+
+                            @Override
+                            public void onMarkerDragEnd(@NonNull Marker marker) {
+                                LatLng newpos = marker.getPosition();
+                                String snippet = marker.getSnippet();
+                            }
+
+                            @Override
+                            public void onMarkerDragStart(@NonNull Marker marker) {
+                            }
+                        }
+                );
             }
         });
     }
@@ -237,6 +273,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String maptype = preferences.getString("map_view_type","NORMAL");
+
+        zoomControlsEnabled = preferences.getBoolean("zoomControlsEnabled", true);
+        mapToolbarEnabled = preferences.getBoolean("mapToolbarEnabled", true);
+        compassEnabled = preferences.getBoolean("compassEnabled", true);
+
         switch (maptype) {
             case "normal":
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -253,9 +294,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.setOnMapLoadedCallback(this);
         mMap.setMinZoomPreference(8);
         mMap.setMaxZoomPreference(20);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
+        mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
+        mMap.getUiSettings().setCompassEnabled(compassEnabled);
 
         //MARK: MarkerDragListener
         mMap.setOnMarkerDragListener(

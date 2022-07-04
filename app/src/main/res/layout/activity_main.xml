@@ -44,6 +44,18 @@
         app:layout_constraintEnd_toEndOf="@id/markerLabel"
         app:layout_constraintTop_toTopOf="@id/markerLabel" />
 
+    <TextView
+        android:id="@+id/markerPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:elevation="@dimen/small_margin"
+        android:text="@string/plus_sign"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/markerLabel"
+        app:layout_constraintTop_toTopOf="@id/markerLabel" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/markerRv"
         android:layout_width="@dimen/info_box_width"
