@@ -12,4 +12,16 @@
         android:entryValues="@array/layer_values"
         android:key="layer_visibility"
         android:title="Visible layers" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="zoomControlsEnabled"
+        android:title="Show zoom controls" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="mapToolbarEnabled"
+        android:title="Show map toolbar" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="compassEnabled"
+        android:title="Show compass" />
 </PreferenceScreen>

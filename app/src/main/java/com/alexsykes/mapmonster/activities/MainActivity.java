@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private boolean locationPermissionGranted;
+    private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
     private LatLng defaultLocation = new LatLng(53.59,-2.56);
@@ -227,6 +227,10 @@ setupUIComponents();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String maptype = preferences.getString("map_view_type","NORMAL");
+        zoomControlsEnabled = preferences.getBoolean("zoomControlsEnabled", true);
+        mapToolbarEnabled = preferences.getBoolean("mapToolbarEnabled", true);
+        compassEnabled = preferences.getBoolean("compassEnabled", true);
+
         switch (maptype) {
             case "normal":
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -243,9 +247,9 @@ setupUIComponents();
         mMap.setOnMapLoadedCallback(this);
         mMap.setMinZoomPreference(8);
         mMap.setMaxZoomPreference(20);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
+        mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
+        mMap.getUiSettings().setCompassEnabled(compassEnabled);
 
         //MARK: MarkerDragListener
         mMap.setOnMarkerDragListener(
@@ -498,7 +502,7 @@ setupUIComponents();
 
         LatLng target = new LatLng(marker.getLatitude(), marker.getLongitude());
         int padding = 100;
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 18));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 16));
         // Zoom to marker_id
     }
 
