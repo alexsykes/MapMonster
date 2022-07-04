@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface MarkerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMarker(Marker marker);
+    void insertMarker(MMarker marker);
 
     @Query("DELETE FROM markers")
     void deleteAllMarkers();
@@ -20,11 +20,11 @@ public interface MarkerDao {
     void deleteMarker(int markerID);
 
     @Query("SELECT * FROM markers ORDER BY placename")
-    LiveData<List<Marker>> allMarkers();
+    LiveData<List<MMarker>> allMarkers();
 
 
     @Query("SELECT * FROM markers ORDER BY placename")
-    List<Marker> getMarkerList();
+    List<MMarker> getMarkerList();
 
 
 

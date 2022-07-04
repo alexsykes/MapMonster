@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "markers")
-public class Marker {
+public class MMarker {
     public void setMarker_id(int marker_id) {
         this.marker_id = marker_id;
     }
@@ -71,7 +71,7 @@ public class Marker {
         this.code = code;
     }
 
-    public Marker(double latitude, double longitude, String placename, String code) {
+    public MMarker(double latitude, double longitude, String placename, String code) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.placename = placename;

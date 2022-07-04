@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.alexsykes.mapmonster.data.Layer;
-import com.alexsykes.mapmonster.data.Marker;
+import com.alexsykes.mapmonster.data.MMarker;
 
 public class LayerListAdapter extends ListAdapter<Layer, LayerViewHolder> {
     AdapterView.OnItemClickListener listener;
@@ -32,7 +32,7 @@ public class LayerListAdapter extends ListAdapter<Layer, LayerViewHolder> {
         holder.bind(current);
     }
     public interface OnItemClickListener {
-        void onItemClick(Marker marker);
+        void onItemClick(MMarker marker);
     }
 
     public static class LayerDiff extends DiffUtil.ItemCallback<Layer> {

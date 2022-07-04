@@ -29,7 +29,7 @@ import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
-import com.alexsykes.mapmonster.data.Marker;
+import com.alexsykes.mapmonster.data.MMarker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 12;
 
-    private List<Marker> markerList;
+    private List<MMarker> markerList;
     private List<Layer> layerList;
 
     // The entry point to the Fused Location Provider.
@@ -259,7 +260,9 @@ setupUIComponents();
                         String snippet = marker.getSnippet();
                         String latStr = df.format(newpos.latitude);
                         String lngStr = df.format(newpos.longitude);
+                        int markerID  = (int) marker.getTag();
 
+                        Log.i(TAG, "onMarkerDrag: id " + markerID);
                     }
 
                     @Override
@@ -456,7 +459,7 @@ setupUIComponents();
         LatLng latLng;
 
         mMap.clear();
-        for (Marker marker : markerList) {
+        for (MMarker marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             type = marker.getPlacename();
@@ -470,7 +473,6 @@ setupUIComponents();
                     .visible(true);
 
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.home_72));
-
             if (type.equals("Car park")) {
                 markerOptions.visible(true);
                 // markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -479,7 +481,9 @@ setupUIComponents();
                 markerOptions.visible(true);
             }
             markerOptions.draggable(true);
-            mMap.addMarker(markerOptions);
+
+            Marker marker1 = mMap.addMarker(markerOptions);
+            marker1.setTag(marker.getMarker_id());
         }
     }
     private void updateCamera() {
@@ -487,7 +491,7 @@ setupUIComponents();
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             LatLng latLng;
-            for (Marker marker : markerList) {
+            for (MMarker marker : markerList) {
                 latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
                 builder.include(latLng);
             }
@@ -501,7 +505,7 @@ setupUIComponents();
         markerList = markerViewModel.getMarkerList();
     }
 
-    public void onMarkerListItemClicked(Marker marker) {
+    public void onMarkerListItemClicked(MMarker marker) {
         Log.i(TAG, "onMarkerListItemClicked: " + marker.getCode());
 
         LatLng target = new LatLng(marker.getLatitude(), marker.getLongitude());

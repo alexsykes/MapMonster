@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.activities.MainActivity;
-import com.alexsykes.mapmonster.data.Marker;
+import com.alexsykes.mapmonster.data.MMarker;
 
 public class MarkerViewHolder extends RecyclerView.ViewHolder {
     final TextView markerTextView, codeTextView;
@@ -21,7 +21,7 @@ public class MarkerViewHolder extends RecyclerView.ViewHolder {
         codeTextView = itemView.findViewById(R.id.codeTextView);
     }
 
-    public void bind(Marker marker) {
+    public void bind(MMarker marker) {
         codeTextView.setText(marker.getCode());
         markerTextView.setText(marker.getPlacename());
 
