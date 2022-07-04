@@ -26,13 +26,8 @@ public interface MarkerDao {
     @Query("SELECT * FROM markers ORDER BY placename")
     List<MMarker> getMarkerList();
 
-
-
-
-
-
-
-
+    @Query("UPDATE markers SET latitude = :lat, longitude = :lng, isUpdated = :isUpdated WHERE markerID = :marker_id  ")
+    void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);
 }
 
 

@@ -33,4 +33,8 @@ public class MarkerRepository {
     public void deleteMarker(int markerID) {
         markerDao.deleteMarker(markerID);
     }
+
+    public void updateMarker(int marker_id, double lat, double lng, boolean isUpdated) {
+        markerDao.updateMarker(marker_id, lat, lng, isUpdated);
+    }
 }

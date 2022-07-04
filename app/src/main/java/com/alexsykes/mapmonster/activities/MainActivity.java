@@ -29,7 +29,9 @@ import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
+import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -64,26 +66,33 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
     private LatLng defaultLocation = new LatLng(53.59,-2.56);
+    private LatLng curLocation;
+
+
+    private MarkerViewModel markerViewModel;
+    private LayerViewModel layerViewModel;
+    private MarkerDao markerDao;
 
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
-    private MarkerViewModel markerViewModel;
-    private LayerViewModel layerViewModel;
     private TextView markerLabel, layerLabel, layerDisc, markerDisc, markerDetailText, markerInfoLabel;
     private Button cancelNewMarkerButton, saveNewMarkerButton;
 
 
     RecyclerView rv;
     RecyclerView layerRV;
+    private int current_marker_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-setupUIComponents();
+        setupUIComponents();
 
+        MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        markerDao = db.markerDao();
 
         layerLabel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,10 +120,6 @@ setupUIComponents();
                 }
             }
         });
-
-
-
-
 
         // Load markerList
 //        loadMarkerList();
@@ -150,6 +155,10 @@ setupUIComponents();
                 layerDisc.setVisibility(View.VISIBLE);
                 markerLabel.setVisibility(View.VISIBLE);
                 markerDisc.setVisibility(View.VISIBLE);
+
+                markerDao.updateMarker(current_marker_id, curLocation.latitude,curLocation.longitude,true);
+
+
             }
         });
 
@@ -260,21 +269,19 @@ setupUIComponents();
                         String snippet = marker.getSnippet();
                         String latStr = df.format(newpos.latitude);
                         String lngStr = df.format(newpos.longitude);
-                        int markerID  = (int) marker.getTag();
-
-                        Log.i(TAG, "onMarkerDrag: id " + markerID);
                     }
 
                     @Override
                     public void onMarkerDragEnd(@NonNull com.google.android.gms.maps.model.Marker marker) {
-                        LatLng newpos = marker.getPosition();
+                        curLocation = marker.getPosition();
                         String snippet = marker.getSnippet();
-                        String latStr = df.format(newpos.latitude);
-                        String lngStr = df.format(newpos.longitude);
-                        String marker_id = marker.getId();
+                        String latStr = df.format(curLocation.latitude);
+                        String lngStr = df.format(curLocation.longitude);
+                        current_marker_id = (int) marker.getTag();
 
                         markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
-                                + System.lineSeparator() + "Marker id: " + marker_id);
+                                + System.lineSeparator() + "Marker id: " + current_marker_id);
+                        Log.i(TAG, "onMarkerDrag: id " + current_marker_id);
                     }
 
                     @Override
@@ -463,7 +470,7 @@ setupUIComponents();
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             type = marker.getPlacename();
-            String snippet = String.valueOf(marker.getMarker_id());
+            String snippet = marker.getSnippet();
 
             marker_title = marker.getPlacename() + " " + code;
             MarkerOptions markerOptions = new MarkerOptions()

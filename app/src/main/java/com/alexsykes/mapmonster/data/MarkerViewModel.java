@@ -25,4 +25,5 @@ public class MarkerViewModel extends AndroidViewModel {
     public void insert(MMarker marker) { markerRepository.insert(marker);}
     public List<MMarker> getMarkerList() { return markerRepository.getMarkerList(); }
     public void deleteMarker(int markerID) { markerRepository.deleteMarker(markerID); }
+    public void updateMarker(int marker_id, double lat, double lng, boolean isUpdated) {markerRepository.updateMarker(marker_id,  lat,  lng,  isUpdated); }
 }
