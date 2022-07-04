@@ -62,12 +62,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
+    RecyclerView markerRV;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
     private LatLng defaultLocation = new LatLng(53.59,-2.56);
     private LatLng curLocation;
-
 
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
@@ -77,9 +76,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     SharedPreferences.Editor editor;
     private TextView markerLabel, markerPlus, layerLabel, layerDisc, markerDisc, markerDetailText, markerInfoLabel;
     private Button cancelNewMarkerButton, saveNewMarkerButton;
-
-
-    RecyclerView rv;
+    private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled, layersCollapsed, markersCollapsed, editingMarker;
     RecyclerView layerRV;
     private int current_marker_id;
 
@@ -87,8 +84,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupUIComponents();
+        defaults = this.getPreferences(Context.MODE_PRIVATE);
+        editor = defaults.edit();
 
+        setupUIComponents();
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
@@ -98,71 +97,70 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onMarkerLabelClicked");
+                layersCollapsed = defaults.getBoolean("layersCollapsed", true);
                 if(layerRV.getVisibility() == View.VISIBLE) {
                     layerRV.setVisibility(View.GONE);
                     layerDisc.setText("↓");
+                    editor.putBoolean("layersCollapsed", true);
                 } else {
                     layerRV.setVisibility(View.VISIBLE);
                     layerDisc.setText("↑");
+                    editor.putBoolean("layersCollapsed", false);
                 }
+                editor.apply();
             }
         });
         markerLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onMarkerLabelClicked");
-                if(rv.getVisibility() == View.VISIBLE) {
-                    rv.setVisibility(View.GONE);
+                markersCollapsed = defaults.getBoolean("markersCollapsed", true);
+                if(markerRV.getVisibility() == View.VISIBLE) {
+                    markerRV.setVisibility(View.GONE);
                     markerDisc.setText("↓");
+                    editor.putBoolean("markersCollapsed", true);
                 } else {
-                    rv.setVisibility(View.VISIBLE);
+                    markerRV.setVisibility(View.VISIBLE);
                     markerDisc.setText("↑");
+                    editor.putBoolean("markersCollapsed", false);
                 }
+                editor.apply();
             }
         });
 
-        // Load markerList
-//        loadMarkerList();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     private void setupUIComponents() {
-        layerLabel = findViewById(R.id.layerLabel);
+        defaults = this.getPreferences(Context.MODE_PRIVATE);
+        layersCollapsed = defaults.getBoolean("layersCollapsed", true);
+        markersCollapsed = defaults.getBoolean("markersCollapsed", true);
+        editingMarker = defaults.getBoolean("editingMarker", false);
+
+        // Lists
         markerLabel = findViewById(R.id.markerLabel);
-        layerDisc = findViewById(R.id.layerDisc);
         markerDisc = findViewById(R.id.markerDisc);
-        markerDetailText = findViewById(R.id.markerDetailText);
+        markerPlus = findViewById(R.id.markerPlus);
+        markerRV = findViewById(R.id.markerRv);
+
+        layerLabel = findViewById(R.id.layerLabel);
+        layerDisc = findViewById(R.id.layerDisc);
+        layerRV = findViewById(R.id.layerRecyclerView);
+
+        displayBoxes();
+
+        // Marker info box
         markerInfoLabel = findViewById(R.id.markerInfoLabel);
+        markerDetailText = findViewById(R.id.markerDetailText);
         cancelNewMarkerButton = findViewById(R.id.cancelNewMarkerButton);
         saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
-        markerPlus = findViewById(R.id.markerPlus);
 
         markerDetailText.setVisibility(View.GONE);
         markerInfoLabel.setVisibility(View.GONE);
         cancelNewMarkerButton.setVisibility(View.GONE);
         saveNewMarkerButton.setVisibility(View.GONE);
-        
-        saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerDetailText.setVisibility(View.GONE);
-                markerInfoLabel.setVisibility(View.GONE);
-                cancelNewMarkerButton.setVisibility(View.GONE);
-                saveNewMarkerButton.setVisibility(View.GONE);
-                rv.setVisibility(View.VISIBLE);
-                layerRV.setVisibility(View.VISIBLE);
-                layerLabel.setVisibility(View.VISIBLE);
-                layerDisc.setVisibility(View.VISIBLE);
-                markerLabel.setVisibility(View.VISIBLE);
-                markerDisc.setVisibility(View.VISIBLE);
-
-                markerDao.updateMarker(current_marker_id, curLocation.latitude,curLocation.longitude,true);
-
-
-            }
-        });
 
         cancelNewMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,12 +169,40 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 markerInfoLabel.setVisibility(View.GONE);
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 saveNewMarkerButton.setVisibility(View.GONE);
-                rv.setVisibility(View.VISIBLE);
-                layerRV.setVisibility(View.VISIBLE);
-                layerLabel.setVisibility(View.VISIBLE);
-                layerDisc.setVisibility(View.VISIBLE);
-                markerLabel.setVisibility(View.VISIBLE);
-                markerDisc.setVisibility(View.VISIBLE);
+//                markerRV.setVisibility(View.VISIBLE);
+//                layerRV.setVisibility(View.VISIBLE);
+//                layerLabel.setVisibility(View.VISIBLE);
+//                layerDisc.setVisibility(View.VISIBLE);
+//                markerLabel.setVisibility(View.VISIBLE);
+//                markerDisc.setVisibility(View.VISIBLE);
+                editor.putBoolean("editingMarker", false);
+                editor.apply();
+                showLayerBox(true);
+                showMarkerBox(true);
+            }
+        });
+        saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markerDetailText.setVisibility(View.GONE);
+                markerInfoLabel.setVisibility(View.GONE);
+                cancelNewMarkerButton.setVisibility(View.GONE);
+                saveNewMarkerButton.setVisibility(View.GONE);
+//                markerRV.setVisibility(View.VISIBLE);
+//                layerRV.setVisibility(View.VISIBLE);
+//                layerLabel.setVisibility(View.VISIBLE);
+//                layerDisc.setVisibility(View.VISIBLE);
+//                markerLabel.setVisibility(View.VISIBLE);
+//                markerDisc.setVisibility(View.VISIBLE);
+
+                editor.putBoolean("editingMarker", false);
+                editor.apply();
+                showLayerBox(true);
+                showMarkerBox(true);
+
+                markerDao.updateMarker(current_marker_id, curLocation.latitude,curLocation.longitude,true);
+
+
             }
         });
         
@@ -215,18 +241,30 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         });
     }
 
+    private void displayBoxes() {
+        if(markersCollapsed) {
+            markerRV.setVisibility(View.GONE);
+        } else {
+            markerRV.setVisibility(View.VISIBLE);
+        }
+
+        if(layersCollapsed) {
+            layerRV.setVisibility(View.GONE);
+        } else {
+            layerRV.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        rv = findViewById(R.id.markerRv);
-       layerRV = findViewById(R.id.layerRecyclerView);
         final LayerListAdapter layerListAdapter = new LayerListAdapter(new LayerListAdapter.LayerDiff());
         layerRV.setAdapter(layerListAdapter);
         layerRV.setLayoutManager(new LinearLayoutManager(this));
 
         final MarkerListAdapter adapter = new MarkerListAdapter(new MarkerListAdapter.MarkerDiff());
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        markerRV.setAdapter(adapter);
+        markerRV.setLayoutManager(new LinearLayoutManager(this));
         // List LiveData Markers
         markerViewModel.getAllMarkers().observe(this, markers -> {
             adapter.submitList(markers);
@@ -244,6 +282,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return true;
     }
 
+
+    // Navigation
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -310,6 +350,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         String snippet = marker.getSnippet();
                         String latStr = df.format(newpos.latitude);
                         String lngStr = df.format(newpos.longitude);
+                        editor.putBoolean("editingMarker", true);
+                        editor.apply();
+//                        showLayers(false);
+//                        showLayers(false);
                     }
 
                     @Override
@@ -332,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         markerInfoLabel.setVisibility(View.VISIBLE);
                         cancelNewMarkerButton.setVisibility(View.VISIBLE);
                         saveNewMarkerButton.setVisibility(View.VISIBLE);
-                        rv.setVisibility(View.GONE);
+                        markerRV.setVisibility(View.GONE);
                         layerRV.setVisibility(View.GONE);
                         layerLabel.setVisibility(View.GONE);
                         layerDisc.setVisibility(View.GONE);
@@ -551,6 +595,30 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private void loadMarkerList() {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerList = markerViewModel.getMarkerList();
+    }
+
+    void showLayerBox(boolean areVisible) {
+        if (areVisible) {
+            layerLabel.setVisibility(View.VISIBLE);
+            layerDisc.setVisibility(View.VISIBLE);
+        } else {
+            layerLabel.setVisibility(View.GONE);
+            layerDisc.setVisibility(View.GONE);
+        }
+        displayBoxes();
+    }
+
+    void showMarkerBox(boolean areVisible) {
+        if (areVisible) {
+            markerLabel.setVisibility(View.VISIBLE);
+            markerDisc.setVisibility(View.VISIBLE);
+            markerPlus.setVisibility(View.VISIBLE);
+        } else {
+            markerLabel.setVisibility(View.GONE);
+            markerDisc.setVisibility(View.GONE);
+            markerPlus.setVisibility(View.GONE);
+        }
+        displayBoxes();
     }
 
     public void onMarkerListItemClicked(MMarker marker) {
