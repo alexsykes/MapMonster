@@ -147,12 +147,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     @Override
     protected void onPause() {
         super.onPause();
-
         editor.putInt("mode",mode);
         editor.putBoolean("layersCollapsed",layersCollapsed);
         editor.putBoolean("markersCollapsed",markersCollapsed);
         editor.putBoolean("editingMarker",editingMarker);
-
         editor.apply();
     }
 
@@ -192,19 +190,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 markerInfoLabel.setVisibility(View.GONE);
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 saveNewMarkerButton.setVisibility(View.GONE);
-//                markerRV.setVisibility(View.VISIBLE);
-//                layerRV.setVisibility(View.VISIBLE);
-//                layerLabel.setVisibility(View.VISIBLE);
-//                layerDisc.setVisibility(View.VISIBLE);
-//                markerLabel.setVisibility(View.VISIBLE);
-//                markerDisc.setVisibility(View.VISIBLE);
                 editor.putBoolean("editingMarker", false);
                 editor.apply();
-
                 mode = 0;
                 setupUIVisibility();
-//                showLayerBox(true);
-//                showMarkerBox(true);
             }
         });
         saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
@@ -214,18 +203,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 markerInfoLabel.setVisibility(View.GONE);
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 saveNewMarkerButton.setVisibility(View.GONE);
-//                markerRV.setVisibility(View.VISIBLE);
-//                layerRV.setVisibility(View.VISIBLE);
-//                layerLabel.setVisibility(View.VISIBLE);
-//                layerDisc.setVisibility(View.VISIBLE);
-//                markerLabel.setVisibility(View.VISIBLE);
-//                markerDisc.setVisibility(View.VISIBLE);
-
                 editor.putBoolean("editingMarker", false);
                 editor.apply();
-//                showLayerBox(true);
-//                showMarkerBox(true);
-
                 mode = 0;
                 setupUIVisibility();
                 markerDao.updateMarker(current_marker_id, curLocation.latitude,curLocation.longitude,true);
@@ -313,8 +292,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
                 markerInfoLabel.setVisibility(View.VISIBLE);
                 markerDetailText.setVisibility(View.VISIBLE);
+
                 cancelNewMarkerButton.setVisibility(View.VISIBLE);
                 saveNewMarkerButton.setVisibility(View.VISIBLE);
+
                 break;
         }
     }
@@ -424,20 +405,18 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
                     @Override
                     public void onMarkerDrag(@NonNull com.google.android.gms.maps.model.Marker marker) {
-                        mode = 1;
-                        setupUIVisibility();
                         LatLng newpos = marker.getPosition();
                         String snippet = marker.getSnippet();
                         String latStr = df.format(newpos.latitude);
                         String lngStr = df.format(newpos.longitude);
-                        editor.putBoolean("editingMarker", true);
-                        editor.apply();
 //                        showLayers(false);
 //                        showLayers(false);
                     }
 
                     @Override
                     public void onMarkerDragEnd(@NonNull com.google.android.gms.maps.model.Marker marker) {
+                        cancelNewMarkerButton.setVisibility(View.VISIBLE);
+                        saveNewMarkerButton.setVisibility(View.VISIBLE);
                         curLocation = marker.getPosition();
                         String snippet = marker.getSnippet();
                         String latStr = df.format(curLocation.latitude);
@@ -451,18 +430,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
                     @Override
                     public void onMarkerDragStart(@NonNull com.google.android.gms.maps.model.Marker marker) {
-
-//                        markerDetailText.setVisibility(View.VISIBLE);
-//                        markerInfoLabel.setVisibility(View.VISIBLE);
-//                        cancelNewMarkerButton.setVisibility(View.VISIBLE);
-//                        saveNewMarkerButton.setVisibility(View.VISIBLE);
-//                        markerRV.setVisibility(View.GONE);
-//                        layerRV.setVisibility(View.GONE);
-//                        layerLabel.setVisibility(View.GONE);
-//                        layerDisc.setVisibility(View.GONE);
-//                        markerLabel.setVisibility(View.GONE);
-//                        markerDisc.setVisibility(View.GONE);
-
+                        editor.putBoolean("editingMarker", true);
+                        editor.apply();
+                        mode = 1;
+                        setupUIVisibility();
                         String snippet = marker.getSnippet();
                         String placename = marker.getTitle();
                         LatLng newpos = marker.getPosition();
