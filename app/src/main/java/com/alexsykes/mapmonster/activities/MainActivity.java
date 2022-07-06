@@ -651,28 +651,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerList = markerViewModel.getMarkerList();
     }
 
-    void showLayerBox(boolean areVisible) {
-        if (areVisible) {
-            layerLabel.setVisibility(View.VISIBLE);
-            layerDisc.setVisibility(View.VISIBLE);
-        } else {
-            layerLabel.setVisibility(View.GONE);
-            layerDisc.setVisibility(View.GONE);
-        }
-        displayBoxes();
-    }
-    void showMarkerBox(boolean areVisible) {
-        if (areVisible) {
-            markerLabel.setVisibility(View.VISIBLE);
-            markerDisc.setVisibility(View.VISIBLE);
-            markerPlus.setVisibility(View.VISIBLE);
-        } else {
-            markerLabel.setVisibility(View.GONE);
-            markerDisc.setVisibility(View.GONE);
-            markerPlus.setVisibility(View.GONE);
-        }
-        displayBoxes();
-    }
     public void onMarkerListItemClicked(MMarker marker) {
         Log.i(TAG, "onMarkerListItemClicked: " + marker.getCode());
 
