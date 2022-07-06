@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-        setupUIVisibility();
+        setupMode();
         getSavedCameraPosition();
     }
 
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 editor.putBoolean("editingMarker", false);
                 editor.apply();
                 mode = 0;
-                setupUIVisibility();
+                setupMode();
                 mMap.clear();
                 // loadMarkerList();
                 addMarkersToMap();
@@ -213,9 +214,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 editor.putBoolean("editingMarker", false);
                 editor.apply();
                 mode = 0;
-                setupUIVisibility();
-                markerDao.updateMarker(current_marker_id, curLocation.latitude,curLocation.longitude,true);
-
+                setupMode();
+                if(current_marker_id == -999) {
+                    markerDao.insertMarker(new MMarker(curLocation.latitude, curLocation.longitude, "New placemark", "Code", "waypoint", ""));
+                } else {
+                    markerDao.updateMarker(current_marker_id, curLocation.latitude, curLocation.longitude, true);
+                }
 
             }
         });
@@ -223,6 +227,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mode = 2;
+                setupMode();
+                showEditDialog();
                 Log.i(TAG, "onClick: Add new marker");
                 curLocation = mMap.getCameraPosition().target;
                 MarkerOptions newMarker = new MarkerOptions()
@@ -232,25 +239,36 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 mMap.addMarker(newMarker);
 
                 //MARK: MarkerDragListener
-                mMap.setOnMarkerDragListener(
-                        new GoogleMap.OnMarkerDragListener() {
-                            final DecimalFormat df = new DecimalFormat("#.#####");
-
-                            @Override
-                            public void onMarkerDrag(@NonNull Marker marker) {
-                            }
-
-                            @Override
-                            public void onMarkerDragEnd(@NonNull Marker marker) {
-                                LatLng newpos = marker.getPosition();
-                                String snippet = marker.getSnippet();
-                            }
-
-                            @Override
-                            public void onMarkerDragStart(@NonNull Marker marker) {
-                            }
-                        }
-                );
+//                mMap.setOnMarkerDragListener(
+//                        new GoogleMap.OnMarkerDragListener() {
+//                            final DecimalFormat df = new DecimalFormat("#.#####");
+//
+//                            @Override
+//                            public void onMarkerDrag(@NonNull Marker marker) {
+//                            }
+//
+//                            @Override
+//                            public void onMarkerDragEnd(@NonNull Marker marker) {
+//                                LatLng newpos = marker.getPosition();
+//                                String snippet = marker.getSnippet();
+//                            }
+//
+//                            @Override
+//                            public void onMarkerDragStart(@NonNull Marker marker) {
+//                                cancelNewMarkerButton.setVisibility(View.VISIBLE);
+//                                saveNewMarkerButton.setVisibility(View.VISIBLE);
+//                                curLocation = marker.getPosition();
+//                                String snippet = marker.getSnippet();
+//                                String latStr = df.format(curLocation.latitude);
+//                                String lngStr = df.format(curLocation.longitude);
+//                                current_marker_id = (int) marker.getTag();
+//
+//                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+//                                        + System.lineSeparator() + "Marker id: " + current_marker_id);
+//                                Log.i(TAG, "onMarkerDrag: id " + current_marker_id);
+//                            }
+//                        }
+//                );
             }
         });
     }
@@ -259,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         0 - Normal mode - Marker and Layer boxes visible, MarkerInfo box GONE
         1 - Editing marker mode
      */
-    private void setupUIVisibility(){
+    private void setupMode(){
         switch (mode) {
             case 0:
                 markerLabel.setVisibility(View.VISIBLE);
@@ -298,6 +316,20 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 layerRV.setVisibility(View.GONE);
 
                 markerInfoLabel.setVisibility(View.VISIBLE);
+                markerDetailText.setVisibility(View.VISIBLE);
+                break;
+
+            case 2:
+                markerLabel.setVisibility(View.GONE);
+                markerPlus.setVisibility(View.GONE);
+                markerDisc.setVisibility(View.GONE);
+                markerRV.setVisibility(View.GONE);
+                layerLabel.setVisibility(View.GONE);
+                layerDisc.setVisibility(View.GONE);
+                layerRV.setVisibility(View.GONE);
+
+                markerInfoLabel.setVisibility(View.VISIBLE);
+                markerInfoLabel.setText("New marker");
                 markerDetailText.setVisibility(View.VISIBLE);
                 break;
         }
@@ -424,8 +456,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         String snippet = marker.getSnippet();
                         String latStr = df.format(curLocation.latitude);
                         String lngStr = df.format(curLocation.longitude);
-                        current_marker_id = (int) marker.getTag();
-
+                        if(marker.getTag()!=null) {
+                            current_marker_id = (int) marker.getTag();
+                        } else {
+                            current_marker_id = -999;
+                        }
                         markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
                                 + System.lineSeparator() + "Marker id: " + current_marker_id);
                         Log.i(TAG, "onMarkerDrag: id " + current_marker_id);
@@ -436,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         editor.putBoolean("editingMarker", true);
                         editor.apply();
                         mode = 1;
-                        setupUIVisibility();
+                        setupMode();
                         String snippet = marker.getSnippet();
                         String placename = marker.getTitle();
                         LatLng newpos = marker.getPosition();
@@ -662,5 +697,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     public void onLayerListItemCheckedChanged(Layer layer, boolean isChecked) {
         Log.i(TAG, "onLayerListItemCheckedChanged: " + layer.getLayer_id() + isChecked);
         layerViewModel.setVisibility(isChecked, layer.getLayer_id());
+    }
+
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        MarkerDetailFragment markerDetailFragment = MarkerDetailFragment.newInstance();
+        markerDetailFragment.show(fm, "fragment_edit_name");
     }
 }
