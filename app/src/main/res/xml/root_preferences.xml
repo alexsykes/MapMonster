@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:defaultValue="1"
+        android:defaultValue="normal"
         android:entries="@array/view_entries"
         android:entryValues="@array/view_values"
         android:key="map_view_type"

@@ -84,9 +84,14 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         defaults = this.getPreferences(Context.MODE_PRIVATE);
         editor = defaults.edit();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         mode = defaults.getInt("mode",0);
         setupUIComponents();
@@ -131,27 +136,26 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 editor.apply();
             }
         });
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume: ");
         setupUIVisibility();
-
+        getSavedCameraPosition();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.i(TAG, "onPause: ");
         editor.putInt("mode",mode);
         editor.putBoolean("layersCollapsed",layersCollapsed);
         editor.putBoolean("markersCollapsed",markersCollapsed);
         editor.putBoolean("editingMarker",editingMarker);
         editor.apply();
+        saveCameraPosition();
     }
 
     private void setupUIComponents() {
@@ -194,6 +198,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 editor.apply();
                 mode = 0;
                 setupUIVisibility();
+                mMap.clear();
+                // loadMarkerList();
+                addMarkersToMap();
             }
         });
         saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
@@ -292,10 +299,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
                 markerInfoLabel.setVisibility(View.VISIBLE);
                 markerDetailText.setVisibility(View.VISIBLE);
-
-                cancelNewMarkerButton.setVisibility(View.VISIBLE);
-                saveNewMarkerButton.setVisibility(View.VISIBLE);
-
                 break;
         }
     }
@@ -341,7 +344,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return true;
     }
 
-
     // Navigation
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -368,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
     @SuppressLint("MissingPermission")
     public void onMapReady(GoogleMap googleMap) {
+        Log.i(TAG, "onMapReady: ");
         mMap = googleMap;
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -590,7 +593,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onMapLoaded: ");
         loadMarkerList();
         addMarkersToMap();
-        updateCamera();
+        //updateCamera();
     }
 
     // Utility methods
@@ -658,7 +661,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
         displayBoxes();
     }
-
     void showMarkerBox(boolean areVisible) {
         if (areVisible) {
             markerLabel.setVisibility(View.VISIBLE);
@@ -671,7 +673,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
         displayBoxes();
     }
-
     public void onMarkerListItemClicked(MMarker marker) {
         Log.i(TAG, "onMarkerListItemClicked: " + marker.getCode());
 
@@ -680,10 +681,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 18));
         // Zoom to marker_id
     }
-
-//    public void onLayerListItemClicked(Layer layer) {
-//    }
-
     public void onLayerListItemCheckedChanged(Layer layer, boolean isChecked) {
         Log.i(TAG, "onLayerListItemCheckedChanged: " + layer.getLayer_id() + isChecked);
         layerViewModel.setVisibility(isChecked, layer.getLayer_id());
