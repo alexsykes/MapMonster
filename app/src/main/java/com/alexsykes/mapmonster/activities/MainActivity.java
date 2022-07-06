@@ -701,7 +701,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        MarkerDetailFragment markerDetailFragment = MarkerDetailFragment.newInstance();
+        MarkerDetailFragment markerDetailFragment = MarkerDetailFragment.newInstance("Marker details");
         markerDetailFragment.show(fm, "fragment_edit_name");
     }
 }
