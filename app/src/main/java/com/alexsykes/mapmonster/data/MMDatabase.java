@@ -48,32 +48,33 @@ public abstract class MMDatabase extends RoomDatabase{
                 MarkerDao markerDao = INSTANCE.markerDao();
                 markerDao.deleteAllMarkers();
 
-                MMarker marker = new MMarker(53.5947, -2.5611,"Home", "P1","waypoint","snip");
+                MMarker marker = new MMarker(53.5947, -2.5611,"Home", "P1","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.6687, -2.509,"Place 2", "P2","waypoint","snip");
+                marker = new MMarker(53.6687, -2.509,"Place 2", "P2","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.6897, -2.535568,"Place 3", "P3","waypoint","snip");
+                marker = new MMarker(53.6897, -2.535568,"Place 3", "P3","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.6701, -2.5789,"Place 4", "P4","waypoint","snip");
+                marker = new MMarker(53.6701, -2.5789,"Place 4", "P4","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.6087, -2.556699,"Place 5", "P5","waypoint","snip");
+                marker = new MMarker(53.6087, -2.556699,"Place 5", "P5","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.66, -2.579,"Place 6", "P6","waypoint","snip");
+                marker = new MMarker(53.66, -2.579,"Place 6", "P6","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.64257, -2.5789,"Place 7", "P7","waypoint","snip");
+                marker = new MMarker(53.64257, -2.5789,"Place 7", "P7","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.6889, -2.5245,"Place 8", "P8","waypoint","snip");
+                marker = new MMarker(53.6889, -2.5245,"Place 8", "P8","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.616737, -2.3889,"Place 9", "P0","waypoint","snip");
+                marker = new MMarker(53.616737, -2.3889,"Place 9", "P0","waypoint","");
                 markerDao.insertMarker(marker);
-                marker = new MMarker(53.6877, -2.59,"Place 10", "P10","waypoint","snip");
-                markerDao.insertMarker(marker);
-                markerDao.deleteMarker(5);
+                marker = new MMarker(53.6877, -2.59,"Place 10", "P10","waypoint","");
+
 
                 LayerDao layerDao   = INSTANCE.layerDao();
                 layerDao.deleteAllLayers();
 
-                Layer layer = new Layer("Parking", "P");
+                Layer layer = new Layer("Parking", "CP");
+                layerDao.insertLayer(layer);
+                layer = new Layer("Waypoint", "WP");
                 layerDao.insertLayer(layer);
                 layer = new Layer("Fuel", "FL");
                 layerDao.insertLayer(layer);

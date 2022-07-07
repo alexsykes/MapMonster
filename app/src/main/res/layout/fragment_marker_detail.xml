@@ -1,23 +1,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/marker_detail_fragment"
-    android:layout_width="200dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/large_margin"
     android:layout_gravity="center"
+    android:layout_marginEnd="@dimen/large_margin"
+    android:elevation="@dimen/large_margin"
     android:orientation="vertical">
 
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_700"
+        android:text="Marker details"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/markerNameEditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="Name">
+        android:hint="@string/marker_name">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="hint" />
+            tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/markerCodeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/marker_code">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#616161" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RadioGroup
+        android:id="@+id/layerRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/small_margin"
+        android:paddingEnd="@dimen/small_margin" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,15 +58,20 @@
 
         <Button
             android:id="@+id/dismissMarkerDetailsButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:layout_margin="@dimen/small_margin"
+            android:text="@android:string/cancel"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
         <Button
             android:id="@+id/saveMarkerDetailsButton"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:layout_margin="@dimen/small_margin"
+            android:text="@string/save" />
     </LinearLayout>
 
 </LinearLayout>

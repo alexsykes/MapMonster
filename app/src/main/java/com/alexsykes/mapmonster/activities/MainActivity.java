@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled, layersCollapsed, markersCollapsed, editingMarker;
     RecyclerView layerRV;
     private int current_marker_id;
+    MarkerDetailFragment markerDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,7 +229,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mode = 2;
+                mode = 0;
+                editor.putInt("mode", mode);
+                editor.apply();
                 setupMode();
                 showEditDialog();
                 Log.i(TAG, "onClick: Add new marker");
@@ -391,7 +395,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
         return false;
     }
-
     private void goSettings() {
         Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
         startActivity(intent);
@@ -513,7 +516,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //        Log.i(TAG, "onMapReady: " + markerList.size());
         // addMarkersToMap();
     }
-
     private void getLocationPermission() {
         /*
          * Request location permission, so that we can get the location of the
@@ -698,10 +700,15 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onLayerListItemCheckedChanged: " + layer.getLayer_id() + isChecked);
         layerViewModel.setVisibility(isChecked, layer.getLayer_id());
     }
-
     private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        MarkerDetailFragment markerDetailFragment = MarkerDetailFragment.newInstance("Marker details");
+         markerDetailFragment = MarkerDetailFragment.newInstance("Marker details");
+        getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                Log.i(TAG, "onFragmentResult: ");
+            }
+        });
         markerDetailFragment.show(fm, "fragment_edit_name");
     }
 }
