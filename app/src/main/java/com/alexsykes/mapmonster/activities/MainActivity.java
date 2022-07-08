@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,7 +53,7 @@ import com.google.android.gms.tasks.Task;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, MarkerDetailDialogFragment.MarkerDetailDialogListener {
 
     private GoogleMap mMap;
 
@@ -701,14 +702,24 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         layerViewModel.setVisibility(isChecked, layer.getLayer_id());
     }
     private void showEditDialog() {
+//        FragmentManager fm = getSupportFragmentManager();
+//         markerDetailFragment = MarkerDetailFragment.newInstance("Marker details");
+//        getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+//            @Override
+//            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+//                Log.i(TAG, "onFragmentResult: ");
+//            }
+//        });
+//        markerDetailFragment.show(fm, "fragment_edit_name");
+
         FragmentManager fm = getSupportFragmentManager();
-         markerDetailFragment = MarkerDetailFragment.newInstance("Marker details");
-        getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                Log.i(TAG, "onFragmentResult: ");
-            }
-        });
-        markerDetailFragment.show(fm, "fragment_edit_name");
+        MarkerDetailDialogFragment markerDetailDialogFragment = new MarkerDetailDialogFragment();
+        markerDetailDialogFragment.show(fm, "marker_detail_edit_name");
+
+    }
+
+    @Override
+    public void onFinishEditDialog(String text) {
+        Toast.makeText(this, "Name " + text, Toast.LENGTH_LONG).show();
     }
 }
