@@ -656,7 +656,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     .snippet(snippet)
                     .visible(true);
 
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.home_72));
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.hotel_24));
+            
             if (type.equals("Car park")) {
                 markerOptions.visible(true);
             } else {
