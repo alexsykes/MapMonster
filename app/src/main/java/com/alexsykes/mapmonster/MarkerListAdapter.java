@@ -7,13 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.alexsykes.mapmonster.data.Marker;
+import com.alexsykes.mapmonster.data.MMarker;
 
-public class MarkerListAdapter extends ListAdapter<Marker, MarkerViewHolder> {
+public class MarkerListAdapter extends ListAdapter<MMarker, MarkerViewHolder> {
 
     AdapterView.OnItemClickListener listener;
 
-    public MarkerListAdapter(@NonNull DiffUtil.ItemCallback<Marker> diffCallback) {
+    public MarkerListAdapter(@NonNull DiffUtil.ItemCallback<MMarker> diffCallback) {
         super(diffCallback);
     }
 
@@ -24,23 +24,23 @@ public class MarkerListAdapter extends ListAdapter<Marker, MarkerViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MarkerViewHolder holder, int position) {
-        Marker current= getItem(position);
+        MMarker current= getItem(position);
         // String placename = current.getPlacename();
         holder.bind(current);
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Marker marker);
+        void onItemClick(MMarker marker);
     }
 
-    public static class MarkerDiff extends DiffUtil.ItemCallback<Marker> {
+    public static class MarkerDiff extends DiffUtil.ItemCallback<MMarker> {
         @Override
-        public boolean areItemsTheSame(@NonNull Marker oldItem, @NonNull Marker newItem) {
+        public boolean areItemsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Marker oldItem, @NonNull Marker newItem) {
+        public boolean areContentsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
             return oldItem.getPlacename().equals(newItem.getPlacename());
         }
     }

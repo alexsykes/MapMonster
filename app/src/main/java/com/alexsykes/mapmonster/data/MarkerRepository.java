@@ -8,8 +8,8 @@ import java.util.List;
 
 public class MarkerRepository {
     private MarkerDao markerDao;
-    private LiveData<List<Marker>> allMarkers;
-    private List<Marker> markerList;
+    private LiveData<List<MMarker>> allMarkers;
+    private List<MMarker> markerList;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -19,14 +19,22 @@ public class MarkerRepository {
         markerList = markerDao.getMarkerList();
     }
 
-    LiveData<List<Marker>> getAllMarkers() {
+    LiveData<List<MMarker>> getAllMarkers() {
         return allMarkers;
     }
-    public List<Marker> getMarkerList() { return markerList; }
+    public List<MMarker> getMarkerList() { return markerList; }
 
-    void insert(Marker marker) {
+    void insert(MMarker marker) {
         MMDatabase.databaseWriteExecutor.execute(()  -> {
             markerDao.insertMarker(marker);
         });
+    }
+
+    public void deleteMarker(int markerID) {
+        markerDao.deleteMarker(markerID);
+    }
+
+    public void updateMarker(int marker_id, double lat, double lng, boolean isUpdated) {
+        markerDao.updateMarker(marker_id, lat, lng, isUpdated);
     }
 }

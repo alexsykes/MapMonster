@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "markers")
-public class Marker {
+public class MMarker {
     public void setMarker_id(int marker_id) {
         this.marker_id = marker_id;
     }
@@ -21,7 +21,58 @@ public class Marker {
     }
 
     private double latitude, longitude;
-    private String placename, code;
+    private String placename;
+    private String code;
+    private String type;
+    private boolean isUpdated;
+    private boolean isNew;
+    private String snippet;
+
+    public MMarker(double latitude, double longitude, String placename, String code, String type, String snippet) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.placename = placename;
+        this.code = code;
+        this.snippet = snippet;
+        this.type = type;
+        isVisible = true;
+        isUpdated = false;
+        isNew = true;
+
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isUpdated() {
+        return isUpdated;
+    }
+
+    public void setUpdated(boolean updated) {
+        isUpdated = updated;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    public String getSnippet() {
+        return snippet;
+    }
+
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
+    }
+
     private enum type {
         WAYPOINT,
         JUNCTION,
@@ -69,13 +120,5 @@ public class Marker {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public Marker(double latitude, double longitude, String placename, String code) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.placename = placename;
-        this.code = code;
-        isVisible = true;
     }
 }

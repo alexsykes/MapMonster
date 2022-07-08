@@ -44,6 +44,18 @@
         app:layout_constraintEnd_toEndOf="@id/markerLabel"
         app:layout_constraintTop_toTopOf="@id/markerLabel" />
 
+    <TextView
+        android:id="@+id/markerPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:elevation="@dimen/small_margin"
+        android:text="@string/plus_sign"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/markerLabel"
+        app:layout_constraintTop_toTopOf="@id/markerLabel" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/markerRv"
         android:layout_width="@dimen/info_box_width"
@@ -113,7 +125,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/saveNewMarkerButton"
-        app:layout_constraintTop_toBottomOf="@+id/layerRecyclerView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/markerDetailText"
@@ -127,7 +139,7 @@
         android:textColor="@color/purple_500"
         app:layout_constraintStart_toStartOf="@id/markerInfoLabel"
         app:layout_constraintTop_toBottomOf="@+id/markerInfoLabel"
-        app:layout_constraintEnd_toEndOf="@id/saveNewMarkerButton"
+        app:layout_constraintEnd_toEndOf="@id/markerInfoLabel"
         tools:ignore="TextContrastCheck" />
 
     <Button
@@ -136,8 +148,9 @@
         android:layout_height="wrap_content"
         android:elevation="@dimen/small_margin"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/small_margin"
         android:text="@string/cancel"
-        app:layout_constraintStart_toStartOf="@id/markerInfoLabel"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/markerDetailText"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
