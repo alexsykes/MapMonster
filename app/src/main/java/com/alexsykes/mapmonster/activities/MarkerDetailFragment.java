@@ -3,6 +3,7 @@ package com.alexsykes.mapmonster.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.List;
 
 
 public class MarkerDetailFragment extends DialogFragment {
-    private TextInputLayout markerNameInputLayout;
+    private TextInputLayout markerNameEditText, markerCodeEditText;
     private static String TAG = "Info";
     Button saveButton, cancelButton;
     RadioGroup layerRadioGroup;
@@ -34,18 +35,69 @@ public class MarkerDetailFragment extends DialogFragment {
     LayerDao layerDao;
     List<Layer> layerList;
 
-    public MarkerDetailFragment() {
+
+        public MarkerDetailFragment() {
         Log.i(TAG, "MarkerDetailFragment: ");
         Bundle args = new Bundle();
         args.putString("title", "New ma");
         this.setArguments(args);
 
 
-       db = MMDatabase.getDatabase(getContext());
-      layerDao = db.layerDao();
-      layerList =  layerDao.getLayerList();
+        db = MMDatabase.getDatabase(getContext());
+        layerDao = db.layerDao();
+        layerList =  layerDao.getLayerList();
         Log.i(TAG, "MarkerDetailFragment: ");
 
+    };
+
+    @Override
+    public void onViewCreated (View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        markerNameEditText =  view.findViewById(R.id.markerNameEditText);
+        markerCodeEditText = view.findViewById(R.id.markerCodeEditText);
+        saveButton = view.findViewById(R.id.saveMarkerDetailsButton);
+        layerRadioGroup = view.findViewById(R.id.layerRadioGroup);
+
+        for(int i = 0; i< layerList.size(); i++) {
+            Layer layer = layerList.get(i);
+            RadioButton button = new RadioButton(getContext());
+            button.setText(layer.getLayername());
+            layerRadioGroup.addView(button);
+        }
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MarkerDetailFragmentListener listener = (MarkerDetailFragmentListener) getActivity();
+                Editable markerName = markerNameEditText.getEditText().getText();
+                Editable markerCode = markerCodeEditText.getEditText().getText();
+                int selectedId = layerRadioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = view.findViewById(selectedId);
+                String layer = String.valueOf(radioButton.getText());
+
+                listener.onReturn(markerName, markerCode, layer);
+                dismiss();
+            }
+        });
+
+        cancelButton = view.findViewById(R.id.dismissMarkerDetailsButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dismiss();
+                                            }
+                                        }
+        );
+
+        // Fetch arguments from bundle and set title
+        String title = getArguments().getString("title", "Enter Name");
+        getDialog().setTitle(title);
+        getDialog().setCancelable(true);
+        // Show soft keyboard automatically and request focus to field
+        // markerNameInputLayout.requestFocus();
+        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     public static MarkerDetailFragment newInstance(String title){
@@ -63,58 +115,14 @@ public class MarkerDetailFragment extends DialogFragment {
         return inflater.inflate(R.layout.fragment_marker_detail, container);
     }
 
-    @Override
-    public void onViewCreated (View view, @Nullable Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
-
-        markerNameInputLayout =  view.findViewById(R.id.markerNameEditText);
-        saveButton = view.findViewById(R.id.saveMarkerDetailsButton);
-        layerRadioGroup = view.findViewById(R.id.layerRadioGroup);
-
-        for(int i = 0; i< layerList.size(); i++) {
-            Layer layer = layerList.get(i);
-            RadioButton button = new RadioButton(getContext());
-            button.setText(layer.getLayername());
-            layerRadioGroup.addView(button);
-        }
-
-                saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dismiss();
-            }
-        });
-
-        cancelButton = view.findViewById(R.id.dismissMarkerDetailsButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                Bundle result = new Bundle();
-                                                result.putString("bundleKey", "result");
-                                                // The child fragment needs to still set the result on its parent fragment manager
-                                                getParentFragmentManager().setFragmentResult("requestKey", result);
-
-
-                                                dismiss();
-                                            }
-                                        }
-        );
-
-        // Fetch arguments from bundle and set title
-        String title = getArguments().getString("title", "Enter Name");
-        getDialog().setTitle(title);
-        getDialog().setCancelable(true);
-        // Show soft keyboard automatically and request focus to field
-        // markerNameInputLayout.requestFocus();
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    public String getMarkerDetails()  {
+        String data = String.valueOf(this.markerNameEditText.getEditText().getText());
+        return data;
     }
 
-    public String getMarkerDetails()  {
-        String data = String.valueOf(this.markerNameInputLayout.getEditText().getText());
-        return data;
+public interface MarkerDetailFragmentListener {
+        void onReturn(Editable name, Editable code, String layer);
+
     }
 
     @Override

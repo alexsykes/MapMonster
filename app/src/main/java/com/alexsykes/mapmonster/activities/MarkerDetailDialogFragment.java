@@ -41,8 +41,8 @@ public class MarkerDetailDialogFragment extends DialogFragment implements TextVi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
        // markerNameEditText = view.findViewById(R.id.markerNameEditText).getText();
-        String name = getArguments().getString("title", "Enter name");
-        getDialog().setTitle(name);
+//        String name = getArguments().getString("title", "Enter name");
+//        getDialog().setTitle(name);
      //   markerNameEditText.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 //        markerCodeEditText.setOnEditorActionListener(this);

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,14 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,7 +52,7 @@ import com.google.android.gms.tasks.Task;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, MarkerDetailDialogFragment.MarkerDetailDialogListener {
+public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, MarkerDetailFragment.MarkerDetailFragmentListener {
 
     private GoogleMap mMap;
 
@@ -241,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         .position(curLocation)
                         .draggable(true);
 
-                mMap.addMarker(newMarker);
+//                mMap.addMarker(newMarker);
 
                 //MARK: MarkerDragListener
 //                mMap.setOnMarkerDragListener(
@@ -659,8 +658,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.home_72));
             if (type.equals("Car park")) {
                 markerOptions.visible(true);
-                // markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                // markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.airport_runway));
             } else {
                 markerOptions.visible(true);
             }
@@ -702,24 +699,15 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         layerViewModel.setVisibility(isChecked, layer.getLayer_id());
     }
     private void showEditDialog() {
-//        FragmentManager fm = getSupportFragmentManager();
-//         markerDetailFragment = MarkerDetailFragment.newInstance("Marker details");
-//        getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
-//            @Override
-//            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-//                Log.i(TAG, "onFragmentResult: ");
-//            }
-//        });
-//        markerDetailFragment.show(fm, "fragment_edit_name");
-
         FragmentManager fm = getSupportFragmentManager();
-        MarkerDetailDialogFragment markerDetailDialogFragment = new MarkerDetailDialogFragment();
-        markerDetailDialogFragment.show(fm, "marker_detail_edit_name");
+        MarkerDetailFragment markerDetailFragment = new MarkerDetailFragment();
+        markerDetailFragment.show(fm, "marker_detail_edit_name");
 
     }
 
+
     @Override
-    public void onFinishEditDialog(String text) {
-        Toast.makeText(this, "Name " + text, Toast.LENGTH_LONG).show();
+    public void onReturn(Editable text, Editable code, String layer) {
+        Log.i(TAG, "onReturn: " + text);
     }
 }
