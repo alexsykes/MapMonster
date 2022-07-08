@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -21,13 +22,13 @@ import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.MMDatabase;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
 
 public class MarkerDetailFragment extends DialogFragment {
-    private TextInputLayout markerNameEditText, markerCodeEditText;
+//    private TextInputLayout markerNameEditText, markerCodeEditText;
+    private EditText markerNameTextEdit, markerCodeTextEdit;
     private static String TAG = "Info";
     Button saveButton, cancelButton;
     RadioGroup layerRadioGroup;
@@ -54,8 +55,9 @@ public class MarkerDetailFragment extends DialogFragment {
     public void onViewCreated (View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        markerNameEditText =  view.findViewById(R.id.markerNameEditText);
-        markerCodeEditText = view.findViewById(R.id.markerCodeEditText);
+        markerNameTextEdit = view.findViewById(R.id.markerNameTextEdit);
+        markerCodeTextEdit = view.findViewById(R.id.markerCodeTextEdit);
+
         saveButton = view.findViewById(R.id.saveMarkerDetailsButton);
         layerRadioGroup = view.findViewById(R.id.layerRadioGroup);
 
@@ -70,8 +72,9 @@ public class MarkerDetailFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 MarkerDetailFragmentListener listener = (MarkerDetailFragmentListener) getActivity();
-                Editable markerName = markerNameEditText.getEditText().getText();
-                Editable markerCode = markerCodeEditText.getEditText().getText();
+                Editable markerName = markerNameTextEdit.getText();
+                Editable markerCode = markerCodeTextEdit.getText();
+
                 int selectedId = layerRadioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton = view.findViewById(selectedId);
                 String layer = String.valueOf(radioButton.getText());
@@ -114,11 +117,11 @@ public class MarkerDetailFragment extends DialogFragment {
                               Bundle savedInstanceState){
         return inflater.inflate(R.layout.fragment_marker_detail, container);
     }
-
-    public String getMarkerDetails()  {
-        String data = String.valueOf(this.markerNameEditText.getEditText().getText());
-        return data;
-    }
+//
+//    public String getMarkerDetails()  {
+//        String data = String.valueOf(this.markerNameEditText.getEditText().getText());
+//        return data;
+//    }
 
 public interface MarkerDetailFragmentListener {
         void onReturn(Editable name, Editable code, String layer);

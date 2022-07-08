@@ -27,9 +27,12 @@
         android:hint="@string/marker_name">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/markerNameTextEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#616161"  />
+            android:inputType="textCapWords"
+            android:singleLine="true"
+            android:textColorHint="#616161" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -39,8 +42,11 @@
         android:hint="@string/marker_code">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/markerCodeTextEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapCharacters"
+            android:singleLine="true"
             android:textColorHint="#616161" />
     </com.google.android.material.textfield.TextInputLayout>
 

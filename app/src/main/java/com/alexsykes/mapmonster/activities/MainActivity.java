@@ -688,11 +688,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     public void onMarkerListItemClicked(MMarker marker) {
         Log.i(TAG, "onMarkerListItemClicked: " + marker.getCode());
-
         LatLng target = new LatLng(marker.getLatitude(), marker.getLongitude());
         int padding = 100;
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 18));
-        // Zoom to marker_id
     }
     public void onLayerListItemCheckedChanged(Layer layer, boolean isChecked) {
         Log.i(TAG, "onLayerListItemCheckedChanged: " + layer.getLayer_id() + isChecked);
@@ -700,14 +698,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
     private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        MarkerDetailFragment markerDetailFragment = new MarkerDetailFragment();
+        markerDetailFragment = new MarkerDetailFragment();
         markerDetailFragment.show(fm, "marker_detail_edit_name");
-
     }
-
 
     @Override
     public void onReturn(Editable text, Editable code, String layer) {
-        Log.i(TAG, "onReturn: " + text);
+        Log.i(TAG, "onReturn: " + text + code + layer);
     }
 }
