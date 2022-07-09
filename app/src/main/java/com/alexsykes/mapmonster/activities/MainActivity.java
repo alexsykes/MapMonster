@@ -645,22 +645,41 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         for (MMarker marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
-            type = marker.getPlacename();
+            type = marker.getType();
             String snippet = marker.getSnippet();
 
-            marker_title = marker.getPlacename() + " " + code;
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng)
-                    .title(marker_title)
-                    .snippet(snippet)
-                    .visible(true);
+            marker_title = marker.getPlacename();
+           MarkerOptions markerOptions = new MarkerOptions()
+                            .position(latLng)
+                            .title(marker_title)
+                            .snippet(snippet)
+                            .visible(true);
 
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.home_72));
-            if (type.equals("Car park")) {
-                markerOptions.visible(true);
-            } else {
-                markerOptions.visible(true);
+                    switch(type)  {
+                        case "Accommodation" :
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.hotel_24));
+                            break;
+                        case "Fuel" :
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.fuel));
+                            break;
+                        case "Waypoint" :
+                            break;
+                        case "Food" :
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.hamburger_24));
+                            break;
+                        case "Parking" :
+
+                            break;
+                        default:
+
+                            break;
             }
+
+//            if (type.equals("Car park")) {
+//                markerOptions.visible(true);
+//            } else {
+//                markerOptions.visible(true);
+//            }
             markerOptions.draggable(true);
 
             Marker marker1 = mMap.addMarker(markerOptions);

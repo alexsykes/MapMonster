@@ -1,26 +1,27 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:defaultValue="normal"
-        android:entries="@array/view_entries"
-        android:entryValues="@array/view_values"
-        android:key="map_view_type"
-        android:title="Map view" />
-    <MultiSelectListPreference
-        android:defaultValue="@array/layer_entries"
-        android:entries="@array/layer_values"
-        android:entryValues="@array/layer_values"
-        android:key="layer_visibility"
-        android:title="Visible layers" />
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="zoomControlsEnabled"
-        android:title="Show zoom controls" />
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="mapToolbarEnabled"
-        android:title="Show map toolbar" />
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="compassEnabled"
-        android:title="Show compass" />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/general_preferences">
+    <PreferenceCategory android:title="General">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="mapToolbarEnabled"
+            android:title="Show map toolbar" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="compassEnabled"
+            android:title="Show compass" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="zoomControlsEnabled"
+            android:title="Show zoom controls" />
+        <MultiSelectListPreference
+            android:key="layer_visibility"
+            android:title="Visible layers" />
+        <ListPreference
+            android:defaultValue="normal"
+            android:entries="@array/view_entries"
+            android:entryValues="@array/view_values"
+            android:key="map_view_type"
+            android:title="Map view" />
+    </PreferenceCategory>
 </PreferenceScreen>
