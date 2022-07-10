@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private MarkerDao markerDao;
 
     SharedPreferences defaults;
+
     SharedPreferences.Editor editor;
     private int mode;
     private TextView markerLabel, markerPlus, layerLabel, layerDisc, markerDisc, markerDetailText, markerInfoLabel;
@@ -724,5 +725,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     @Override
     public void onReturn(Editable text, Editable code, String layer) {
         Log.i(TAG, "onReturn: " + text + code + layer);
+
+        curLocation = mMap.getCameraPosition().target;
+        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, text.toString(),code.toString(),layer, "");
+        markerDao.insertMarker(mMarker);
+        mMap.clear();
+        loadMarkerList();
+        addMarkersToMap();
     }
 }

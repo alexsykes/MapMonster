@@ -74,10 +74,16 @@ public class MarkerDetailFragment extends DialogFragment {
                 MarkerDetailFragmentListener listener = (MarkerDetailFragmentListener) getActivity();
                 Editable markerName = markerNameTextEdit.getText();
                 Editable markerCode = markerCodeTextEdit.getText();
+                String layer = "Placemark";
 
+                if(markerName.length() == 0) { markerName.append("New Placemark") ; }
+                if(markerCode.length() == 0) { markerCode.append("MT") ; }
                 int selectedId = layerRadioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = view.findViewById(selectedId);
-                String layer = String.valueOf(radioButton.getText());
+
+                if(selectedId != -1) {
+                    RadioButton radioButton = view.findViewById(selectedId);
+                    layer = String.valueOf(radioButton.getText());
+                }
 
                 listener.onReturn(markerName, markerCode, layer);
                 dismiss();
