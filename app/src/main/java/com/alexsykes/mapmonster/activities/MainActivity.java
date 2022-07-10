@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -40,6 +43,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -658,18 +662,19 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
                     switch(type)  {
                         case "Accommodation" :
-                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.hotel_24));
+                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_36));
                             break;
                         case "Fuel" :
-                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.fuel));
+                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_36));
                             break;
                         case "Waypoint" :
+                            // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
                             break;
                         case "Food" :
-                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.hamburger_24));
+                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_36));
                             break;
                         case "Parking" :
-
+                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
                             break;
                         default:
 
@@ -732,5 +737,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.clear();
         loadMarkerList();
         addMarkersToMap();
+    }
+
+    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+        vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }
