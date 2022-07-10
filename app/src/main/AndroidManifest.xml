@@ -18,15 +18,19 @@
         android:theme="@style/Theme.MapMonster"
         tools:targetApi="31">
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.MarkerListActivity"
             android:parentActivityName=".activities.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SettingsActivity"
             android:exported="false"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.HelpActivity"
-            android:parentActivityName=".activities.MainActivity"
             android:exported="false"
-            android:label="@string/title_activity_help" />
+            android:label="@string/title_activity_help"
+            android:parentActivityName=".activities.MainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

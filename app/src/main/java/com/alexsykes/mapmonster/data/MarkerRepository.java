@@ -9,6 +9,7 @@ import java.util.List;
 public class MarkerRepository {
     private MarkerDao markerDao;
     private LiveData<List<MMarker>> allMarkers;
+    private List<Integer> allMarkersByLayer;
     private List<MMarker> markerList;
 
     MarkerRepository(Application application) {
@@ -17,10 +18,14 @@ public class MarkerRepository {
         markerDao = db.markerDao();
         allMarkers = markerDao.allMarkers();
         markerList = markerDao.getMarkerList();
+        allMarkersByLayer = markerDao.allMarkersByLayer();
     }
 
     LiveData<List<MMarker>> getAllMarkers() {
         return allMarkers;
+    }
+    List<Integer> getAllMarkersByLayer() {
+        return allMarkersByLayer;
     }
     public List<MMarker> getMarkerList() { return markerList; }
 

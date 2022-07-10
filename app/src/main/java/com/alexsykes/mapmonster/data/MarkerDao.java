@@ -23,6 +23,10 @@ public interface MarkerDao {
     LiveData<List<MMarker>> allMarkers();
 
 
+    @Query("SELECT COUNT(*) FROM markers GROUP BY type ORDER BY type, placename")
+    List<Integer> allMarkersByLayer();
+
+
     @Query("SELECT * FROM markers ORDER BY placename")
     List<MMarker> getMarkerList();
 

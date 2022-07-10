@@ -3,13 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/marker_list_item"
+        android:icon="@drawable/list_48"
+        android:title="@string/markers"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/settings_menu_item"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title="Settings"
+        android:icon="@drawable/settings_white_48"
+        android:title="@string/settings"
         app:showAsAction="always" />
     <item
         android:id="@+id/help_menu_item"
-        android:icon="@android:drawable/ic_menu_help"
-        android:title="help"
-        app:showAsAction="always" />
+        android:icon="@drawable/help_48"
+        android:title="@string/help"
+        app:showAsAction="ifRoom" />
 </menu>

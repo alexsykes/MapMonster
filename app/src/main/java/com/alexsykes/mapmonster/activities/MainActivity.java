@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
             }
         });
-        
+
         markerPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -396,10 +396,20 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             case R.id.settings_menu_item:
                 goSettings();
                 return true;
+
+            case R.id.marker_list_item:
+                goMarkerList();
+                return true;
             default:
         }
         return false;
     }
+
+    private void goMarkerList() {
+        Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
+        startActivity(intent);
+    }
+
     private void goSettings() {
         Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
         startActivity(intent);
@@ -654,31 +664,30 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             String snippet = marker.getSnippet();
 
             marker_title = marker.getPlacename();
-           MarkerOptions markerOptions = new MarkerOptions()
-                            .position(latLng)
-                            .title(marker_title)
-                            .snippet(snippet)
-                            .visible(true);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(marker_title)
+                    .snippet(snippet)
+                    .visible(true);
 
-                    switch(type)  {
-                        case "Accommodation" :
-                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_36));
-                            break;
-                        case "Fuel" :
-                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_36));
-                            break;
-                        case "Waypoint" :
-                            // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
-                            break;
-                        case "Food" :
-                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_36));
-                            break;
-                        case "Parking" :
-                            markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
-                            break;
-                        default:
-
-                            break;
+            switch(type)  {
+                case "Accommodation" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_36));
+                    break;
+                case "Fuel" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_36));
+                    break;
+                case "Waypoint" :
+                    // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
+                    break;
+                case "Food" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_36));
+                    break;
+                case "Parking" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
+                    break;
+                default:
+                    break;
             }
 
 //            if (type.equals("Car park")) {
