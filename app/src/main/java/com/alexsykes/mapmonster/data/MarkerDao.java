@@ -3,10 +3,12 @@ package com.alexsykes.mapmonster.data;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.MapInfo;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
+import java.util.Map;
 
 @Dao
 public interface MarkerDao {
@@ -32,6 +34,10 @@ public interface MarkerDao {
 
     @Query("UPDATE markers SET latitude = :lat, longitude = :lng, isUpdated = :isUpdated WHERE markerID = :marker_id  ")
     void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);
+
+    @MapInfo(keyColumn = "layername", valueColumn = "placename")
+    @Query("SELECT layers.layername AS layername, markers.* FROM layers JOIN markers ON layers.layername = markers.type ORDER BY layername, placename")
+    public Map<String, List<MMarker>> getMarkersByLayer();
 }
 
 

@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDao = db.markerDao();
 
+
         layerLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
