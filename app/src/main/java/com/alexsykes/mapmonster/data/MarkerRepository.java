@@ -10,7 +10,7 @@ import java.util.Map;
 public class MarkerRepository {
     private MarkerDao markerDao;
     private LiveData<List<MMarker>> allMarkers;
-    private List<Integer> allMarkersByLayer;
+    private List<Integer> markerCountByLayer;
     private List<MMarker> markerList;
     private Map<String, List<MMarker>> map;
 
@@ -20,7 +20,7 @@ public class MarkerRepository {
         markerDao = db.markerDao();
         allMarkers = markerDao.allMarkers();
         markerList = markerDao.getMarkerList();
-        allMarkersByLayer = markerDao.allMarkersByLayer();
+        markerCountByLayer = markerDao.markerCountByLayer();
         map = markerDao.getMarkersByLayer();
     }
 
@@ -28,7 +28,7 @@ public class MarkerRepository {
         return allMarkers;
     }
     List<Integer> getAllMarkersByLayer() {
-        return allMarkersByLayer;
+        return markerCountByLayer;
     }
     public List<MMarker> getMarkerList() { return markerList; }
 

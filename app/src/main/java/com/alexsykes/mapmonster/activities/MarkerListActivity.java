@@ -52,7 +52,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDao = db.markerDao();
-        listLiveData = markerDao.allMarkersByLayer();
+        listLiveData = markerDao.markerCountByLayer();
         map = markerDao.getMarkersByLayer();
         numSections = map.size();
         Set<String> sections = map.keySet();

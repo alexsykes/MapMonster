@@ -26,7 +26,7 @@ public interface MarkerDao {
 
 
     @Query("SELECT COUNT(*) FROM markers GROUP BY type ORDER BY type, placename")
-    List<Integer> allMarkersByLayer();
+    List<Integer> markerCountByLayer();
 
 
     @Query("SELECT * FROM markers ORDER BY placename")
