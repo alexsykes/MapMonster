@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.ParentItemAdapter;
 import com.alexsykes.mapmonster.R;
+import com.alexsykes.mapmonster.SectionListAdapter;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
@@ -66,7 +66,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
 
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
-        final ParentItemAdapter layerListAdapter = new ParentItemAdapter(map.keySet());
+        final SectionListAdapter layerListAdapter = new SectionListAdapter(map.keySet());
         sectionListRV.setAdapter(layerListAdapter);
         sectionListRV.setLayoutManager(new LinearLayoutManager(this));
     }
