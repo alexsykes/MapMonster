@@ -9,27 +9,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Set;
 
-public class SectionListAdapter extends RecyclerView.Adapter<SectionViewHolder> {
+public class ParentItemAdapter extends RecyclerView.Adapter<ParentViewHolder> {
     Set<String> keySet;
     String[] sections;
 
-    public SectionListAdapter(Set<String> keySet) {
+    public ParentItemAdapter(Set<String> keySet) {
         this.keySet = keySet;
         sections = keySet.toArray(new String[keySet.size()]);
     }
 
     @NonNull
     @Override
-    public SectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ParentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.section_header, parent, false);
 
-        return new SectionViewHolder(view);
+        return new ParentViewHolder(view);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SectionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ParentViewHolder holder, int position) {
         holder.sectionTitleTextView.setText(sections[position]);
 
     }

@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexsykes.mapmonster.activities.MainActivity;
 import com.alexsykes.mapmonster.data.MMarker;
 
-public class MarkerViewHolder extends RecyclerView.ViewHolder {
+public class ChildViewHolder extends RecyclerView.ViewHolder {
     final TextView markerTextView, codeTextView;
 
-    private MarkerViewHolder(View itemView)  {
+    private ChildViewHolder(View itemView)  {
         super(itemView);
         markerTextView = itemView.findViewById(R.id.markerTextView);
         codeTextView = itemView.findViewById(R.id.codeTextView);
@@ -35,9 +35,9 @@ public class MarkerViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    static MarkerViewHolder create(ViewGroup parent) {
+    static ChildViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.marker_item, parent, false);
-        return new MarkerViewHolder(view);
+        return new ChildViewHolder(view);
     }
 }

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.alexsykes.mapmonster.data.MMarker;
 
-public class MarkerListAdapter extends ListAdapter<MMarker, MarkerViewHolder> {
+public class MarkerListAdapter extends ListAdapter<MMarker, ChildViewHolder> {
 
     AdapterView.OnItemClickListener listener;
 
@@ -18,12 +18,12 @@ public class MarkerListAdapter extends ListAdapter<MMarker, MarkerViewHolder> {
     }
 
     @Override
-    public MarkerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return MarkerViewHolder.create(parent);
+    public ChildViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return ChildViewHolder.create(parent);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MarkerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChildViewHolder holder, int position) {
         MMarker current= getItem(position);
         // String placename = current.getPlacename();
         holder.bind(current);
