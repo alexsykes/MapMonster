@@ -38,7 +38,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionViewHolder> 
     public SectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.section_header, parent, false);
-        return new SectionViewHolder(view, map);
+        return new SectionViewHolder(view);
 
     }
 
@@ -46,12 +46,9 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionViewHolder> 
     public void onBindViewHolder(@NonNull SectionViewHolder holder, int position) {
 //        MMarker marker = markerList.get(position);
         String section = sections[position];
-        ArrayList<MMarker> markers = (ArrayList<MMarker>) map.get(section);
-        // MMarker mMarker = markerList[position];
+        List<MMarker> markers =  map.get(section);
         holder.sectionTitleTextView.setText(sections[position]);
-//        MMarker mMarkerArrayList = markerList.get(position);
-//        List<MMarker> markerList =
-
+        holder.markerList = markers;
     }
 
     @Override
