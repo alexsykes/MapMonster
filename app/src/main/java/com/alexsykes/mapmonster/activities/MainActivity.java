@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -365,14 +366,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         final LayerListAdapter layerListAdapter = new LayerListAdapter(new LayerListAdapter.LayerDiff());
         layerRV.setAdapter(layerListAdapter);
         layerRV.setLayoutManager(new LinearLayoutManager(this));
+        layerRV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         final MarkerListAdapter adapter = new MarkerListAdapter(new MarkerListAdapter.MarkerDiff());
         markerRV.setAdapter(adapter);
         markerRV.setLayoutManager(new LinearLayoutManager(this));
+        markerRV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         // List LiveData Markers
-//        markerViewModel.getAllMarkers().observe(this, markers -> {
-//            adapter.submitList(markers);
-//        });
+        markerViewModel.getAllMarkers().observe(this, markers -> {
+            adapter.submitList(markers);
+        });
 
         layerList = layerViewModel.getLayerList();
         layerListAdapter.submitList(layerList);

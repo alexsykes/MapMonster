@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.data.MMarker;
@@ -21,11 +22,11 @@ public class SectionViewHolder extends RecyclerView.ViewHolder {
 
         markerRV = itemView.findViewById(R.id.markerItemsRecyclerView);
         markerRV.setAdapter(new ChildMarkerListAdapter(markerList));
-//        markerRV.setLayoutManager(new LinearLayoutManager(markerRV.getContext()));
+        markerRV.setLayoutManager(new LinearLayoutManager(markerRV.getContext()));
 
     }
 
-    public void setMarkerList(List<MMarker> markerList){
-        this.markerList = markerList;
-    }
+//    public void setMarkerList(List<MMarker> markerList){
+//        this.markerList = markerList;
+//    }
 }

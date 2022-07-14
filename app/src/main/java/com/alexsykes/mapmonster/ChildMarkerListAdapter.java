@@ -25,26 +25,19 @@ public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerList
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.child_marker_list_item, parent, false);
-
         return new ViewHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.childMarkerNameTextView.setText("Name");
+        holder.childMarkerNameTextView.setText(markers.get(position).getPlacename());
     }
 
     @Override
     public int getItemCount() {
+ //       return 1;
         return markers.size();
-//        return markers.size();
     }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-//
-//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView childMarkerNameTextView;

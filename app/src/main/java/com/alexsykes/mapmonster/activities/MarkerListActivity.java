@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
@@ -45,12 +44,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerDao = db.markerDao();
         markerMap = markerDao.getMarkersByLayer();
 
+        // Main recycerView
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
-
-        // Pass marker data into adapter
         final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap);
         sectionListRV.setAdapter(layerListAdapter);
-        sectionListRV.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
