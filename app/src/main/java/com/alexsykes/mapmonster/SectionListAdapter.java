@@ -48,7 +48,8 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionViewHolder> 
         String section = sections[position];
         List<MMarker> markers =  map.get(section);
         holder.sectionTitleTextView.setText(sections[position]);
-        holder.markerList = markers;
+//        holder.markerList = markers;
+        holder.setMarkerList(markers);
     }
 
     @Override

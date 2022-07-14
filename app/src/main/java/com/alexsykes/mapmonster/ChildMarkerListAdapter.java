@@ -1,7 +1,9 @@
 package com.alexsykes.mapmonster;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,17 +22,23 @@ public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerList
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        // Create a new view, which defines the UI of the list item
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.child_marker_list_item, parent, false);
+
+        return new ViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        holder.childMarkerNameTextView.setText("Name");
     }
 
     @Override
     public int getItemCount() {
         return markers.size();
+//        return markers.size();
     }
 //
 //    @Override
@@ -39,8 +47,11 @@ public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerList
 //    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView childMarkerNameTextView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            childMarkerNameTextView = itemView.findViewById(R.id.childMarkerNameTextView);
         }
     }
 }

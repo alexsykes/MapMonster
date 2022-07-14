@@ -24,4 +24,8 @@ public class SectionViewHolder extends RecyclerView.ViewHolder {
 //        markerRV.setLayoutManager(new LinearLayoutManager(markerRV.getContext()));
 
     }
+
+    public void setMarkerList(List<MMarker> markerList){
+        this.markerList = markerList;
+    }
 }

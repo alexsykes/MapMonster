@@ -370,9 +370,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerRV.setAdapter(adapter);
         markerRV.setLayoutManager(new LinearLayoutManager(this));
         // List LiveData Markers
-        markerViewModel.getAllMarkers().observe(this, markers -> {
-            adapter.submitList(markers);
-        });
+//        markerViewModel.getAllMarkers().observe(this, markers -> {
+//            adapter.submitList(markers);
+//        });
 
         layerList = layerViewModel.getLayerList();
         layerListAdapter.submitList(layerList);
