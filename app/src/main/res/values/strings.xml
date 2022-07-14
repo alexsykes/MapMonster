@@ -38,4 +38,6 @@
     <string name="help">help</string>
     <string name="section">Section</string>
     <string name="childMarkerName">Marker name</string>
+    <string name="lat">Lat</string>
+    <string name="lng">Lng</string>
 </resources>

@@ -20,28 +20,15 @@ public class LayerViewHolder extends RecyclerView.ViewHolder{
     CheckBox layerVisibilityCheckBox;
     public LayerViewHolder(@NonNull View itemView) {
         super(itemView);
-//        layerNameTextView = itemView.findViewById(R.id.layerNameTextView);
-//        codeTextView = itemView.findViewById(R.id.layerCodeTextView);
         layerVisibilityCheckBox = itemView.findViewById(R.id.layerCheckBox);
     }
 
     public void bind(Layer layer)  {
-//        codeTextView.setText(layer.getCode());
-//        layerNameTextView.setText(layer.getLayername());
         int marker_id = layer.getLayer_id();
         boolean isChecked = layer.isVisible();
         layerVisibilityCheckBox.setText(layer.getLayername());
         layerVisibilityCheckBox.setChecked(isChecked);
 //
-//        itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Log.i("Info", "onClick: ");
-//                Context context = itemView.getContext();
-//                ((MainActivity) context).onLayerListItemClicked(layer);
-//            }
-//        });
-
         layerVisibilityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
