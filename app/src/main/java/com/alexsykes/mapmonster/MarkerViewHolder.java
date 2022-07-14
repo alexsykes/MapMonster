@@ -14,7 +14,6 @@ import com.alexsykes.mapmonster.data.MMarker;
 public class MarkerViewHolder extends RecyclerView.ViewHolder {
     final TextView markerTextView, codeTextView;
 
-
     private MarkerViewHolder(View itemView)  {
         super(itemView);
         markerTextView = itemView.findViewById(R.id.markerTextView);

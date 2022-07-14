@@ -36,4 +36,5 @@
     <string name="marker_name">Marker name</string>
     <string name="settings">Settings</string>
     <string name="help">help</string>
+    <string name="section">Section</string>
 </resources>

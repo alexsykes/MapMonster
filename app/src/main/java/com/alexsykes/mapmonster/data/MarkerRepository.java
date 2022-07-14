@@ -5,12 +5,14 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.Map;
 
 public class MarkerRepository {
     private MarkerDao markerDao;
     private LiveData<List<MMarker>> allMarkers;
     private List<Integer> allMarkersByLayer;
     private List<MMarker> markerList;
+    private Map<String, List<MMarker>> map;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -19,6 +21,7 @@ public class MarkerRepository {
         allMarkers = markerDao.allMarkers();
         markerList = markerDao.getMarkerList();
         allMarkersByLayer = markerDao.allMarkersByLayer();
+        map = markerDao.getMarkersByLayer();
     }
 
     LiveData<List<MMarker>> getAllMarkers() {
