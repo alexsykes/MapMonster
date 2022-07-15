@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,18 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
         Context context = holder.itemView.getContext();
         holder.sectionHeaderTextView.setText(section);
+        holder.sectionHeaderTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: ");
+                if(holder.markerItemsRecyclerView.getVisibility() == View.VISIBLE) {
+                    holder.markerItemsRecyclerView.setVisibility(View.GONE);
+                } else {
+                    holder.markerItemsRecyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         ChildMarkerListAdapter childMarkerListAdapter = new ChildMarkerListAdapter(markerList);
         holder.markerItemsRecyclerView.setAdapter(childMarkerListAdapter);
         holder.markerItemsRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));

@@ -1,5 +1,6 @@
 package com.alexsykes.mapmonster;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexsykes.mapmonster.activities.MarkerListActivity;
 import com.alexsykes.mapmonster.data.MMarker;
 
 import java.text.DecimalFormat;
@@ -48,12 +50,17 @@ public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerList
         holder.childMarkerNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int isVisible = holder.detailContainer.getVisibility();
                 Log.i(TAG, "onClick: " + marker.getMarker_id());
-                if(holder.detailContainer.getVisibility() == View.VISIBLE) {
+                Context context = holder.childMarkerNameTextView.getContext();
+
+                if(isVisible == View.VISIBLE) {
                     holder.detailContainer.setVisibility(View.GONE);
                 } else {
                     holder.detailContainer.setVisibility(View.VISIBLE);
                                     }
+                isVisible = holder.detailContainer.getVisibility();
+                ((MarkerListActivity) context).onMarkerListItemClicked(marker, isVisible);
             }
         });
     }

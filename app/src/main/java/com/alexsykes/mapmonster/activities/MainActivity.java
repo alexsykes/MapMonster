@@ -530,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.setMyLocationEnabled(locationPermissionGranted);
 
         CameraPosition cameraPosition = getSavedCameraPosition();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 //        Log.i(TAG, "onMapReady: " + markerList.size());
         // addMarkersToMap();
