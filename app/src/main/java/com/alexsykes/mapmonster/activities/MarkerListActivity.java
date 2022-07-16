@@ -3,13 +3,17 @@ package com.alexsykes.mapmonster.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
@@ -21,8 +25,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -33,18 +42,14 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     private static final int DEFAULT_ZOOM = 12;
     private MarkerDao markerDao;
-    public int numMarkers;
     public List<MMarker> markerList;
-    private List sectionList;
     RecyclerView sectionListRV;
+    private TextView showAllMarkersButton;
     private Map<String, List<MMarker>> markerMap;
-    private String sectionName;
-    private int numSections;
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
     private FloatingActionButton addMarkerButton;
-    private Location lastKnownLocation;
     private LatLng defaultLocation = new LatLng(53.59,-2.56);
 
     @Override
@@ -61,12 +66,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerDao = db.markerDao();
         markerMap = markerDao.getMarkersByLayer();
 
+
         // Main recycerView
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
         final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap);
         sectionListRV.setAdapter(layerListAdapter);
     }
-
 
     @Override
     protected void onResume() {
@@ -89,6 +94,14 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void setupUI() {
+        showAllMarkersButton = findViewById(R.id.showAllMarkers);
+        showAllMarkersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: showAllMarkers");
+                showAllMarkers();
+            }
+        });
         addMarkerButton = findViewById(R.id.addMarkerButton);
         addMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +109,86 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 Log.i(TAG, "onClick: newMarker");
             }
         });
+    }
+
+    private void showAllMarkers() {
+        // Get database then markerList
+        MMDatabase db = MMDatabase.getDatabase(this);
+        markerDao = db.markerDao();
+        markerList = markerDao.getMarkerList();
+        addMarkers(markerList);
+    }
+
+    private void addMarkers(List<MMarker> markerList) {
+        // Clear map of current markers, return if markerList is empty
+        mMap.clear();
+        if(markerList.isEmpty()) {
+            return;
+        }
+
+        String code, type, snippet, marker_title;
+
+        // Setup Bounds builder
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        int padding = 100;
+        LatLng latLng;
+
+        // Iterate through markerList
+        for(int i = 0; i < markerList.size(); i++ ) {
+            MMarker marker = markerList.get(i);
+
+            // Get data set
+            latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+            code = marker.getCode();
+            type = marker.getType();
+            snippet = marker.getSnippet();
+            marker_title = marker.getPlacename();
+
+            // Create new marker
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(marker_title)
+                    .snippet(snippet)
+                    .draggable(true)
+                    .visible(true);
+
+            // with custom icons
+            switch(type)  {
+                case "Accommodation" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_36));
+                    break;
+                case "Fuel" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_36));
+                    break;
+                case "Waypoint" :
+                    // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
+                    break;
+                case "Food" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_36));
+                    break;
+                case "Parking" :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
+                    break;
+                default:
+                    break;
+            }
+
+            // Include in vounds builder
+            builder.include(latLng);
+
+            // Add to map
+            Marker marker1 = mMap.addMarker(markerOptions);
+            // Set marker tag for editing
+            marker1.setTag(marker.getMarker_id());
+        }
+
+        LatLngBounds bounds = builder.build();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+    }
+
+    private void showLayerMarkers(String layerName){
+        markerList = markerMap.get(layerName);
+        addMarkers(markerList);
     }
 
     @Override
@@ -140,5 +233,16 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     public void onMarkerListItemClicked(MMarker marker, int isVisible) {
         LatLng loc = new LatLng(marker.getLatitude(), marker.getLongitude());
         Log.i(TAG, "onMarkerListItemClicked: " + isVisible);
+    }
+
+    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+        vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

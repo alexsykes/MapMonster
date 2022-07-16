@@ -40,4 +40,6 @@
     <string name="childMarkerName">Marker name</string>
     <string name="lat">Lat</string>
     <string name="lng">Lng</string>
+    <string name="add_marker">Add marker</string>
+    <string name="show_all">Show all</string>
 </resources>
