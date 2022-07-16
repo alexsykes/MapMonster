@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexsykes.mapmonster.activities.MarkerListActivity;
 import com.alexsykes.mapmonster.data.MMarker;
 
 import java.util.ArrayList;
@@ -48,7 +49,9 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
                     holder.markerItemsRecyclerView.setVisibility(View.GONE);
                 } else {
                     holder.markerItemsRecyclerView.setVisibility(View.VISIBLE);
+                    ((MarkerListActivity) context).onLayerListItemClicked(section);
                 }
+//                Context context = itemView.getContext();
             }
         });
 

@@ -93,6 +93,11 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onStart: MarkerListActivity");
     }
 
+    public void onLayerListItemClicked(String layerName){
+        Log.i(TAG, "onLayerListItemClicked: " + layerName);
+        showLayerMarkers(layerName);
+            }
+
     private void setupUI() {
         showAllMarkersButton = findViewById(R.id.showAllMarkers);
         showAllMarkersButton.setOnClickListener(new View.OnClickListener() {

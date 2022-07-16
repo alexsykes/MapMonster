@@ -51,7 +51,7 @@ public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerList
             @Override
             public void onClick(View v) {
                 int isVisible = holder.detailContainer.getVisibility();
-                Log.i(TAG, "onClick: " + marker.getMarker_id());
+                Log.i(TAG, "onChildMarkerListAdapterClick: " + marker.getMarker_id());
                 Context context = holder.childMarkerNameTextView.getContext();
 
                 if(isVisible == View.VISIBLE) {
