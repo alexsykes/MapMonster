@@ -35,15 +35,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MarkerListActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final String TAG = "Info";
 
     private static final int DEFAULT_ZOOM = 12;
     private MarkerDao markerDao;
-    public List<MMarker> markerList;
+    public List<MMarker> visibleMarkerList;
     RecyclerView sectionListRV;
     private ArrayList<String> visibleLayers;
     private TextView showAllMarkersButton;
@@ -59,6 +61,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_list);
+        defaults = this.getPreferences(Context.MODE_PRIVATE);
         mapIsReady = false;
         markersAreWaiting = false;
         visibleLayers = new ArrayList<String>();
@@ -84,6 +87,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         super.onResume();
         Log.i(TAG, "onResume: ");
         // getSavedCameraPosition();
+//        defaults = this.getPreferences(Context.MODE_PRIVATE);
+//        Set<String> set = defaults.getStringSet("visibleLayers", null);
+//        visibleLayers = new ArrayList<String>(set);
+//        visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
     }
 
     @Override
@@ -91,6 +98,11 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         super.onPause();
         Log.i(TAG, "onPause: MarkerListActivity");
         saveCameraPosition();
+
+        Set<String> set = new HashSet<String>();
+        set.addAll(visibleLayers);
+        editor.putStringSet("visibleLayers", set);
+        editor.apply();
     }
 
     @Override
@@ -105,11 +117,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         } else {
             visibleLayers.remove(visibleLayers.indexOf(layerName));
         }
-//        showLayerMarkers(layerName);
-
-        markerList = markerDao.getVisibleMarkerList(visibleLayers);
-        addMarkers(markerList);
-        Log.i(TAG, "onLayerListItemClicked: " + layerName + visibleLayers);
+        visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
+        addMarkers(visibleMarkerList);
     }
 
     private void setupUI() {
@@ -134,8 +143,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         // Get database then markerList
         MMDatabase db = MMDatabase.getDatabase(this);
         markerDao = db.markerDao();
-        markerList = markerDao.getMarkerList();
-        addMarkers(markerList);
+        visibleMarkerList = markerDao.getMarkerList();
+        addMarkers(visibleMarkerList);
     }
 
     private void addMarkers(List<MMarker> markerList) {
@@ -205,10 +214,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
     }
 
-    private void showLayerMarkers(String layerName){
-        markerList = markerMap.get(layerName);
-        addMarkers(markerList);
-    }
+//    private void showLayerMarkers(String layerName){
+//        markerList = markerMap.get(layerName);
+//        addMarkers(markerList);
+//    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
