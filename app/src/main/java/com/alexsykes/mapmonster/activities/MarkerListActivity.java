@@ -80,11 +80,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-        // getSavedCameraPosition();
-//        defaults = this.getPreferences(Context.MODE_PRIVATE);
-//        Set<String> set = defaults.getStringSet("visibleLayers", null);
-//        visibleLayers = new ArrayList<String>(set);
-//        visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
     }
 
     @Override
@@ -195,8 +190,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             marker1.setTag(marker.getMarker_id());
         }
 
-        LatLngBounds bounds = builder.build();
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+        if(markerList.size() == 1) {
+            LatLngBounds bounds = builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 16));
+        } else {
+            LatLngBounds bounds = builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+        }
     }
 
 //    private void showLayerMarkers(String layerName){

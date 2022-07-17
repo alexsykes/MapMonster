@@ -17,6 +17,7 @@
             android:id="@+id/sectionSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:padding="@dimen/small_margin"
             android:text="Switch"
             android:textColor="@color/white"

@@ -40,7 +40,7 @@ public interface MarkerDao {
     void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);
 
     @MapInfo(keyColumn = "layername", valueColumn = "placename")
-    @Query("SELECT layers.layername AS layername, markers.* FROM layers JOIN markers ON layers.layername = markers.type ORDER BY layername, placename")
+    @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.type ORDER BY layername, placename")
     public Map<String, List<MMarker>> getMarkersByLayer();
 }
 
