@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private MarkerDao markerDao;
     public List<MMarker> markerList;
     RecyclerView sectionListRV;
+    private ArrayList<String> visibleLayers;
     private TextView showAllMarkersButton;
     private Map<String, List<MMarker>> markerMap;
     SharedPreferences defaults;
@@ -59,6 +61,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_marker_list);
         mapIsReady = false;
         markersAreWaiting = false;
+        visibleLayers = new ArrayList<String>();
 
         setupUI();
 
@@ -96,8 +99,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onStart: MarkerListActivity");
     }
 
-    public void onLayerListItemClicked(String layerName){
-        Log.i(TAG, "onLayerListItemClicked: " + layerName);
+    public void onLayerListItemClicked(String layerName, int visibility){
+        Log.i(TAG, "onLayerListItemClicked: " + layerName + " V: " + visibility);
+        visibleLayers.add(layerName);
         showLayerMarkers(layerName);
             }
 

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.activities.MarkerListActivity;
 import com.alexsykes.mapmonster.data.MMarker;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +41,16 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         markerList = map.get(section);
 
         Context context = holder.itemView.getContext();
-        holder.sectionHeaderTextView.setText(section);
-        holder.sectionHeaderTextView.setOnClickListener(new View.OnClickListener() {
+        holder.sectionSwitch.setText(section);
+        holder.sectionSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick: ");
+                Log.i(TAG, "onBindViewHolder - onClick: ");
+                ((MarkerListActivity) context).onLayerListItemClicked(section, holder.markerItemsRecyclerView.getVisibility());
                 if(holder.markerItemsRecyclerView.getVisibility() == View.VISIBLE) {
                     holder.markerItemsRecyclerView.setVisibility(View.GONE);
                 } else {
                     holder.markerItemsRecyclerView.setVisibility(View.VISIBLE);
-                    ((MarkerListActivity) context).onLayerListItemClicked(section);
                 }
 //                Context context = itemView.getContext();
             }
@@ -67,11 +68,12 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView sectionHeaderTextView;
+        SwitchMaterial sectionSwitch;
         RecyclerView markerItemsRecyclerView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            sectionHeaderTextView = itemView.findViewById(R.id.sectionHeaderTextView);
+            sectionSwitch = itemView.findViewById(R.id.sectionSwitch);
             markerItemsRecyclerView = itemView.findViewById(R.id.markerItemsRecyclerView);
         }
     }
