@@ -51,11 +51,15 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap mMap;
     private FloatingActionButton addMarkerButton;
     private LatLng defaultLocation = new LatLng(53.59,-2.56);
+    private boolean mapIsReady, markersAreWaiting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_list);
+        mapIsReady = false;
+        markersAreWaiting = false;
+
         setupUI();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -66,8 +70,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerDao = db.markerDao();
         markerMap = markerDao.getMarkersByLayer();
 
-
-        // Main recycerView
+        // Main recyclerView
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
         final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap);
         sectionListRV.setAdapter(layerListAdapter);
@@ -199,6 +202,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        mapIsReady = true;
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
