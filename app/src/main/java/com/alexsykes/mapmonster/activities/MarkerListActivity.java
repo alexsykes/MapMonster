@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,33 +47,28 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     public List<MMarker> visibleMarkerList;
     RecyclerView sectionListRV;
     private ArrayList<String> visibleLayers;
-    private TextView showAllMarkersButton;
-    private Map<String, List<MMarker>> markerMap;
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
-    private FloatingActionButton addMarkerButton;
-    private LatLng defaultLocation = new LatLng(53.59,-2.56);
-    private boolean mapIsReady, markersAreWaiting;
+    private final LatLng defaultLocation = new LatLng(53.59,-2.56);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_list);
         defaults = this.getPreferences(Context.MODE_PRIVATE);
-        mapIsReady = false;
-        markersAreWaiting = false;
-        visibleLayers = new ArrayList<String>();
+        visibleLayers = new ArrayList<>();
 
         setupUI();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         MMDatabase db = MMDatabase.getDatabase(this);
         markerDao = db.markerDao();
-        markerMap = markerDao.getMarkersByLayer();
+        Map<String, List<MMarker>> markerMap = markerDao.getMarkersByLayer();
 
         // Main recyclerView
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
@@ -99,8 +93,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onPause: MarkerListActivity");
         saveCameraPosition();
 
-        Set<String> set = new HashSet<String>();
-        set.addAll(visibleLayers);
+        Set<String> set = new HashSet<>(visibleLayers);
         editor.putStringSet("visibleLayers", set);
         editor.apply();
     }
@@ -115,28 +108,20 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         if(visibility == 8) {
             visibleLayers.add(layerName);
         } else {
-            visibleLayers.remove(visibleLayers.indexOf(layerName));
+            visibleLayers.remove(layerName);
         }
         visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
         addMarkers(visibleMarkerList);
     }
 
     private void setupUI() {
-        showAllMarkersButton = findViewById(R.id.showAllMarkers);
-        showAllMarkersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick: showAllMarkers");
-                showAllMarkers();
-            }
+        TextView showAllMarkersButton = findViewById(R.id.showAllMarkers);
+        showAllMarkersButton.setOnClickListener(v -> {
+            Log.i(TAG, "onClick: showAllMarkers");
+            showAllMarkers();
         });
-        addMarkerButton = findViewById(R.id.addMarkerButton);
-        addMarkerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick: newMarker");
-            }
-        });
+        FloatingActionButton addMarkerButton = findViewById(R.id.addMarkerButton);
+        addMarkerButton.setOnClickListener(v -> Log.i(TAG, "onClick: newMarker"));
     }
 
     private void showAllMarkers() {
@@ -154,7 +139,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             return;
         }
 
-        String code, type, snippet, marker_title;
+        String type, snippet, marker_title;
 
         // Setup Bounds builder
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -167,7 +152,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
             // Get data set
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-            code = marker.getCode();
             type = marker.getType();
             snippet = marker.getSnippet();
             marker_title = marker.getPlacename();
@@ -207,6 +191,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             // Add to map
             Marker marker1 = mMap.addMarker(markerOptions);
             // Set marker tag for editing
+            assert marker1 != null;
             marker1.setTag(marker.getMarker_id());
         }
 
@@ -222,7 +207,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        mapIsReady = true;
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
@@ -251,12 +235,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         LatLng startPosition = new LatLng(latitude, longitude);
 
 
-        CameraPosition cameraPosition = new CameraPosition.Builder()
+        return new CameraPosition.Builder()
                 .target(startPosition)      // Sets the center of the map to Mountain View
                 .zoom(zoom)
-                .build();                   // Creates a CameraPosition from the builder
-
-        return cameraPosition;
+                .build();
     }
 
     public void onMarkerListItemClicked(MMarker marker, int isVisible) {
@@ -267,6 +249,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
 
+        assert vectorDrawable != null;
         vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(bitmap);
