@@ -7,6 +7,7 @@ import androidx.room.MapInfo;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,9 @@ public interface MarkerDao {
 
     @Query("SELECT * FROM markers ORDER BY placename")
     List<MMarker> getMarkerList();
+
+    @Query("SELECT * FROM markers WHERE type IN (:layerNames) ORDER BY type, placename")
+    List<MMarker> getVisibleMarkerList(ArrayList<String> layerNames);
 
     @Query("UPDATE markers SET latitude = :lat, longitude = :lng, isUpdated = :isUpdated WHERE markerID = :marker_id  ")
     void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);

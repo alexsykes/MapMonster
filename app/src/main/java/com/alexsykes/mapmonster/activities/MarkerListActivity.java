@@ -85,7 +85,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onResume: ");
         // getSavedCameraPosition();
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -100,10 +100,17 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void onLayerListItemClicked(String layerName, int visibility){
-        Log.i(TAG, "onLayerListItemClicked: " + layerName + " V: " + visibility);
-        visibleLayers.add(layerName);
-        showLayerMarkers(layerName);
-            }
+        if(visibility == 8) {
+            visibleLayers.add(layerName);
+        } else {
+            visibleLayers.remove(visibleLayers.indexOf(layerName));
+        }
+//        showLayerMarkers(layerName);
+
+        markerList = markerDao.getVisibleMarkerList(visibleLayers);
+        addMarkers(markerList);
+        Log.i(TAG, "onLayerListItemClicked: " + layerName + visibleLayers);
+    }
 
     private void setupUI() {
         showAllMarkersButton = findViewById(R.id.showAllMarkers);

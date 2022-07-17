@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ public class MarkerRepository {
     private LiveData<List<MMarker>> allMarkers;
     private List<Integer> markerCountByLayer;
     private List<MMarker> markerList;
+    private List<MMarker> visibleMarkerList;
     private Map<String, List<MMarker>> map;
+    private ArrayList<String> layerNames;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -22,6 +25,8 @@ public class MarkerRepository {
         markerList = markerDao.getMarkerList();
         markerCountByLayer = markerDao.markerCountByLayer();
         map = markerDao.getMarkersByLayer();
+//        visibleMarkerList = markerDao.getVisibleMarkerList(layerNames);
+
     }
 
     LiveData<List<MMarker>> getAllMarkers() {
@@ -31,6 +36,7 @@ public class MarkerRepository {
         return markerCountByLayer;
     }
     public List<MMarker> getMarkerList() { return markerList; }
+    public List<MMarker> getVisibleMarkerList() { return visibleMarkerList; }
 
     void insert(MMarker marker) {
         MMDatabase.databaseWriteExecutor.execute(()  -> {
