@@ -71,8 +71,10 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
         if(visibleLayers.contains(section)){
             holder.sectionSwitch.setChecked(true);
+            holder.markerItemsRecyclerView.setVisibility(View.VISIBLE);
         } else {
             holder.sectionSwitch.setChecked(false);
+            holder.markerItemsRecyclerView.setVisibility(View.GONE);
         }
         holder.sectionSwitch.setOnClickListener(new View.OnClickListener() {
 
