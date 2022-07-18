@@ -35,10 +35,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class MarkerListActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final String TAG = "Info";
@@ -46,13 +44,15 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private static final int DEFAULT_ZOOM = 12;
     private MarkerDao markerDao;
     private LayerDao layerDao;
-    public List<MMarker> visibleMarkerList;
+    Map<String, List<MMarker>> markerMap;
+    TextView showAllMarkersButton;
     RecyclerView sectionListRV;
-    private ArrayList<String> visibleLayers = new ArrayList<>();
+    private List<MMarker> visibleMarkerList;
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
     private final LatLng defaultLocation = new LatLng(53.59,-2.56);
+    private ArrayList<String> visibleLayers ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_marker_list);
         defaults = this.getPreferences(Context.MODE_PRIVATE);
 
+        MMDatabase db = MMDatabase.getDatabase(this);
+        markerDao = db.markerDao();
+        layerDao = db.layerDao();
+        // Get all markers / layers for menu
+        markerMap = markerDao.getMarkersByLayer();
+        visibleLayers = new ArrayList<>(layerDao.getVisibleLayerList());
         setupUI();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -67,39 +73,31 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-        MMDatabase db = MMDatabase.getDatabase(this);
-        markerDao = db.markerDao();
-        layerDao = db.layerDao();
-        Map<String, List<MMarker>> markerMap = markerDao.getMarkersByLayer();
-        List<String> visibleLayerList = layerDao.getVisibleLayerList();
-        visibleLayers = new ArrayList<>(visibleLayerList);
-
-        // Main recyclerView
+        // Main recyclerView - show list/sbulist of layers/markers
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
         final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap);
         sectionListRV.setAdapter(layerListAdapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: ");
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Log.i(TAG, "onResume: ");
+//    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause: MarkerListActivity");
+//        Log.i(TAG, "onPause: MarkerListActivity");
         saveCameraPosition();
-        Set<String> set = new HashSet<>(visibleLayers);
-        editor.putStringSet("visibleLayers", set);
-        editor.apply();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart: MarkerListActivity");
+        // Get list of visible layers
+        visibleMarkerList = getVisibleMarkers();
     }
 
     public void onLayerListItemClicked(String layerName, int visibility){
@@ -116,23 +114,31 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void setupUI() {
-        TextView showAllMarkersButton = findViewById(R.id.showAllMarkers);
+        showAllMarkersButton = findViewById(R.id.showAllMarkers);
         showAllMarkersButton.setOnClickListener(v -> {
             Log.i(TAG, "onClick: showAllMarkers");
-            showAllMarkers();
+            toggleAllMarkers();
         });
         FloatingActionButton addMarkerButton = findViewById(R.id.addMarkerButton);
         addMarkerButton.setOnClickListener(v -> Log.i(TAG, "onClick: newMarker"));
     }
 
-    private void showAllMarkers() {
+    // Used from Show/Hide button
+    private void toggleAllMarkers() {
         // Get database then markerList
         MMDatabase db = MMDatabase.getDatabase(this);
         markerDao = db.markerDao();
         layerDao = db.layerDao();
 
-        visibleMarkerList = markerDao.getMarkerList();
-        layerDao.setVisibilityForAll(true);
+        if ( showAllMarkersButton.getText().toString().equals("Show all")) {
+            visibleMarkerList = markerDao.getMarkerList();
+            layerDao.setVisibilityForAll(true);
+            showAllMarkersButton.setText("Hide all");
+        } else {
+            layerDao.setVisibilityForAll(false);
+            showAllMarkersButton.setText("Show all");
+        }
+        visibleMarkerList = getVisibleMarkers();
         addMarkers(visibleMarkerList);
     }
 
@@ -152,7 +158,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
         // Iterate through markerList
         for(int i = 0; i < markerList.size(); i++ ) {
-            MMarker marker = markerList.get(i);
+            MMarker marker = visibleMarkerList.get(i);
 
             // Get data set
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
@@ -212,6 +218,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         CameraPosition cameraPosition = getSavedCameraPosition();
+        addMarkers(visibleMarkerList);
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
@@ -243,6 +250,15 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 .target(startPosition)      // Sets the center of the map to Mountain View
                 .zoom(zoom)
                 .build();
+    }
+
+    List<MMarker> getVisibleMarkers() {
+        MMDatabase db = MMDatabase.getDatabase(this);
+        markerDao = db.markerDao();
+        layerDao = db.layerDao();
+        ArrayList<String> visibleLayerList = new ArrayList<>(layerDao.getVisibleLayerList());
+        visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayerList);
+        return visibleMarkerList;
     }
 
     public void onMarkerListItemClicked(MMarker marker, int isVisible) {

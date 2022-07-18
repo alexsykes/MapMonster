@@ -42,6 +42,10 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
         Context context = holder.itemView.getContext();
         holder.sectionSwitch.setText(section);
+
+        if(holder.sectionSwitch.getText().equals("Food")){
+            holder.sectionSwitch.setChecked(true);
+        }
         holder.sectionSwitch.setOnClickListener(new View.OnClickListener() {
 
             // Toggle marker list visibility on click

@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         layerList = layerViewModel.getLayerList();
         layerListAdapter.submitList(layerList);
-        layerViewModel.setVisibility(false,4);
+//        layerViewModel.setVisibility(false,4);
     }
 
     @Override
@@ -408,12 +408,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
         return false;
     }
-
     private void goMarkerList() {
         Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
         startActivity(intent);
     }
-
     private void goSettings() {
         Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
         startActivity(intent);
