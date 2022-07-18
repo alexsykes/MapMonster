@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.SectionListAdapter;
+import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
 import com.alexsykes.mapmonster.data.MarkerDao;
@@ -44,9 +45,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     private static final int DEFAULT_ZOOM = 12;
     private MarkerDao markerDao;
+    private LayerDao layerDao;
     public List<MMarker> visibleMarkerList;
     RecyclerView sectionListRV;
-    private ArrayList<String> visibleLayers;
+    private ArrayList<String> visibleLayers = new ArrayList<>();
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
@@ -57,7 +59,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_list);
         defaults = this.getPreferences(Context.MODE_PRIVATE);
-        visibleLayers = new ArrayList<>();
 
         setupUI();
 
@@ -68,7 +69,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
         MMDatabase db = MMDatabase.getDatabase(this);
         markerDao = db.markerDao();
+        layerDao = db.layerDao();
         Map<String, List<MMarker>> markerMap = markerDao.getMarkersByLayer();
+        List<String> visibleLayerList = layerDao.getVisibleLayerList();
+        visibleLayers = new ArrayList<>(visibleLayerList);
 
         // Main recyclerView
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
@@ -87,7 +91,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         super.onPause();
         Log.i(TAG, "onPause: MarkerListActivity");
         saveCameraPosition();
-
         Set<String> set = new HashSet<>(visibleLayers);
         editor.putStringSet("visibleLayers", set);
         editor.apply();
@@ -100,10 +103,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void onLayerListItemClicked(String layerName, int visibility){
+        Log.i(TAG, "onLayerListItemClicked: " + layerName + visibility);
         if(visibility == 8) {
             visibleLayers.add(layerName);
+            layerDao.setVisibility(layerName, true);
         } else {
             visibleLayers.remove(layerName);
+            layerDao.setVisibility(layerName, false);
         }
         visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
         addMarkers(visibleMarkerList);
@@ -123,7 +129,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         // Get database then markerList
         MMDatabase db = MMDatabase.getDatabase(this);
         markerDao = db.markerDao();
+        layerDao = db.layerDao();
+
         visibleMarkerList = markerDao.getMarkerList();
+        layerDao.setVisibilityForAll(true);
         addMarkers(visibleMarkerList);
     }
 
@@ -180,7 +189,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                     break;
             }
 
-            // Include in vounds builder
+            // Include in bounds builder
             builder.include(latLng);
 
             // Add to map
@@ -198,11 +207,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
         }
     }
-
-//    private void showLayerMarkers(String layerName){
-//        markerList = markerMap.get(layerName);
-//        addMarkers(markerList);
-//    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -242,6 +246,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void onMarkerListItemClicked(MMarker marker, int isVisible) {
+
         LatLng loc = new LatLng(marker.getLatitude(), marker.getLongitude());
         Log.i(TAG, "onMarkerListItemClicked: " + isVisible);
     }

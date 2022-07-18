@@ -43,6 +43,8 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         Context context = holder.itemView.getContext();
         holder.sectionSwitch.setText(section);
         holder.sectionSwitch.setOnClickListener(new View.OnClickListener() {
+
+            // Toggle marker list visibility on click
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onBindViewHolder - onClick: ");

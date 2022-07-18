@@ -25,4 +25,13 @@ public interface LayerDao {
 
     @Query("UPDATE layers SET isVisible = :visibility WHERE layerID = :layerID")
     void setVisibility (boolean visibility, int layerID);
+
+    @Query("UPDATE layers SET isVisible = :visibility WHERE layername = :layer")
+    void setVisibility (String layer, boolean visibility);
+
+    @Query("SELECT layername FROM layers WHERE isVisible = '1'" )
+    List<String> getVisibleLayerList();
+
+    @Query("UPDATE layers SET isVisible = :b")
+    void setVisibilityForAll(boolean b);
 }

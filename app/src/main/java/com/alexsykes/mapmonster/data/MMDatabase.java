@@ -67,6 +67,9 @@ public abstract class MMDatabase extends RoomDatabase{
                 marker = new MMarker(53.616737, -2.3889,"Place 9", "P0","Food","");
                 markerDao.insertMarker(marker);
                 marker = new MMarker(53.6877, -2.59,"Place 10", "P10","Food","");
+                markerDao.insertMarker(marker);
+                marker = new MMarker(53.55535, -2.48963,"M61 J6", "J6","Junction","");
+                markerDao.insertMarker(marker);
 
 
                 LayerDao layerDao   = INSTANCE.layerDao();
