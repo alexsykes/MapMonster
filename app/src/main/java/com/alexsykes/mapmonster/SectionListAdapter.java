@@ -25,6 +25,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
     String[] sections;
     Map<String, List<MMarker>> map;
     List<MMarker> markerList;
+    ArrayList<String> visibleLayers;
     public static final String TAG = "Info";
 
     @NonNull
@@ -35,36 +36,12 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         return new ViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String section = sections[position];
-        markerList = map.get(section);
-
-        Context context = holder.itemView.getContext();
-        holder.sectionSwitch.setText(section);
-
-        if(holder.sectionSwitch.getText().equals("Food")){
-            holder.sectionSwitch.setChecked(true);
-        }
-        holder.sectionSwitch.setOnClickListener(new View.OnClickListener() {
-
-            // Toggle marker list visibility on click
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onBindViewHolder - onClick: ");
-                ((MarkerListActivity) context).onLayerListItemClicked(section, holder.markerItemsRecyclerView.getVisibility());
-                if(holder.markerItemsRecyclerView.getVisibility() == View.VISIBLE) {
-                    holder.markerItemsRecyclerView.setVisibility(View.GONE);
-                } else {
-                    holder.markerItemsRecyclerView.setVisibility(View.VISIBLE);
-                }
-//                Context context = itemView.getContext();
-            }
-        });
-
-        ChildMarkerListAdapter childMarkerListAdapter = new ChildMarkerListAdapter(markerList);
-        holder.markerItemsRecyclerView.setAdapter(childMarkerListAdapter);
-        holder.markerItemsRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+    public SectionListAdapter(Map<String, List<MMarker>> map, ArrayList<String> visibleLayers) {
+        this.map = map;
+        this.keySet = map.keySet();
+        this.visibleLayers = new ArrayList<>(visibleLayers);
+        sections = keySet.toArray(new String[keySet.size()]);
+        markerList = new ArrayList(map.values());
     }
 
     @Override
@@ -84,16 +61,37 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         }
     }
 
-    // Multiple constructors with arguments defined
-    public SectionListAdapter(Set<String> keySet) {
-        this.keySet = keySet;
-        sections = keySet.toArray(new String[keySet.size()]);
-    }
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String section = sections[position];
+        markerList = map.get(section);
 
-    public SectionListAdapter(Map<String, List<MMarker>> map) {
-        this.map = map;
-        this.keySet = map.keySet();
-        sections = keySet.toArray(new String[keySet.size()]);
-        markerList = new ArrayList(map.values());
+        Context context = holder.itemView.getContext();
+        holder.sectionSwitch.setText(section);
+
+        if(visibleLayers.contains(section)){
+            holder.sectionSwitch.setChecked(true);
+        } else {
+            holder.sectionSwitch.setChecked(false);
+        }
+        holder.sectionSwitch.setOnClickListener(new View.OnClickListener() {
+
+            // Toggle marker list visibility on click
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onBindViewHolder - onClick: ");
+                ((MarkerListActivity) context).onLayerListItemClicked(section, holder.markerItemsRecyclerView.getVisibility());
+//                ((MarkerListActivity) context).onLayerListItemClicked(section, holder.sectionSwitch.isChecked());
+                if(holder.markerItemsRecyclerView.getVisibility() == View.VISIBLE) {
+                    holder.markerItemsRecyclerView.setVisibility(View.GONE);
+                } else {
+                    holder.markerItemsRecyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ChildMarkerListAdapter childMarkerListAdapter = new ChildMarkerListAdapter(markerList);
+        holder.markerItemsRecyclerView.setAdapter(childMarkerListAdapter);
+        holder.markerItemsRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
     }
 }

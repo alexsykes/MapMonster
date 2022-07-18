@@ -75,15 +75,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
         // Main recyclerView - show list/sbulist of layers/markers
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
-        final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap);
+        final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap, visibleLayers);
         sectionListRV.setAdapter(layerListAdapter);
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Log.i(TAG, "onResume: ");
-//    }
 
     @Override
     protected void onPause() {
