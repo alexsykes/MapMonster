@@ -8,6 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -92,6 +96,34 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onStart: MarkerListActivity");
         // Get list of visible layers
         visibleMarkerList = getVisibleMarkers();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.layer_edit_menu, menu);
+        return true;
+    }
+    // Navigation
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.marker_list_item:
+                toggleLayerPanel();
+                return true;
+            default:
+        }
+        return false;
+    }
+
+    private void toggleLayerPanel() {
+        if (sectionListRV.getVisibility() == View.VISIBLE) {
+        sectionListRV.setVisibility(View.GONE);
+            mMap.setPadding(0,0,0,0); }
+        else {
+            sectionListRV.setVisibility(View.VISIBLE);
+            mMap.setPadding(0,0,100,0);
+        }
     }
 
     public void onLayerListItemClicked(String layerName, int visibility){

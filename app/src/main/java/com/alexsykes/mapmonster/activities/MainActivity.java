@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         mode = defaults.getInt("mode",0);
@@ -110,41 +111,35 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerDao = db.markerDao();
 
 
-        layerLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onMarkerLabelClicked");
-                layersCollapsed = defaults.getBoolean("layersCollapsed", true);
-                if(layerRV.getVisibility() == View.VISIBLE) {
-                    layerRV.setVisibility(View.GONE);
-                    layerDisc.setText("↓");
-                    layersCollapsed= true;
-                } else {
-                    layerRV.setVisibility(View.VISIBLE);
-                    layerDisc.setText("↑");
-                    layersCollapsed= false;
-                }
-                editor.putBoolean("layersCollapsed", layersCollapsed);
-                editor.apply();
+        layerLabel.setOnClickListener(v -> {
+            Log.i(TAG, "onMarkerLabelClicked");
+            layersCollapsed = defaults.getBoolean("layersCollapsed", true);
+            if(layerRV.getVisibility() == View.VISIBLE) {
+                layerRV.setVisibility(View.GONE);
+                layerDisc.setText("↓");
+                layersCollapsed= true;
+            } else {
+                layerRV.setVisibility(View.VISIBLE);
+                layerDisc.setText("↑");
+                layersCollapsed= false;
             }
+            editor.putBoolean("layersCollapsed", layersCollapsed);
+            editor.apply();
         });
-        markerLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onMarkerLabelClicked");
-                markersCollapsed = defaults.getBoolean("markersCollapsed", true);
-                if(markerRV.getVisibility() == View.VISIBLE) {
-                    markerRV.setVisibility(View.GONE);
-                    markerDisc.setText("↓");
-                    markersCollapsed = true;
-                } else {
-                    markerRV.setVisibility(View.VISIBLE);
-                    markerDisc.setText("↑");
-                    markersCollapsed = false;
-                }
-                editor.putBoolean("markersCollapsed", markersCollapsed);
-                editor.apply();
+        markerLabel.setOnClickListener(v -> {
+            Log.i(TAG, "onMarkerLabelClicked");
+            markersCollapsed = defaults.getBoolean("markersCollapsed", true);
+            if(markerRV.getVisibility() == View.VISIBLE) {
+                markerRV.setVisibility(View.GONE);
+                markerDisc.setText("↓");
+                markersCollapsed = true;
+            } else {
+                markerRV.setVisibility(View.VISIBLE);
+                markerDisc.setText("↑");
+                markersCollapsed = false;
             }
+            editor.putBoolean("markersCollapsed", markersCollapsed);
+            editor.apply();
         });
     }
 
@@ -197,59 +192,51 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         cancelNewMarkerButton.setVisibility(View.GONE);
         saveNewMarkerButton.setVisibility(View.GONE);
 
-        cancelNewMarkerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerDetailText.setVisibility(View.GONE);
-                markerInfoLabel.setVisibility(View.GONE);
-                cancelNewMarkerButton.setVisibility(View.GONE);
-                saveNewMarkerButton.setVisibility(View.GONE);
-                editor.putBoolean("editingMarker", false);
-                editor.apply();
-                mode = 0;
-                setupMode();
-                mMap.clear();
-                // loadMarkerList();
-                addMarkersToMap();
-            }
+        cancelNewMarkerButton.setOnClickListener(v -> {
+            markerDetailText.setVisibility(View.GONE);
+            markerInfoLabel.setVisibility(View.GONE);
+            cancelNewMarkerButton.setVisibility(View.GONE);
+            saveNewMarkerButton.setVisibility(View.GONE);
+            editor.putBoolean("editingMarker", false);
+            editor.apply();
+            mode = 0;
+            setupMode();
+            mMap.clear();
+            // loadMarkerList();
+            addMarkersToMap();
         });
-        saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerDetailText.setVisibility(View.GONE);
-                markerInfoLabel.setVisibility(View.GONE);
-                cancelNewMarkerButton.setVisibility(View.GONE);
-                saveNewMarkerButton.setVisibility(View.GONE);
-                editor.putBoolean("editingMarker", false);
-                editor.apply();
-                mode = 0;
-                setupMode();
-                if(current_marker_id == -999) {
-                    markerDao.insertMarker(new MMarker(curLocation.latitude, curLocation.longitude, "New placemark", "Code", "waypoint", ""));
-                } else {
-                    markerDao.updateMarker(current_marker_id, curLocation.latitude, curLocation.longitude, true);
-                }
-
+        saveNewMarkerButton.setOnClickListener(v -> {
+            markerDetailText.setVisibility(View.GONE);
+            markerInfoLabel.setVisibility(View.GONE);
+            cancelNewMarkerButton.setVisibility(View.GONE);
+            saveNewMarkerButton.setVisibility(View.GONE);
+            editor.putBoolean("editingMarker", false);
+            editor.apply();
+            mode = 0;
+            setupMode();
+            if(current_marker_id == -999) {
+                markerDao.insertMarker(new MMarker(curLocation.latitude, curLocation.longitude, "Waypoint", "Code", "waypoint", ""));
+            } else {
+                markerDao.updateMarker(current_marker_id, curLocation.latitude, curLocation.longitude, true);
             }
+
         });
 
-        markerPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mode = 0;
-                editor.putInt("mode", mode);
-                editor.apply();
-                setupMode();
-                showEditDialog();
-                Log.i(TAG, "onClick: Add new marker");
-                curLocation = mMap.getCameraPosition().target;
-                MarkerOptions newMarker = new MarkerOptions()
-                        .position(curLocation)
-                        .draggable(true);
+        markerPlus.setOnClickListener(v -> {
+            mode = 0;
+            editor.putInt("mode", mode);
+            editor.apply();
+            setupMode();
+            showEditDialog();
+            Log.i(TAG, "onClick: Add new marker");
+            curLocation = mMap.getCameraPosition().target;
+            MarkerOptions newMarker = new MarkerOptions()
+                    .position(curLocation)
+                    .draggable(true);
 
 //                mMap.addMarker(newMarker);
 
-                //MARK: MarkerDragListener
+            //MARK: MarkerDragListener
 //                mMap.setOnMarkerDragListener(
 //                        new GoogleMap.OnMarkerDragListener() {
 //                            final DecimalFormat df = new DecimalFormat("#.#####");
@@ -280,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //                            }
 //                        }
 //                );
-            }
         });
     }
 
@@ -373,9 +359,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerRV.setLayoutManager(new LinearLayoutManager(this));
         markerRV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         // List LiveData Markers
-        markerViewModel.getAllMarkers().observe(this, markers -> {
-            adapter.submitList(markers);
-        });
+        markerViewModel.getAllMarkers().observe(this, markers -> adapter.submitList(markers));
 
         layerList = layerViewModel.getLayerList();
         layerListAdapter.submitList(layerList);
@@ -408,6 +392,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
         return false;
     }
+
     private void goMarkerList() {
         Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
         startActivity(intent);
