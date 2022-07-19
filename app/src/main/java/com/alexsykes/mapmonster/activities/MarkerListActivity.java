@@ -49,7 +49,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private MarkerDao markerDao;
     private LayerDao layerDao;
     Map<String, List<MMarker>> markerMap;
-    TextView showAllMarkersButton;
+    TextView showAllMarkersButton, showAllLayersButton;
     RecyclerView sectionListRV;
     private List<MMarker> visibleMarkerList;
     SharedPreferences defaults;
@@ -107,11 +107,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     // Navigation
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.marker_list_item:
-                toggleLayerPanel();
-                return true;
-            default:
+        if (item.getItemId() == R.id.marker_list_item) {
+            toggleLayerPanel();
+            return true;
         }
         return false;
     }
@@ -140,13 +138,29 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void setupUI() {
-        showAllMarkersButton = findViewById(R.id.showAllMarkers);
-        showAllMarkersButton.setOnClickListener(v -> {
+//        showAllMarkersButton = findViewById(R.id.showAllMarkers);
+//        showAllMarkersButton.setOnClickListener(v -> {
+//            Log.i(TAG, "onClick: showAllMarkers");
+//            toggleAllMarkers();
+//        });
+
+                showAllLayersButton = findViewById(R.id.showLayerList);
+        showAllLayersButton.setOnClickListener(v -> {
             Log.i(TAG, "onClick: showAllMarkers");
-            toggleAllMarkers();
+            toggleAllLayers();
         });
+
         FloatingActionButton addMarkerButton = findViewById(R.id.addMarkerButton);
         addMarkerButton.setOnClickListener(v -> Log.i(TAG, "onClick: newMarker"));
+    }
+
+    private void toggleAllLayers() {
+        sectionListRV = findViewById(R.id.sectionListRecyclerView);
+        if (sectionListRV.getVisibility() == View.VISIBLE) {
+            sectionListRV.setVisibility(View.GONE);
+        } else {
+            sectionListRV.setVisibility(View.VISIBLE);
+        }
     }
 
     // Used from Show/Hide button
