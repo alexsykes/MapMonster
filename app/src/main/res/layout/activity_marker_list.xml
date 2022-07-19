@@ -17,49 +17,54 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".activities.MarkerListActivity" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/showLayerList"
+
+    <LinearLayout
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="0dp"
-        android:background="@color/purple_500"
-        android:elevation="6dp"
-        android:padding="@dimen/small_margin"
-        android:text="@string/show_layer_list"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/sectionListRecyclerView"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/small_margin"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/addMarkerButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sectionListRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:elevation="@dimen/large_margin"
-        android:overScrollMode="always"
-        android:translationZ="5dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="@id/showLayerList"
-        app:layout_constraintStart_toStartOf="@id/showLayerList"
-        app:layout_constraintTop_toBottomOf="@id/showLayerList" />
+        tools:layout_editor_absoluteY="8dp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addMarkerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/large_margin"
-        android:elevation="@dimen/large_margin"
-        android:clickable="true"
-        android:contentDescription="@string/add_marker"
-        android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:ignore="ImageContrastCheck" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/showLayerList"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/purple_500"
+            android:elevation="6dp"
+            android:padding="@dimen/small_margin"
+            android:text="@string/show_layer_list"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sectionListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:elevation="@dimen/large_margin"
+            android:overScrollMode="always"
+            android:translationZ="5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addMarkerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/large_margin"
+            android:clickable="true"
+            android:contentDescription="@string/add_marker"
+            android:elevation="@dimen/large_margin"
+            android:focusable="true"
+            app:srcCompat="@android:drawable/ic_input_add"
+            tools:ignore="ImageContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

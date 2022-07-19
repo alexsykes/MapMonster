@@ -810,3 +810,4 @@ app/build/intermediates/project_dex_archive/debug/out/com/alexsykes/mapmonster/S
 app/src/main/java/com/alexsykes/mapmonster/activities/MarkerListActivity.java
 app/src/main/res/layout/activity_marker_list.xml
 app/src/main/res/layout/section_header.xml
+/app/build/generated/res/resValues/debug/
