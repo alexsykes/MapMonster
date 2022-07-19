@@ -140,11 +140,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void setupUI() {
-//        showAllMarkersButton = findViewById(R.id.showAllMarkers);
-//        showAllMarkersButton.setOnClickListener(v -> {
-//            Log.i(TAG, "onClick: showAllMarkers");
-//            toggleAllMarkers();
-//        });
 
         showAllLayerList = findViewById(R.id.showLayerList);
         showAllLayerList.setChecked(true);
