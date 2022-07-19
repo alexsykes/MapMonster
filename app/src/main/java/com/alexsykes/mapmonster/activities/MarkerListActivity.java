@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private MarkerDao markerDao;
     private LayerDao layerDao;
     Map<String, List<MMarker>> markerMap;
-    TextView showAllMarkersButton, showAllLayersButton;
+    TextView showAllMarkersButton;
+    SwitchMaterial showAllLayerList;
     RecyclerView sectionListRV;
     private List<MMarker> visibleMarkerList;
     SharedPreferences defaults;
@@ -144,22 +146,24 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 //            toggleAllMarkers();
 //        });
 
-                showAllLayersButton = findViewById(R.id.showLayerList);
-        showAllLayersButton.setOnClickListener(v -> {
+        showAllLayerList = findViewById(R.id.showLayerList);
+        showAllLayerList.setChecked(true);
+        showAllLayerList.setOnClickListener(v -> {
             Log.i(TAG, "onClick: showAllMarkers");
-            toggleAllLayers();
+            boolean setVisible = showAllLayerList.isChecked();
+            showAllLayers(setVisible);
         });
 
         FloatingActionButton addMarkerButton = findViewById(R.id.addMarkerButton);
         addMarkerButton.setOnClickListener(v -> Log.i(TAG, "onClick: newMarker"));
     }
 
-    private void toggleAllLayers() {
+    private void showAllLayers(boolean isVisible) {
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
-        if (sectionListRV.getVisibility() == View.VISIBLE) {
-            sectionListRV.setVisibility(View.GONE);
-        } else {
+        if (isVisible) {
             sectionListRV.setVisibility(View.VISIBLE);
+        } else {
+            sectionListRV.setVisibility(View.GONE);
         }
     }
 

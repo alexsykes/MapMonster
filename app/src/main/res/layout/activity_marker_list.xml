@@ -17,14 +17,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".activities.MarkerListActivity" />
 
-    <TextView
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/showLayerList"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="0dp"
-        android:background="@color/purple_700"
+        android:background="@color/purple_500"
         android:elevation="6dp"
         android:padding="@dimen/small_margin"
         android:text="@string/show_layer_list"
@@ -33,7 +33,6 @@
         app:layout_constraintBottom_toTopOf="@id/sectionListRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
         />
 
     <androidx.recyclerview.widget.RecyclerView
