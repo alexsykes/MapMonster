@@ -811,3 +811,7 @@ app/src/main/java/com/alexsykes/mapmonster/activities/MarkerListActivity.java
 app/src/main/res/layout/activity_marker_list.xml
 app/src/main/res/layout/section_header.xml
 /app/build/generated/res/resValues/debug/
+app/build/intermediates/project_dex_archive/debug/out/830b32c714c97564a49b23dd452fb056a7153b417ad03e1c9acf2ddc75804664_0.jar
+app/build/intermediates/project_dex_archive/debug/out/830b32c714c97564a49b23dd452fb056a7153b417ad03e1c9acf2ddc75804664_1.jar
+app/build/intermediates/project_dex_archive/debug/out/830b32c714c97564a49b23dd452fb056a7153b417ad03e1c9acf2ddc75804664_2.jar
+app/build/intermediates/project_dex_archive/debug/out/830b32c714c97564a49b23dd452fb056a7153b417ad03e1c9acf2ddc75804664_3.jar

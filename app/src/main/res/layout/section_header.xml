@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/small_margin"
-            android:text="Switch"
+            android:text="@string/section_switch"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>

@@ -40,7 +40,7 @@ public class MarkerDetailFragment extends DialogFragment {
         public MarkerDetailFragment() {
         Log.i(TAG, "MarkerDetailFragment: ");
         Bundle args = new Bundle();
-        args.putString("title", "New ma");
+        args.putString("title", "New marker");
         this.setArguments(args);
 
 

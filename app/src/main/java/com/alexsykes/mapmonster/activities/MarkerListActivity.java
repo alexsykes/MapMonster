@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
@@ -43,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MarkerListActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MarkerListActivity extends AppCompatActivity implements OnMapReadyCallback, MarkerDetailFragment.MarkerDetailFragmentListener {
     public static final String TAG = "Info";
 
     private static final int DEFAULT_ZOOM = 12;
@@ -59,6 +61,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap mMap;
     private final LatLng defaultLocation = new LatLng(53.59,-2.56);
     private ArrayList<String> visibleLayers ;
+    MarkerDetailFragment markerDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +153,23 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         });
 
         FloatingActionButton addMarkerButton = findViewById(R.id.addMarkerButton);
-        addMarkerButton.setOnClickListener(v -> Log.i(TAG, "onClick: newMarker"));
+        addMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: New Marker;");
+                addNewMarker();
+            }
+        });
+    }
+
+    private void addNewMarker() {
+        // Get current marker location
+        LatLng loc = mMap.getCameraPosition().target;
+        double lat = loc.latitude;
+        double lng = loc.longitude;
+
+        showEditDialog();
+
     }
 
     private void showAllLayers(boolean isVisible) {
@@ -306,6 +325,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onMarkerListItemClicked: " + isVisible);
     }
 
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        markerDetailFragment = new MarkerDetailFragment();
+        markerDetailFragment.show(fm, "marker_detail_edit_name");
+    }
+
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
 
@@ -316,5 +341,14 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    @Override
+    public void onReturn(Editable name, Editable code, String layer) {
+
+        LatLng curLocation = mMap.getCameraPosition().target;
+        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, "");
+        markerDao.insertMarker(mMarker);
+        //  mMap.clear();
     }
 }
