@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,7 +49,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback, MarkerDetailFragment.MarkerDetailFragmentListener {
+public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         setupUIComponents();
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+//        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDao = db.markerDao();
 
 //        layerLabel.setOnClickListener(v -> {
@@ -148,10 +146,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause: ");
-        editor.putInt("mode",mode);
-        editor.putBoolean("layersCollapsed",layersCollapsed);
-        editor.putBoolean("markersCollapsed",markersCollapsed);
-        editor.putBoolean("editingMarker",editingMarker);
+//        editor.putInt("mode",mode);
+//        editor.putBoolean("layersCollapsed",layersCollapsed);
+//        editor.putBoolean("markersCollapsed",markersCollapsed);
+//        editor.putBoolean("editingMarker",editingMarker);
         editor.apply();
         saveCameraPosition();
     }
@@ -710,23 +708,23 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //        Log.i(TAG, "onLayerListItemCheckedChanged: " + layer.getLayer_id() + isChecked);
 //        layerViewModel.setVisibility(isChecked, layer.getLayer_id());
 //    }
-    private void showEditDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        markerDetailFragment = new MarkerDetailFragment();
-        markerDetailFragment.show(fm, "marker_detail_edit_name");
-    }
+//    private void showEditDialog() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        markerDetailFragment = new MarkerDetailFragment();
+//        markerDetailFragment.show(fm, "marker_detail_edit_name");
+//    }
 
-    @Override
-    public void onReturn(Editable text, Editable code, String layer) {
-        Log.i(TAG, "onReturn: " + text + code + layer);
-
-        curLocation = mMap.getCameraPosition().target;
-        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, text.toString(),code.toString(),layer, "");
-        markerDao.insertMarker(mMarker);
-        mMap.clear();
-        loadMarkerList();
-        addMarkersToMap();
-    }
+//    @Override
+//    public void onReturn(Editable text, Editable code, String layer) {
+//        Log.i(TAG, "onReturn: " + text + code + layer);
+//
+//        curLocation = mMap.getCameraPosition().target;
+//        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, text.toString(),code.toString(),layer, "");
+//        markerDao.insertMarker(mMarker);
+//        mMap.clear();
+//        loadMarkerList();
+//        addMarkersToMap();
+//    }
 
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
