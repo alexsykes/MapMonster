@@ -99,46 +99,14 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         setupUIComponents();
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-//        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDao = db.markerDao();
 
-//        layerLabel.setOnClickListener(v -> {
-//            Log.i(TAG, "onMarkerLabelClicked");
-//            layersCollapsed = defaults.getBoolean("layersCollapsed", true);
-//            if(layerRV.getVisibility() == View.VISIBLE) {
-//                layerRV.setVisibility(View.GONE);
-//                layerDisc.setText("↓");
-//                layersCollapsed= true;
-//            } else {
-//                layerRV.setVisibility(View.VISIBLE);
-//                layerDisc.setText("↑");
-//                layersCollapsed= false;
-//            }
-//            editor.putBoolean("layersCollapsed", layersCollapsed);
-//            editor.apply();
-//        });
-//        markerLabel.setOnClickListener(v -> {
-//            Log.i(TAG, "onMarkerLabelClicked");
-//            markersCollapsed = defaults.getBoolean("markersCollapsed", true);
-//            if(markerRV.getVisibility() == View.VISIBLE) {
-//                markerRV.setVisibility(View.GONE);
-//                markerDisc.setText("↓");
-//                markersCollapsed = true;
-//            } else {
-//                markerRV.setVisibility(View.VISIBLE);
-//                markerDisc.setText("↑");
-//                markersCollapsed = false;
-//            }
-//            editor.putBoolean("markersCollapsed", markersCollapsed);
-//            editor.apply();
-//        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-//        setupMode();
         getSavedCameraPosition();
     }
 
@@ -146,215 +114,18 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause: ");
-//        editor.putInt("mode",mode);
-//        editor.putBoolean("layersCollapsed",layersCollapsed);
-//        editor.putBoolean("markersCollapsed",markersCollapsed);
-//        editor.putBoolean("editingMarker",editingMarker);
         editor.apply();
         saveCameraPosition();
     }
 
     private void setupUIComponents() {
         defaults = this.getPreferences(Context.MODE_PRIVATE);
-//        layersCollapsed = defaults.getBoolean("layersCollapsed", true);
-//        markersCollapsed = defaults.getBoolean("markersCollapsed", true);
-//        editingMarker = defaults.getBoolean("editingMarker", false);
-
-        // Lists
-//        markerLabel = findViewById(R.id.markerLabel);
-//        markerDisc = findViewById(R.id.markerDisc);
-//        markerPlus = findViewById(R.id.markerPlus);
-//        markerRV = findViewById(R.id.markerRv);
-//
-//        layerLabel = findViewById(R.id.layerLabel);
-//        layerDisc = findViewById(R.id.layerDisc);
-//        layerRV = findViewById(R.id.layerRecyclerView);
-
-//        displayBoxes();
-
-        // Marker info box
-//        markerInfoLabel = findViewById(R.id.markerInfoLabel);
-//        markerDetailText = findViewById(R.id.markerDetailText);
-//        cancelNewMarkerButton = findViewById(R.id.cancelNewMarkerButton);
-//        saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
-
-//        markerDetailText.setVisibility(View.GONE);
-//        markerInfoLabel.setVisibility(View.GONE);
-//        cancelNewMarkerButton.setVisibility(View.GONE);
-//        saveNewMarkerButton.setVisibility(View.GONE);
-//
-//        cancelNewMarkerButton.setOnClickListener(v -> {
-//            markerDetailText.setVisibility(View.GONE);
-//            markerInfoLabel.setVisibility(View.GONE);
-//            cancelNewMarkerButton.setVisibility(View.GONE);
-//            saveNewMarkerButton.setVisibility(View.GONE);
-//            editor.putBoolean("editingMarker", false);
-//            editor.apply();
-//            mode = 0;
-//            setupMode();
-//            mMap.clear();
-//            // loadMarkerList();
-//            addMarkersToMap();
-//        });
-//        saveNewMarkerButton.setOnClickListener(v -> {
-//            markerDetailText.setVisibility(View.GONE);
-//            markerInfoLabel.setVisibility(View.GONE);
-//            cancelNewMarkerButton.setVisibility(View.GONE);
-//            saveNewMarkerButton.setVisibility(View.GONE);
-//            editor.putBoolean("editingMarker", false);
-//            editor.apply();
-//            mode = 0;
-//            setupMode();
-//            if(current_marker_id == -999) {
-//                markerDao.insertMarker(new MMarker(curLocation.latitude, curLocation.longitude, "Waypoint", "Code", "waypoint", ""));
-//            } else {
-//                markerDao.updateMarker(current_marker_id, curLocation.latitude, curLocation.longitude, true);
-//            }
-//
-//        });
-//
-//        markerPlus.setOnClickListener(v -> {
-//            mode = 0;
-//            editor.putInt("mode", mode);
-//            editor.apply();
-//            setupMode();
-//            showEditDialog();
-//            Log.i(TAG, "onClick: Add new marker");
-//            curLocation = mMap.getCameraPosition().target;
-//            MarkerOptions newMarker = new MarkerOptions()
-//                    .position(curLocation)
-//                    .draggable(true);
-//
-////                mMap.addMarker(newMarker);
-//
-//            //MARK: MarkerDragListener
-////                mMap.setOnMarkerDragListener(
-////                        new GoogleMap.OnMarkerDragListener() {
-////                            final DecimalFormat df = new DecimalFormat("#.#####");
-////
-////                            @Override
-////                            public void onMarkerDrag(@NonNull Marker marker) {
-////                            }
-////
-////                            @Override
-////                            public void onMarkerDragEnd(@NonNull Marker marker) {
-////                                LatLng newpos = marker.getPosition();
-////                                String snippet = marker.getSnippet();
-////                            }
-////
-////                            @Override
-////                            public void onMarkerDragStart(@NonNull Marker marker) {
-////                                cancelNewMarkerButton.setVisibility(View.VISIBLE);
-////                                saveNewMarkerButton.setVisibility(View.VISIBLE);
-////                                curLocation = marker.getPosition();
-////                                String snippet = marker.getSnippet();
-////                                String latStr = df.format(curLocation.latitude);
-////                                String lngStr = df.format(curLocation.longitude);
-////                                current_marker_id = (int) marker.getTag();
-////
-////                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
-////                                        + System.lineSeparator() + "Marker id: " + current_marker_id);
-////                                Log.i(TAG, "onMarkerDrag: id " + current_marker_id);
-////                            }
-////                        }
-////                );
-//        });
     }
 
-//    /* Modes
-//        0 - Normal mode - Marker and Layer boxes visible, MarkerInfo box GONE
-//        1 - Editing marker mode
-//     */
-//    private void setupMode(){
-//        switch (mode) {
-//            case 0:
-//                markerLabel.setVisibility(View.VISIBLE);
-//                markerPlus.setVisibility(View.VISIBLE);
-//                markerDisc.setVisibility(View.VISIBLE);
-//                if(markersCollapsed) {
-//                    markerRV.setVisibility(View.GONE);
-//                    markerDisc.setText("↓");
-//                } else {
-//                    markerRV.setVisibility(View.VISIBLE);
-//                    markerDisc.setText("↑");
-//                }
-//                layerLabel.setVisibility(View.VISIBLE);
-//                layerDisc.setVisibility(View.VISIBLE);
-//                if(layersCollapsed) {
-//                    layerRV.setVisibility(View.GONE);
-//                    layerDisc.setText("↓");
-//                } else {
-//                    layerRV.setVisibility(View.VISIBLE);
-//                    layerDisc.setText("↑");
-//                }
-//
-//                markerInfoLabel.setVisibility(View.GONE);
-//                markerDetailText.setVisibility(View.GONE);
-//                cancelNewMarkerButton.setVisibility(View.GONE);
-//                saveNewMarkerButton.setVisibility(View.GONE);
-//                break;
-//
-//            case 1:
-//                markerLabel.setVisibility(View.GONE);
-//                markerPlus.setVisibility(View.GONE);
-//                markerDisc.setVisibility(View.GONE);
-//                markerRV.setVisibility(View.GONE);
-//                layerLabel.setVisibility(View.GONE);
-//                layerDisc.setVisibility(View.GONE);
-//                layerRV.setVisibility(View.GONE);
-//
-//                markerInfoLabel.setVisibility(View.VISIBLE);
-//                markerDetailText.setVisibility(View.VISIBLE);
-//                break;
-//
-//            case 2:
-//                markerLabel.setVisibility(View.GONE);
-//                markerPlus.setVisibility(View.GONE);
-//                markerDisc.setVisibility(View.GONE);
-//                markerRV.setVisibility(View.GONE);
-//                layerLabel.setVisibility(View.GONE);
-//                layerDisc.setVisibility(View.GONE);
-//                layerRV.setVisibility(View.GONE);
-//
-//                markerInfoLabel.setVisibility(View.VISIBLE);
-//                markerInfoLabel.setText("New marker");
-//                markerDetailText.setVisibility(View.VISIBLE);
-//                break;
-//        }
-//    }
-
-//    private void displayBoxes() {
-//        if(markersCollapsed) {
-//            markerRV.setVisibility(View.GONE);
-//        } else {
-//            markerRV.setVisibility(View.VISIBLE);
-//        }
-//
-//        if(layersCollapsed) {
-//            layerRV.setVisibility(View.GONE);
-//        } else {
-//            layerRV.setVisibility(View.VISIBLE);
-//        }
-//    }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        final LayerListAdapter layerListAdapter = new LayerListAdapter(new LayerListAdapter.LayerDiff());
-//        layerRV.setAdapter(layerListAdapter);
-//        layerRV.setLayoutManager(new LinearLayoutManager(this));
-//        layerRV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-//
-//        final MarkerListAdapter adapter = new MarkerListAdapter(new MarkerListAdapter.MarkerDiff());
-//        markerRV.setAdapter(adapter);
-//        markerRV.setLayoutManager(new LinearLayoutManager(this));
-//        markerRV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-//        // List LiveData Markers
-//        markerViewModel.getAllMarkers().observe(this, markers -> adapter.submitList(markers));
-//
-//        layerList = layerViewModel.getLayerList();
-//        layerListAdapter.submitList(layerList);
-//        layerViewModel.setVisibility(false,4);
     }
 
     @Override
@@ -427,62 +198,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
         mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
         mMap.getUiSettings().setCompassEnabled(compassEnabled);
-
-//        //MARK: MarkerDragListener
-//        mMap.setOnMarkerDragListener(
-//                new GoogleMap.OnMarkerDragListener() {
-//                    final DecimalFormat df = new DecimalFormat("#.00000");
-//                    LatLng startPos, endPos;
-//
-//                    @Override
-//                    public void onMarkerDrag(@NonNull com.google.android.gms.maps.model.Marker marker) {
-//                        LatLng newpos = marker.getPosition();
-//                        String snippet = marker.getSnippet();
-//                        String latStr = df.format(newpos.latitude);
-//                        String lngStr = df.format(newpos.longitude);
-////                        showLayers(false);
-////                        showLayers(false);
-//                    }
-//
-//                    @Override
-//                    public void onMarkerDragEnd(@NonNull com.google.android.gms.maps.model.Marker marker) {
-//                        cancelNewMarkerButton.setVisibility(View.VISIBLE);
-//                        saveNewMarkerButton.setVisibility(View.VISIBLE);
-//                        curLocation = marker.getPosition();
-//                        String snippet = marker.getSnippet();
-//                        String latStr = df.format(curLocation.latitude);
-//                        String lngStr = df.format(curLocation.longitude);
-//                        if(marker.getTag()!=null) {
-//                            current_marker_id = (int) marker.getTag();
-//                        } else {
-//                            current_marker_id = -999;
-//                        }
-//                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
-//                                + System.lineSeparator() + "Marker id: " + current_marker_id);
-//                        Log.i(TAG, "onMarkerDrag: id " + current_marker_id);
-//                    }
-//
-//                    @Override
-//                    public void onMarkerDragStart(@NonNull com.google.android.gms.maps.model.Marker marker) {
-//                        editor.putBoolean("editingMarker", true);
-//                        editor.apply();
-////                        mode = 1;
-////                        setupMode();
-//                        String snippet = marker.getSnippet();
-//                        String placename = marker.getTitle();
-//                        LatLng newpos = marker.getPosition();
-//                        String latStr = df.format(newpos.latitude);
-//                        String lngStr = df.format(newpos.longitude);
-//
-//                        String markerText = "Snippet: " + snippet;
-//                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
-//                                + System.lineSeparator() + "Marker id: " + snippet);
-//                        markerInfoLabel.setText(placename);
-//                    }
-//                }
-//        );
-
-        // MarkerClickListener
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                           @Override
                                           public boolean onMarkerClick(@NonNull com.google.android.gms.maps.model.Marker marker) {
@@ -698,33 +413,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerList = markerViewModel.getMarkerList();
     }
 
-//    public void onMarkerListItemClicked(MMarker marker) {
-//        Log.i(TAG, "onMarkerListItemClicked: " + marker.getCode());
-//        LatLng target = new LatLng(marker.getLatitude(), marker.getLongitude());
-//        int padding = 100;
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 18));
-//    }
-//    public void onLayerListItemCheckedChanged(Layer layer, boolean isChecked) {
-//        Log.i(TAG, "onLayerListItemCheckedChanged: " + layer.getLayer_id() + isChecked);
-//        layerViewModel.setVisibility(isChecked, layer.getLayer_id());
-//    }
-//    private void showEditDialog() {
-//        FragmentManager fm = getSupportFragmentManager();
-//        markerDetailFragment = new MarkerDetailFragment();
-//        markerDetailFragment.show(fm, "marker_detail_edit_name");
-//    }
-
-//    @Override
-//    public void onReturn(Editable text, Editable code, String layer) {
-//        Log.i(TAG, "onReturn: " + text + code + layer);
-//
-//        curLocation = mMap.getCameraPosition().target;
-//        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, text.toString(),code.toString(),layer, "");
-//        markerDao.insertMarker(mMarker);
-//        mMap.clear();
-//        loadMarkerList();
-//        addMarkersToMap();
-//    }
 
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
