@@ -303,7 +303,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         float zoom = defaults.getFloat("zoom", DEFAULT_ZOOM);
         LatLng startPosition = new LatLng(latitude, longitude);
 
-
         return new CameraPosition.Builder()
                 .target(startPosition)      // Sets the center of the map to Mountain View
                 .zoom(zoom)
@@ -354,5 +353,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerDao.insertMarker(mMarker);
         getVisibleMarkers();
         addMarkers(visibleMarkerList);
+        CameraPosition cameraPosition = new CameraPosition(curLocation,18,0,0);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }
