@@ -26,14 +26,14 @@ public class MMarker {
     private String type;
     private boolean isUpdated;
     private boolean isNew;
-    private String snippet;
+    private String notes;
 
-    public MMarker(double latitude, double longitude, String placename, String code, String type, String snippet) {
+    public MMarker(double latitude, double longitude, String placename, String code, String type, String notes) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.placename = placename;
         this.code = code;
-        this.snippet = snippet;
+        this.notes = notes;
         this.type = type;
         isVisible = true;
         isUpdated = false;
@@ -65,12 +65,12 @@ public class MMarker {
         isNew = aNew;
     }
 
-    public String getSnippet() {
-        return snippet;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setSnippet(String snippet) {
-        this.snippet = snippet;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     private enum type {

@@ -2,12 +2,16 @@ package com.alexsykes.mapmonster.activities;
 // https://guides.codepath.com/android/using-dialogfragment
 
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,14 +26,16 @@ import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.MMDatabase;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
 
 public class MarkerDetailFragment extends DialogFragment {
-//    private TextInputLayout markerNameEditText, markerCodeEditText;
-    private EditText markerNameTextEdit, markerCodeTextEdit;
+    private  static  LatLng latLng;
     private static String TAG = "Info";
+//    private TextInputLayout markerNameEditText, markerCodeEditText;
+    private EditText markerNameTextEdit, markerCodeTextEdit, markerNotesTextEdit;
     Button saveButton, cancelButton;
     RadioGroup layerRadioGroup;
     MMDatabase db;
@@ -37,7 +43,8 @@ public class MarkerDetailFragment extends DialogFragment {
     List<Layer> layerList;
 
 
-        public MarkerDetailFragment() {
+        public MarkerDetailFragment(LatLng latLng) {
+            this.latLng = latLng;
         Log.i(TAG, "MarkerDetailFragment: ");
         Bundle args = new Bundle();
         args.putString("title", "New marker");
@@ -51,12 +58,22 @@ public class MarkerDetailFragment extends DialogFragment {
 
     };
 
+    public static MarkerDetailFragment newInstance(String title){
+        Log.i(TAG, "newInstance: ");
+        MarkerDetailFragment frag = new MarkerDetailFragment(latLng);
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        frag.setArguments(args);
+        return frag;
+    }
+
     @Override
     public void onViewCreated (View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
         markerNameTextEdit = view.findViewById(R.id.markerNameTextEdit);
         markerCodeTextEdit = view.findViewById(R.id.markerCodeTextEdit);
+        markerNotesTextEdit = view.findViewById(R.id.markerNotesTextEdit);
 
         saveButton = view.findViewById(R.id.saveMarkerDetailsButton);
         layerRadioGroup = view.findViewById(R.id.layerRadioGroup);
@@ -74,6 +91,8 @@ public class MarkerDetailFragment extends DialogFragment {
                 MarkerDetailFragmentListener listener = (MarkerDetailFragmentListener) getActivity();
                 Editable markerName = markerNameTextEdit.getText();
                 Editable markerCode = markerCodeTextEdit.getText();
+                Editable markerNotes = markerNotesTextEdit.getText();
+                //Editable markerDetails =
                 String layer = "Placemark";
 
                 if(markerName.length() == 0) { markerName.append("New Placemark") ; }
@@ -85,7 +104,8 @@ public class MarkerDetailFragment extends DialogFragment {
                     layer = String.valueOf(radioButton.getText());
                 }
 
-                listener.onReturn(markerName, markerCode, layer);
+                listener.onReturn(markerName, markerCode, markerNotes,
+                        layer);
                 dismiss();
             }
         });
@@ -109,13 +129,20 @@ public class MarkerDetailFragment extends DialogFragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
-    public static MarkerDetailFragment newInstance(String title){
-        Log.i(TAG, "newInstance: ");
-        MarkerDetailFragment frag = new MarkerDetailFragment();
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        frag.setArguments(args);
-        return frag;
+    public void onResume() {
+
+        // Store access variables for window and blank point
+        Window window = getDialog().getWindow();
+        Point size = new Point();
+        // Store dimensions of the screen in `size`
+        Display display = window.getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        // Set the width of the dialog proportional to 75% of the screen width
+        window.setLayout((int) (size.x * 0.20), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.TOP | Gravity.LEFT);
+        // Call super onResume after sizing
+        super.onResume();
+
     }
 
     @Override
@@ -123,15 +150,9 @@ public class MarkerDetailFragment extends DialogFragment {
                               Bundle savedInstanceState){
         return inflater.inflate(R.layout.fragment_marker_detail, container);
     }
-//
-//    public String getMarkerDetails()  {
-//        String data = String.valueOf(this.markerNameEditText.getEditText().getText());
-//        return data;
-//    }
 
 public interface MarkerDetailFragmentListener {
-        void onReturn(Editable name, Editable code, String layer);
-
+        void onReturn(Editable name, Editable code, Editable markerNotes, String layer);
     }
 
     @Override

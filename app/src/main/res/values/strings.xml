@@ -45,4 +45,5 @@
     <string name="hide_all">Hide all</string>
     <string name="show_layer_list">Show layer list</string>
     <string name="section_switch">Switch</string>
+    <string name="description">Description</string>
 </resources>

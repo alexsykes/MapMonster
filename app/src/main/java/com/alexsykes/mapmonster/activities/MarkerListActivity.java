@@ -168,7 +168,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         double lat = loc.latitude;
         double lng = loc.longitude;
 
-        showEditDialog();
+        showEditDialog(lat, lng);
 
     }
 
@@ -221,7 +221,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             // Get data set
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             type = marker.getType();
-            snippet = marker.getSnippet();
+            snippet = marker.getNotes();
             marker_title = marker.getPlacename();
 
             // Create new marker
@@ -325,10 +325,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onMarkerListItemClicked: " + isVisible);
     }
 
-    private void showEditDialog() {
+    private void showEditDialog(double lat, double lng) {
+        LatLng latLng = new LatLng(lat,lng);
         FragmentManager fm = getSupportFragmentManager();
-        markerDetailFragment = new MarkerDetailFragment();
+        markerDetailFragment = new MarkerDetailFragment(latLng);
         markerDetailFragment.show(fm, "marker_detail_edit_name");
+
     }
 
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
@@ -344,11 +346,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     @Override
-    public void onReturn(Editable name, Editable code, String layer) {
-
+    public void onReturn(Editable name, Editable code, Editable markerNotes, String layer) {
+        mMap.clear();
+        Log.i(TAG, "onReturn: ");
         LatLng curLocation = mMap.getCameraPosition().target;
-        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, "");
+        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, markerNotes.toString());
         markerDao.insertMarker(mMarker);
-        //  mMap.clear();
+        getVisibleMarkers();
+        addMarkers(visibleMarkerList);
     }
 }

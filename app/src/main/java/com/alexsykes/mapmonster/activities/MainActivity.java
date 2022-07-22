@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private GoogleMap mMap;
 
     private static final String TAG = "Info";
-    private static final int DEFAULT_ZOOM = 12;
+    private static final int DEFAULT_ZOOM = 6;
 
     private List<MMarker> markerList;
     private List<Layer> layerList;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     RecyclerView markerRV;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
-    private LatLng defaultLocation = new LatLng(53.59,-2.56);
+    private LatLng defaultLocation = new LatLng(54.29750000675,-2.94531856934);
     private LatLng curLocation;
 
     private MarkerViewModel markerViewModel;
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
         mMap.setOnMapLoadedCallback(this);
-        mMap.setMinZoomPreference(8);
+        mMap.setMinZoomPreference(4);
         mMap.setMaxZoomPreference(20);
         mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
         mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+//        addMarkersToMap();
         Log.i(TAG, "onMapReady: " + markerList.size() + " markers loaded");
     }
     private void getLocationPermission() {
@@ -253,11 +254,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                                                 lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             }
                         } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "Exception: %s", task.getException());
-                            mMap.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+//                            Log.d(TAG, "Current location is null. Using defaults.");
+//                            Log.e(TAG, "Exception: %s", task.getException());
+//                            mMap.moveCamera(CameraUpdateFactory
+//                                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+//                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
                 });
@@ -343,13 +344,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             type = marker.getType();
-            String snippet = marker.getSnippet();
+            String snippet = marker.getNotes();
 
             marker_title = marker.getPlacename();
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latLng)
                     .title(marker_title)
-                    .snippet(snippet)
+                    .snippet(code)
                     .visible(true);
 
             switch(type)  {
@@ -374,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 default:
                     break;
             }
-            markerOptions.draggable(true);
+            markerOptions.draggable(false);
 
             Marker marker1 = mMap.addMarker(markerOptions);
             marker1.setTag(marker.getMarker_id());
@@ -398,7 +399,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerList = markerViewModel.getMarkerList();
     }
-
 
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);

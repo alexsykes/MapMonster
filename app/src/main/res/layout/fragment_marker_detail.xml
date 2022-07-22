@@ -11,15 +11,6 @@
     android:orientation="vertical">
 
 
-<!--    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/purple_700"
-        android:text="Marker details"
-        android:textAlignment="center"
-        android:textColor="@color/white" />-->
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/markerNameEditText"
         android:layout_width="match_parent"
@@ -47,6 +38,20 @@
             android:layout_height="wrap_content"
             android:inputType="textCapCharacters"
             android:singleLine="true"
+            android:textColorHint="#616161" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/notesNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/markerNotesTextEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            android:singleLine="false"
             android:textColorHint="#616161" />
     </com.google.android.material.textfield.TextInputLayout>
 
