@@ -15,8 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,13 +72,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     SharedPreferences defaults;
 
     SharedPreferences.Editor editor;
-    private int mode;
-    private TextView markerLabel, markerPlus, layerLabel, layerDisc, markerDisc, markerDetailText, markerInfoLabel;
-    private Button cancelNewMarkerButton, saveNewMarkerButton;
-    private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled, layersCollapsed, markersCollapsed, editingMarker;
-    RecyclerView layerRV;
-    private int current_marker_id;
-    MarkerDetailFragment markerDetailFragment;
+    private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +86,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-
-        mode = defaults.getInt("mode",0);
         setupUIComponents();
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerDao = db.markerDao();
-
+        loadMarkerList();
     }
 
     @Override
@@ -221,8 +211,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-//        Log.i(TAG, "onMapReady: " + markerList.size());
-        // addMarkersToMap();
+        Log.i(TAG, "onMapReady: " + markerList.size() + " markers loaded");
     }
     private void getLocationPermission() {
         /*
@@ -336,9 +325,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     @Override
     public void onMapLoaded() {
         Log.i(TAG, "onMapLoaded: ");
-        loadMarkerList();
+//        loadMarkerList();
         addMarkersToMap();
-        //updateCamera();
+        updateCamera();
     }
 
     // Utility methods
@@ -376,18 +365,15 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 case "Food" :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_36));
                     break;
+                case "Junction" :
+//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
+                    break;
                 case "Parking" :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
                     break;
                 default:
                     break;
             }
-
-//            if (type.equals("Car park")) {
-//                markerOptions.visible(true);
-//            } else {
-//                markerOptions.visible(true);
-//            }
             markerOptions.draggable(true);
 
             Marker marker1 = mMap.addMarker(markerOptions);
