@@ -9,8 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -114,12 +112,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         visibleMarkerList = getVisibleMarkers();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.layer_edit_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.layer_edit_menu, menu);
+//        return true;
+//    }
     // Navigation
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -181,12 +179,15 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             double lng = currentMarker.getPosition().longitude;
 
             markerDao.update(markerId, markerCode, markerNotes, markerName, lat, lng);
+            redrawMarkers();
         });
+
         cancelButton = findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(v -> {
             layerPanelLinearLayout.setVisibility(View.VISIBLE);
             markerInfoPanel.setVisibility(View.GONE);
             addMarkerButton.setVisibility(View.VISIBLE);
+            redrawMarkers();
         });
 
 
@@ -445,5 +446,18 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         addMarkers(visibleMarkerList);
         CameraPosition cameraPosition = new CameraPosition(curLocation,18,0,0);
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    public void redrawMarkers() {
+        mMap.clear();
+        visibleMarkerList = getVisibleMarkers();
+        addMarkers(visibleMarkerList);
+
+        // Main recyclerView - show list/sbulist of layers/markers
+        visibleLayers = new ArrayList<>(layerDao.getVisibleLayerList());
+        sectionListRV = findViewById(R.id.sectionListRecyclerView);
+        markerMap = markerDao.getMarkersByLayer();
+        final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap, visibleLayers);
+        sectionListRV.setAdapter(layerListAdapter);
     }
 }
