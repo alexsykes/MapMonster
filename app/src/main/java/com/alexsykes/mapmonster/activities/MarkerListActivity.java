@@ -13,6 +13,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,6 +44,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +56,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private MarkerDao markerDao;
     private LayerDao layerDao;
     Map<String, List<MMarker>> markerMap;
-    TextView showAllMarkersButton;
+    TextView showAllMarkersButton, markerIdTextView, markerLatTextView, markerLngTextView;
+    EditText markerNameEditText, markerNotesEditText, markerCodeEditText;
+    Button saveButton, cancelButton;
+    FloatingActionButton addMarkerButton;
     SwitchMaterial showAllLayerList;
     RecyclerView sectionListRV;
     private List<MMarker> visibleMarkerList;
@@ -60,8 +67,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
     private final LatLng defaultLocation = new LatLng(53.59,-2.56);
+    LinearLayout layerPanelLinearLayout, markerInfoPanel;
     private ArrayList<String> visibleLayers ;
     MarkerDetailFragment markerDetailFragment;
+    private LatLng currentLocation;
+    private Marker currentMarker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +113,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         // Get list of visible layers
         visibleMarkerList = getVisibleMarkers();
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -121,7 +132,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     private void toggleLayerPanel() {
         if (sectionListRV.getVisibility() == View.VISIBLE) {
-        sectionListRV.setVisibility(View.GONE);
+            sectionListRV.setVisibility(View.GONE);
             mMap.setPadding(0,0,0,0); }
         else {
             sectionListRV.setVisibility(View.VISIBLE);
@@ -143,6 +154,41 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void setupUI() {
+        layerPanelLinearLayout = findViewById(R.id.layerPanelLinearLayout);
+        markerInfoPanel = findViewById(R.id.markerInfoPanel);
+        markerIdTextView = findViewById(R.id.markerIdTextView);
+        markerLatTextView = findViewById(R.id.markerLatTextView);
+        markerLngTextView = findViewById(R.id.markerLngTextView);
+        markerNameEditText = findViewById(R.id.markerNameEditText);
+        markerNotesEditText = findViewById(R.id.markerNotesEditText);
+        markerCodeEditText =  findViewById(R.id.markerCodeEditText);
+
+        markerInfoPanel.setVisibility(View.GONE);
+
+        saveButton = findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(v -> {
+            layerPanelLinearLayout.setVisibility(View.VISIBLE);
+            markerInfoPanel.setVisibility(View.GONE);
+            addMarkerButton.setVisibility(View.GONE);
+
+            int markerId = (Integer) currentMarker.getTag();
+
+            String markerName = markerNameEditText.getText().toString();
+            String markerCode = markerCodeEditText.getText().toString();
+            String markerNotes = markerNotesEditText.getText().toString();
+
+            double lat = currentMarker.getPosition().latitude;
+            double lng = currentMarker.getPosition().longitude;
+
+            markerDao.update(markerId, markerCode, markerNotes, markerName, lat, lng);
+        });
+        cancelButton = findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> {
+            layerPanelLinearLayout.setVisibility(View.VISIBLE);
+            markerInfoPanel.setVisibility(View.GONE);
+            addMarkerButton.setVisibility(View.VISIBLE);
+        });
+
 
         showAllLayerList = findViewById(R.id.showLayerList);
         showAllLayerList.setChecked(true);
@@ -152,7 +198,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             showAllLayers(setVisible);
         });
 
-        FloatingActionButton addMarkerButton = findViewById(R.id.addMarkerButton);
+        addMarkerButton = findViewById(R.id.addMarkerButton);
         addMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,10 +234,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerDao = db.markerDao();
         layerDao = db.layerDao();
 
-        if ( showAllMarkersButton.getText().toString().equals("Show all")) {
+        if ( showAllMarkersButton.getText().toString().equals(getString(R.string.show_all))) {
             visibleMarkerList = markerDao.getMarkerList();
             layerDao.setVisibilityForAll(true);
-            showAllMarkersButton.setText("Hide all");
+            showAllMarkersButton.setText(R.string.hide_all);
         } else {
             layerDao.setVisibilityForAll(false);
             showAllMarkersButton.setText("Show all");
@@ -275,6 +321,51 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+
+        // Drag listener
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            final DecimalFormat df = new DecimalFormat("#.#####");
+            String latStr, lngStr;
+            @Override
+            public void onMarkerDrag(@NonNull Marker marker) {
+                Log.i(TAG, "onMarkerDrag: ");
+                currentLocation = marker.getPosition();
+                latStr = df.format(currentLocation.latitude);
+                lngStr = df.format(currentLocation.longitude);
+                markerLatTextView.setText(latStr);
+                markerLngTextView.setText(lngStr);
+            }
+
+            @Override
+            public void onMarkerDragEnd(@NonNull Marker marker) {
+                Log.i(TAG, "onMarkerDragEnd: ");
+                currentMarker = marker;
+            }
+
+            @Override
+            public void onMarkerDragStart(@NonNull Marker marker) {
+                currentLocation = marker.getPosition();
+                Log.i(TAG, "onMarkerDragStart: " + marker.getTag());
+                latStr = df.format(currentLocation.latitude);
+
+                int markerId = (Integer) marker.getTag();
+                MMarker currentMarker = markerDao.getMarker(markerId);
+                latStr = df.format(currentLocation.latitude);
+                lngStr = df.format(currentLocation.longitude);
+                markerInfoPanel.setVisibility(View.VISIBLE);
+                layerPanelLinearLayout.setVisibility(View.GONE);
+                addMarkerButton.setVisibility(View.GONE);
+
+                markerIdTextView.setText(new StringBuilder().append(getString(R.string.marker_id)).append(currentMarker.getMarker_id()).toString());
+                markerLatTextView.setText(latStr);
+                markerLngTextView.setText(lngStr);
+
+                markerCodeEditText.setText(currentMarker.getCode());
+                markerNameEditText.setText(currentMarker.getPlacename());
+                markerNotesEditText.setText(currentMarker.getNotes());
+            }
+        });
+
         CameraPosition cameraPosition = getSavedCameraPosition();
         addMarkers(visibleMarkerList);
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -319,7 +410,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     public void onMarkerListItemClicked(MMarker marker, int isVisible) {
-
         LatLng loc = new LatLng(marker.getLatitude(), marker.getLongitude());
         Log.i(TAG, "onMarkerListItemClicked: " + isVisible);
     }

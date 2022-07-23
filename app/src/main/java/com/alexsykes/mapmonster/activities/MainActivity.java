@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
         mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
         mMap.getUiSettings().setCompassEnabled(compassEnabled);
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                           @Override
                                           public boolean onMarkerClick(@NonNull com.google.android.gms.maps.model.Marker marker) {

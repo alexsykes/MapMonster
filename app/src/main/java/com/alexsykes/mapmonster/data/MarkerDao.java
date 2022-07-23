@@ -42,6 +42,12 @@ public interface MarkerDao {
     @MapInfo(keyColumn = "layername", valueColumn = "placename")
     @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.type ORDER BY layername, placename")
     public Map<String, List<MMarker>> getMarkersByLayer();
+
+    @Query("SELECT * FROM markers WHERE markerID = :tag")
+    MMarker getMarker(int tag);
+
+    @Query("UPDATE markers SET code = :markerCode, placename = :markerName, notes = :markerNotes, latitude = :lat, longitude = :lng WHERE markerID = :markerId")
+    void update(int markerId, String markerCode, String markerNotes, String markerName, double lat, double lng);
 }
 
 

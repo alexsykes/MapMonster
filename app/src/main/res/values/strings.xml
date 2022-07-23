@@ -46,4 +46,9 @@
     <string name="show_layer_list">Show layer list</string>
     <string name="section_switch">Switch</string>
     <string name="description">Description</string>
+    <string name="markerid">markerID:</string>
+    <string name="marker_notes">Marker notes</string>
+    <string name="hide_alll">Hide all</string>
+    <string name="show_alll">Show all</string>
+    <string name="marker_id">\"Marker ID: \"</string>
 </resources>
