@@ -162,6 +162,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onMapReady: ");
         mMap = googleMap;
 
+        // Position the map's camera near Sydney, Australia.
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-34, 151)));
+
+
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String maptype = preferences.getString("map_view_type","NORMAL");
 
