@@ -9,7 +9,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.526" />
         <entry key="app/src/main/res/layout/activity_help.xml" value="0.4203125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_marker_list.xml" value="0.1953125" />
+        <entry key="app/src/main/res/layout/activity_marker_list.xml" value="0.28177083333333336" />
         <entry key="app/src/main/res/layout/child_marker_list_item.xml" value="0.28177083333333336" />
         <entry key="app/src/main/res/layout/fragment_marker_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layer_item.xml" value="0.1" />

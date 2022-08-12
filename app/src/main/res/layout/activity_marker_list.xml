@@ -68,10 +68,12 @@
             android:background="@color/white"
             android:elevation="@dimen/small_margin"
             android:hint="@string/marker_name"
-            android:inputType="textPersonName"
+            android:imeOptions="actionNext"
+            android:inputType="textNoSuggestions"
             android:minHeight="48dp"
             android:padding="@dimen/small_margin"
             android:textColor="@color/teal_700"
+
             tools:ignore="TextContrastCheck" />
 
         <EditText
@@ -81,7 +83,8 @@
             android:background="@color/white"
             android:elevation="@dimen/small_margin"
             android:hint="@string/marker_code"
-            android:inputType="textPersonName"
+            android:imeOptions="actionNext"
+            android:inputType="textNoSuggestions"
             android:minHeight="48dp"
             android:padding="@dimen/small_margin"
             android:textColor="@color/teal_700"
@@ -94,7 +97,8 @@
             android:background="@color/white"
             android:elevation="@dimen/small_margin"
             android:hint="@string/marker_notes"
-            android:inputType="textPersonName"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions"
             android:minHeight="48dp"
             android:padding="@dimen/small_margin"
             android:singleLine="false"
@@ -156,7 +160,7 @@
             android:elevation="@dimen/large_margin"
             android:overScrollMode="always"
             android:translationZ="5dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"></androidx.recyclerview.widget.RecyclerView>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <Space
             android:layout_width="match_parent"
