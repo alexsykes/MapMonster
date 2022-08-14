@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
+    private List<String> visibleLayerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +94,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDao = db.markerDao();
         markerList = markerViewModel.getMarkerList();
+        layerList = layerViewModel.getLayerList();
+        visibleLayerList = layerViewModel.getVisibleLayerList();
     }
 
     @Override
@@ -128,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
-
 
     @SuppressLint("MissingPermission")
     public void onMapReady(GoogleMap googleMap) {
@@ -222,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return false;
     }
 
-
     // Navigation
     private void goMarkerList() {
         Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
@@ -315,38 +317,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
 
-    void saveCameraPosition() {
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
-        editor = defaults.edit();
-        CameraPosition mMyCam = mMap.getCameraPosition();
-        double longitude = mMyCam.target.longitude;
-        double latitude = mMyCam.target.latitude;
-        float zoom = mMyCam.zoom;
-
-        editor.putFloat("longitude", (float) longitude);
-        editor.putFloat("latitude", (float) latitude);
-        editor.putFloat("zoom", zoom);
-        editor.apply();
-    }
-
-    CameraPosition getSavedCameraPosition() {
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
-
-        // "initial longitude" is only used on first startup
-        double longitude = defaults.getFloat("longitude", (float) defaultLocation.longitude);
-        double latitude = defaults.getFloat("latitude", (float) defaultLocation.latitude);
-        float zoom = defaults.getFloat("zoom", DEFAULT_ZOOM);
-        LatLng startPosition = new LatLng(latitude, longitude);
-
-
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(startPosition)      // Sets the center of the map to Mountain View
-                .zoom(zoom)
-                .build();                   // Creates a CameraPosition from the builder
-
-        return cameraPosition;
-    }
-
 
     // Utility methods
     private void addMarkersToMap() {
@@ -411,6 +381,36 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
         }
+    }
+    CameraPosition getSavedCameraPosition() {
+        defaults = this.getPreferences(Context.MODE_PRIVATE);
+
+        // "initial longitude" is only used on first startup
+        double longitude = defaults.getFloat("longitude", (float) defaultLocation.longitude);
+        double latitude = defaults.getFloat("latitude", (float) defaultLocation.latitude);
+        float zoom = defaults.getFloat("zoom", DEFAULT_ZOOM);
+        LatLng startPosition = new LatLng(latitude, longitude);
+
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(startPosition)      // Sets the center of the map to Mountain View
+                .zoom(zoom)
+                .build();                   // Creates a CameraPosition from the builder
+
+        return cameraPosition;
+    }
+    void saveCameraPosition() {
+        defaults = this.getPreferences(Context.MODE_PRIVATE);
+        editor = defaults.edit();
+        CameraPosition mMyCam = mMap.getCameraPosition();
+        double longitude = mMyCam.target.longitude;
+        double latitude = mMyCam.target.latitude;
+        float zoom = mMyCam.zoom;
+
+        editor.putFloat("longitude", (float) longitude);
+        editor.putFloat("latitude", (float) latitude);
+        editor.putFloat("zoom", zoom);
+        editor.apply();
     }
 
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {

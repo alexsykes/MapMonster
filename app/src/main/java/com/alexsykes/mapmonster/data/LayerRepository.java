@@ -10,16 +10,19 @@ public class LayerRepository {
     private LayerDao layerDao;
     private LiveData<List<Layer>> allLabels;
     private List<Layer> layerList;
+    private List<String> visibleLayerList;
 
     LayerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
         layerDao = db.layerDao();
         allLabels = layerDao.allLayers();
         layerList = layerDao.getLayerList();
+        visibleLayerList = layerDao.getVisibleLayerList();
     }
 
     LiveData<List<Layer>> getAllLabels() { return allLabels; }
     public List<Layer> getLayerList() { return layerList; }
+    List<String> getVisibleLayerList() { return visibleLayerList; };
 
     void insert(Layer layer) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
