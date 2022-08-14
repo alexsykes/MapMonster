@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
+
+        // get saved values and editor from prefs
         defaults = this.getPreferences(Context.MODE_PRIVATE);
         editor = defaults.edit();
 
@@ -87,10 +89,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
         setupUIComponents();
+
+        // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerDao = db.markerDao();
-        loadMarkerList();
+        markerList = markerViewModel.getMarkerList();
     }
 
     @Override
@@ -125,38 +129,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return true;
     }
 
-    // Navigation
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help_menu_item:
-                goHelp();
-                return true;
 
-            case R.id.settings_menu_item:
-                goSettings();
-                return true;
-
-            case R.id.marker_list_item:
-                goMarkerList();
-                return true;
-            default:
-        }
-        return false;
-    }
-
-    private void goMarkerList() {
-        Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
-        startActivity(intent);
-    }
-    private void goSettings() {
-        Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
-        startActivity(intent);
-    }
-    private void goHelp() {
-        Intent intent = new Intent(MainActivity.this,HelpActivity.class);
-        startActivity(intent);
-    }
     @SuppressLint("MissingPermission")
     public void onMapReady(GoogleMap googleMap) {
         Log.i(TAG, "onMapReady: ");
@@ -219,6 +192,47 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
 //        addMarkersToMap();
         Log.i(TAG, "onMapReady: " + markerList.size() + " markers loaded");
+    }
+
+    @Override
+    public void onMapLoaded() {
+        Log.i(TAG, "onMapLoaded: ");
+//        loadMarkerList();
+        addMarkersToMap();
+        updateCamera();
+    }
+
+    // Navigation
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help_menu_item:
+                goHelp();
+                return true;
+
+            case R.id.settings_menu_item:
+                goSettings();
+                return true;
+
+            case R.id.marker_list_item:
+                goMarkerList();
+                return true;
+            default:
+        }
+        return false;
+    }
+
+    private void goMarkerList() {
+        Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
+        startActivity(intent);
+    }
+    private void goSettings() {
+        Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+        startActivity(intent);
+    }
+    private void goHelp() {
+        Intent intent = new Intent(MainActivity.this,HelpActivity.class);
+        startActivity(intent);
     }
     private void getLocationPermission() {
         /*
@@ -329,13 +343,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return cameraPosition;
     }
 
-    @Override
-    public void onMapLoaded() {
-        Log.i(TAG, "onMapLoaded: ");
-//        loadMarkerList();
-        addMarkersToMap();
-        updateCamera();
-    }
 
     // Utility methods
     private void addMarkersToMap() {
@@ -400,10 +407,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
         }
-    }
-    private void loadMarkerList() {
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerList = markerViewModel.getMarkerList();
     }
 
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
