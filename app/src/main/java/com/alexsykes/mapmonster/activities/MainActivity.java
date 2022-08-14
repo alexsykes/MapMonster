@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final int DEFAULT_ZOOM = 6;
 
     private List<MMarker> markerList;
-    private List<Layer> layerList;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -67,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
-    private MarkerDao markerDao;
 
     SharedPreferences defaults;
 
@@ -95,9 +93,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
-        markerDao = db.markerDao();
         markerList = markerViewModel.getMarkerList();
-        layerList = layerViewModel.getLayerList();
         visibleLayerList = layerViewModel.getVisibleLayerList();
     }
 

@@ -71,7 +71,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private LatLng currentLocation;
     private Marker currentMarker;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
