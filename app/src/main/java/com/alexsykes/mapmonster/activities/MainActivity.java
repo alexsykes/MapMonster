@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return false;
     }
 
+
+    // Navigation
     private void goMarkerList() {
         Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
         startActivity(intent);
@@ -234,6 +236,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Intent intent = new Intent(MainActivity.this,HelpActivity.class);
         startActivity(intent);
     }
+
+    // Permissions
     private void getLocationPermission() {
         /*
          * Request location permission, so that we can get the location of the
