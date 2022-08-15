@@ -33,4 +33,12 @@ public class LayerRepository {
     public void setVisibility(boolean isVisible, int layerID) {
         layerDao.setVisibility(isVisible,layerID);
     }
+
+    public void setVisibility(String layerName, boolean visibility) {
+        layerDao.setVisibility(layerName, visibility);
+    }
+
+    public void setVisibilityForAll(boolean b) {
+        layerDao.setVisibilityForAll(b);
+    }
 }

@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.SectionListAdapter;
-import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
@@ -74,7 +73,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private MarkerDao markerDao;
-    private LayerDao layerDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +83,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
-//        markerDao = db.markerDao();
-//        layerDao = db.layerDao();
         // Get all markers / layers for menu
-//        markerMap = markerDao.getMarkersByLayer();
-//        visibleLayers = new ArrayList<>(layerDao.getVisibleLayerList());
         markerMap = markerViewModel.getMarkersByLayer();
         visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
 
@@ -145,10 +139,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onLayerListItemClicked: " + layerName + visibility);
         if(visibility == 8) {
             visibleLayers.add(layerName);
-            layerDao.setVisibility(layerName, true);
+            layerViewModel.setVisibility(layerName, true);
         } else {
             visibleLayers.remove(layerName);
-            layerDao.setVisibility(layerName, false);
+            layerViewModel.setVisibility(layerName, false);
         }
         visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
         addMarkers(visibleMarkerList);
@@ -236,14 +230,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         // Get database then markerList
         MMDatabase db = MMDatabase.getDatabase(this);
         markerDao = db.markerDao();
-        layerDao = db.layerDao();
 
         if ( showAllMarkersButton.getText().toString().equals(getString(R.string.show_all))) {
             visibleMarkerList = markerDao.getMarkerList();
-            layerDao.setVisibilityForAll(true);
+            layerViewModel.setVisibilityForAll(true);
             showAllMarkersButton.setText(R.string.hide_all);
         } else {
-            layerDao.setVisibilityForAll(false);
+            layerViewModel.setVisibilityForAll(false);
             showAllMarkersButton.setText("Show all");
         }
         visibleMarkerList = getVisibleMarkers();
@@ -407,8 +400,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     List<MMarker> getVisibleMarkers() {
         MMDatabase db = MMDatabase.getDatabase(this);
         markerDao = db.markerDao();
-        layerDao = db.layerDao();
-        ArrayList<String> visibleLayerList = new ArrayList<>(layerDao.getVisibleLayerList());
+
+        ArrayList<String> visibleLayerList = new ArrayList<>(layerViewModel.getVisibleLayerList());
         visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayerList);
         return visibleMarkerList;
     }
@@ -457,7 +450,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         addMarkers(visibleMarkerList);
 
         // Main recyclerView - show list/sbulist of layers/markers
-        visibleLayers = new ArrayList<>(layerDao.getVisibleLayerList());
+        visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
         markerMap = markerDao.getMarkersByLayer();
         final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap, visibleLayers);

@@ -28,7 +28,6 @@ import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
-import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
