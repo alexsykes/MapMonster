@@ -1,20 +1,25 @@
 package com.alexsykes.mapmonster.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.MultiSelectListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity {
+    public static final String TAG = "Info";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,31 +43,37 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+
+            MultiSelectListPreference layer_visibility = findPreference("layer_visibility");
             layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+
+            // Get lists of layers and visibleLayers
             layerList = layerViewModel.getLayerList();
+            List<String> visibleLayerList = layerViewModel.getVisibleLayerList();
 
             String[] options = new String[layerList.size()];
 
             for (int i = 0; i < layerList.size(); i++){
                 options[i] = layerList.get(i).getLayername();
             }
-//            MultiSelectListPreference customListPref = new MultiSelectListPreference(getActivity());
-            MultiSelectListPreference layer_visibility = findPreference("layer_visibility");
 
-            // Get the Preference Category which we want to add the ListPreference to
-//            PreferenceCategory targetCategory = (PreferenceCategory) findPreference("TARGET_CATEGORY");
-
-            CharSequence[] entries = new CharSequence[]{"One", "Two", "Three"};
-            CharSequence[] entryValues = new CharSequence[]{ "1", "2", "3" };
-
-            // IMPORTANT - This is where set entries...looks OK to me
+            Set<String> values = new HashSet<String>(visibleLayerList);
             layer_visibility.setEntries(options);
             layer_visibility.setEntryValues(options);
+            layer_visibility.setValues(values);
 
-            layer_visibility.setPersistent(true);
-
-            // Add the ListPref to the Pref category
-            //targetCategory.addPreference(customListPref);
+            // Set listener for changes
+            layer_visibility.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    // newValue is A HashSet containing selected values
+                    Log.i(TAG, "onPreferenceChange: " + newValue);
+                    layerViewModel.updateLayerVisibility((Set<String>) newValue);
+                    layer_visibility.setValues((Set<String>) newValue);
+                    return false; // Saves in prefs if set to true
+                }
+            });
         }
     }
 }

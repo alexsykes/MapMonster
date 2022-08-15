@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.Set;
 
 public class LayerViewModel extends AndroidViewModel {
     private LayerRepository layerRepository;
@@ -34,5 +35,9 @@ public class LayerViewModel extends AndroidViewModel {
 
     public void setVisibilityForAll(boolean b) {
         layerRepository.setVisibilityForAll(b);
+    }
+
+    public void updateLayerVisibility(Set<String> newValue) {
+        layerRepository.updateLayerVisibility(newValue);
     }
 }

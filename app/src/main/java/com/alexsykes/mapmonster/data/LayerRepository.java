@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.Set;
 
 public class LayerRepository {
     private LayerDao layerDao;
@@ -40,5 +41,11 @@ public class LayerRepository {
 
     public void setVisibilityForAll(boolean b) {
         layerDao.setVisibilityForAll(b);
+    }
+
+    public void updateLayerVisibility(Set<String> newValues) {
+        layerDao.setVisibilityForAll(false);
+        String[] values = newValues.toArray(new String [newValues.size()]);
+        layerDao.updateLayerVisibility(values);
     }
 }

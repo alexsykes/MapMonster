@@ -34,4 +34,7 @@ public interface LayerDao {
 
     @Query("UPDATE layers SET isVisible = :b")
     void setVisibilityForAll(boolean b);
+
+    @Query("UPDATE layers SET isVisible = 1 WHERE layername IN (:values) ")
+    void updateLayerVisibility(String[] values);
 }
