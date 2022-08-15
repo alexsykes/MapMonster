@@ -28,7 +28,6 @@ import com.alexsykes.mapmonster.SectionListAdapter;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
-import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -72,7 +71,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private Marker currentMarker;
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
-    private MarkerDao markerDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +142,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             visibleLayers.remove(layerName);
             layerViewModel.setVisibility(layerName, false);
         }
-        visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
+        visibleMarkerList = markerViewModel.getVisibleMarkerList(visibleLayers);
         addMarkers(visibleMarkerList);
     }
 
@@ -175,8 +173,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             double lat = currentMarker.getPosition().latitude;
             double lng = currentMarker.getPosition().longitude;
 
-            markerDao.update(markerId, markerCode, markerNotes, markerName, lat, lng);
+            markerViewModel.updateMarker(markerId, markerCode, markerNotes, markerName, lat, lng);
             redrawMarkers();
+
         });
 
         cancelButton = findViewById(R.id.cancelButton);
@@ -229,10 +228,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private void toggleAllMarkers() {
         // Get database then markerList
         MMDatabase db = MMDatabase.getDatabase(this);
-        markerDao = db.markerDao();
 
         if ( showAllMarkersButton.getText().toString().equals(getString(R.string.show_all))) {
-            visibleMarkerList = markerDao.getMarkerList();
+            visibleMarkerList = markerViewModel.getMarkerList();
             layerViewModel.setVisibilityForAll(true);
             showAllMarkersButton.setText(R.string.hide_all);
         } else {
@@ -319,6 +317,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
+
+        // Get list of visible layers
+        visibleMarkerList = getVisibleMarkers();
         // Drag listener
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             final DecimalFormat df = new DecimalFormat("#.#####");
@@ -346,7 +347,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 latStr = df.format(currentLocation.latitude);
 
                 int markerId = (Integer) marker.getTag();
-                MMarker currentMarker = markerDao.getMarker(markerId);
+                MMarker currentMarker = markerViewModel.getMarker(markerId);
                 latStr = df.format(currentLocation.latitude);
                 lngStr = df.format(currentLocation.longitude);
                 markerInfoPanel.setVisibility(View.VISIBLE);
@@ -399,10 +400,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     List<MMarker> getVisibleMarkers() {
         MMDatabase db = MMDatabase.getDatabase(this);
-        markerDao = db.markerDao();
 
         ArrayList<String> visibleLayerList = new ArrayList<>(layerViewModel.getVisibleLayerList());
-        visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayerList);
+        visibleMarkerList = markerViewModel.getVisibleMarkerList(visibleLayerList);
         return visibleMarkerList;
     }
 
@@ -437,7 +437,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "onReturn: ");
         LatLng curLocation = mMap.getCameraPosition().target;
         MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, markerNotes.toString());
-        markerDao.insertMarker(mMarker);
+        markerViewModel.insert(mMarker);
         getVisibleMarkers();
         addMarkers(visibleMarkerList);
         CameraPosition cameraPosition = new CameraPosition(curLocation,18,0,0);
@@ -452,7 +452,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         // Main recyclerView - show list/sbulist of layers/markers
         visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
-        markerMap = markerDao.getMarkersByLayer();
+        markerMap = markerViewModel.getMarkersByLayer();
         final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap, visibleLayers);
         sectionListRV.setAdapter(layerListAdapter);
     }

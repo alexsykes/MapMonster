@@ -25,8 +25,6 @@ public class MarkerRepository {
         markerList = markerDao.getMarkerList();
         markerCountByLayer = markerDao.markerCountByLayer();
         markerMap = markerDao.getMarkersByLayer();
-//        visibleMarkerList = markerDao.getVisibleMarkerList(layerNames);
-
     }
 
     LiveData<List<MMarker>> getAllMarkers() {
@@ -53,4 +51,15 @@ public class MarkerRepository {
         markerDao.updateMarker(marker_id, lat, lng, isUpdated);
     }
 
+    public void updateMarker(int markerId, String markerCode, String markerNotes, String markerName, double lat, double lng) {
+        markerDao.update(markerId, markerCode, markerNotes, markerName, lat, lng);
+    }
+
+    public MMarker getMarker(int markerId) {
+        return markerDao.getMarker(markerId);
+    }
+
+    public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) {
+        return markerDao.getVisibleMarkerList(visibleLayerList);
+    }
 }
