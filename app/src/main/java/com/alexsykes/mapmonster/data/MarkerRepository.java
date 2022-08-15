@@ -14,7 +14,7 @@ public class MarkerRepository {
     private List<Integer> markerCountByLayer;
     private List<MMarker> markerList;
     private List<MMarker> visibleMarkerList;
-    private Map<String, List<MMarker>> map;
+    private Map<String, List<MMarker>> markerMap;
     private ArrayList<String> layerNames;
 
     MarkerRepository(Application application) {
@@ -24,7 +24,7 @@ public class MarkerRepository {
         allMarkers = markerDao.allMarkers();
         markerList = markerDao.getMarkerList();
         markerCountByLayer = markerDao.markerCountByLayer();
-        map = markerDao.getMarkersByLayer();
+        markerMap = markerDao.getMarkersByLayer();
 //        visibleMarkerList = markerDao.getVisibleMarkerList(layerNames);
 
     }
@@ -37,6 +37,7 @@ public class MarkerRepository {
     }
     public List<MMarker> getMarkerList() { return markerList; }
     public List<MMarker> getVisibleMarkerList() { return visibleMarkerList; }
+    public Map<String, List<MMarker>> getMarkersByLayer() { return markerMap;  }
 
     void insert(MMarker marker) {
         MMDatabase.databaseWriteExecutor.execute(()  -> {
@@ -51,4 +52,5 @@ public class MarkerRepository {
     public void updateMarker(int marker_id, double lat, double lng, boolean isUpdated) {
         markerDao.updateMarker(marker_id, lat, lng, isUpdated);
     }
+
 }

@@ -20,14 +20,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.SectionListAdapter;
 import com.alexsykes.mapmonster.data.LayerDao;
+import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
 import com.alexsykes.mapmonster.data.MarkerDao;
+import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,8 +54,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     public static final String TAG = "Info";
 
     private static final int DEFAULT_ZOOM = 12;
-    private MarkerDao markerDao;
-    private LayerDao layerDao;
     Map<String, List<MMarker>> markerMap;
     TextView showAllMarkersButton, markerIdTextView, markerLatTextView, markerLngTextView;
     EditText markerNameEditText, markerNotesEditText, markerCodeEditText;
@@ -70,6 +71,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     MarkerDetailFragment markerDetailFragment;
     private LatLng currentLocation;
     private Marker currentMarker;
+    private MarkerViewModel markerViewModel;
+    private LayerViewModel layerViewModel;
+    private MarkerDao markerDao;
+    private LayerDao layerDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,11 +83,16 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         defaults = this.getPreferences(Context.MODE_PRIVATE);
 
         MMDatabase db = MMDatabase.getDatabase(this);
-        markerDao = db.markerDao();
-        layerDao = db.layerDao();
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+//        markerDao = db.markerDao();
+//        layerDao = db.layerDao();
         // Get all markers / layers for menu
-        markerMap = markerDao.getMarkersByLayer();
-        visibleLayers = new ArrayList<>(layerDao.getVisibleLayerList());
+//        markerMap = markerDao.getMarkersByLayer();
+//        visibleLayers = new ArrayList<>(layerDao.getVisibleLayerList());
+        markerMap = markerViewModel.getMarkersByLayer();
+        visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
+
         setupUI();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -111,12 +121,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         visibleMarkerList = getVisibleMarkers();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.layer_edit_menu, menu);
-//        return true;
-//    }
     // Navigation
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

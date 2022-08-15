@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.Map;
 
 public class MarkerViewModel extends AndroidViewModel {
     private MarkerRepository markerRepository;
@@ -32,5 +33,9 @@ public class MarkerViewModel extends AndroidViewModel {
     public List<MMarker> getVisibleMarkerList() { return markerRepository.getVisibleMarkerList(); }
     public void deleteMarker(int markerID) { markerRepository.deleteMarker(markerID); }
     public void updateMarker(int marker_id, double lat, double lng, boolean isUpdated) {markerRepository.updateMarker(marker_id,  lat,  lng,  isUpdated); }
+
+    public Map<String, List<MMarker>> getMarkersByLayer() {
+        return markerRepository.getMarkersByLayer();
+    }
 }
 
