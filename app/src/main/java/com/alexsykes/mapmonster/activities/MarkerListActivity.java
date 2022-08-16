@@ -52,25 +52,25 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     public static final String TAG = "Info";
 
     private static final int DEFAULT_ZOOM = 12;
-    Map<String, List<MMarker>> markerMap;
     TextView showAllMarkersButton, markerIdTextView, markerLatTextView, markerLngTextView;
     EditText markerNameEditText, markerNotesEditText, markerCodeEditText;
     Button saveButton, cancelButton;
     FloatingActionButton addMarkerButton;
     SwitchMaterial showAllLayerList;
     RecyclerView sectionListRV;
-    private List<MMarker> visibleMarkerList;
     SharedPreferences defaults;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
     private final LatLng defaultLocation = new LatLng(53.59,-2.56);
     LinearLayout layerPanelLinearLayout, markerInfoPanel;
-    private ArrayList<String> visibleLayers ;
     MarkerDetailFragment markerDetailFragment;
     private LatLng currentLocation;
     private Marker currentMarker;
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
+    private ArrayList<String> visibleLayers ;
+    private List<MMarker> visibleMarkerList;
+    Map<String, List<MMarker>> markerMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -316,7 +316,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
 
         // Get list of visible layers
         visibleMarkerList = getVisibleMarkers();

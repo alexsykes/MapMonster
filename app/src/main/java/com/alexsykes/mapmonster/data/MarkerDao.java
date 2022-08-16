@@ -35,14 +35,14 @@ public interface MarkerDao {
     @Query("SELECT * FROM markers WHERE isArchived = 0 ORDER BY placename")
     List<MMarker> getMarkerList();
 
-    @Query("SELECT * FROM markers WHERE type IN (:layerNames) ORDER BY type, placename")
+    @Query("SELECT * FROM markers WHERE type IN (:layerNames) AND isArchived = 0 ORDER BY type, placename")
     List<MMarker> getVisibleMarkerList(ArrayList<String> layerNames);
 
     @Query("UPDATE markers SET latitude = :lat, longitude = :lng, isUpdated = :isUpdated WHERE markerID = :marker_id  ")
     void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);
 
     @MapInfo(keyColumn = "layername", valueColumn = "placename")
-    @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.type WHERE layers.isArchived = 0 ORDER BY layername, placename")
+    @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.type WHERE markers.isArchived = 0 ORDER BY layername, placename")
     public Map<String, List<MMarker>> getMarkersByLayer();
 
     @Query("SELECT * FROM markers WHERE markerID = :tag")

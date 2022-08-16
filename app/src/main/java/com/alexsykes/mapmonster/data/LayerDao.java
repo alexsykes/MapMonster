@@ -22,7 +22,6 @@ public interface LayerDao {
     @Query("SELECT * FROM layers ORDER BY layername")
     LiveData<List<Layer>> allLayers();
 
-
     @Query("SELECT * FROM layers ORDER BY layername")
     List<Layer> getLayerList();
 
@@ -32,7 +31,7 @@ public interface LayerDao {
     @Query("UPDATE layers SET isVisible = :visibility WHERE layername = :layer")
     void setVisibility (String layer, boolean visibility);
 
-    @Query("SELECT layername FROM layers WHERE isVisible = '1'" )
+    @Query("SELECT layername FROM layers WHERE isVisible = '1' AND isArchived = 0" )
     List<String> getVisibleLayerList();
 
     @Query("UPDATE layers SET isVisible = :b")
