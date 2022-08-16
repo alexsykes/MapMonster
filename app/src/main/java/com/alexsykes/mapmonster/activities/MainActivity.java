@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
-import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
@@ -337,22 +336,22 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
             switch(type)  {
                 case "Accommodation" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_24));
                     break;
                 case "Fuel" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_24));
                     break;
                 case "Waypoint" :
                     // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
                     break;
                 case "Food" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fastfood_24));
                     break;
                 case "Junction" :
 //                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
                     break;
                 case "Parking" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_24));
                     break;
                 default:
                     break;

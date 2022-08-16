@@ -276,19 +276,19 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             // with custom icons
             switch(type)  {
                 case "Accommodation" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_24));
                     break;
                 case "Fuel" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_24));
                     break;
                 case "Waypoint" :
                     // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
                     break;
                 case "Food" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_24));
                     break;
                 case "Parking" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_24));
                     break;
                 default:
                     break;
