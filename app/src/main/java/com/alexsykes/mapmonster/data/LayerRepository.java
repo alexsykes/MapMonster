@@ -48,4 +48,8 @@ public class LayerRepository {
         String[] values = newValues.toArray(new String [newValues.size()]);
         layerDao.updateLayerVisibility(values);
     }
+
+    public void archiveAllLayers() {
+        layerDao.archiveAllLayers();
+    }
 }

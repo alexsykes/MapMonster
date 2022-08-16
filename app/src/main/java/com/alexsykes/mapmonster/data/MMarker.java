@@ -26,6 +26,7 @@ public class MMarker {
     private String type;
     private boolean isUpdated;
     private boolean isNew;
+    private boolean isArchived;
     private String notes;
 
     public MMarker(double latitude, double longitude, String placename, String code, String type, String notes) {
@@ -38,7 +39,7 @@ public class MMarker {
         isVisible = true;
         isUpdated = false;
         isNew = true;
-
+        isArchived = false;
     }
 
     public String getType() {
@@ -117,6 +118,10 @@ public class MMarker {
     public String getCode() {
         return code;
     }
+
+    public boolean isArchived() { return isArchived;  }
+
+    public void setArchived(boolean archived) { isArchived = archived;  }
 
     public void setCode(String code) {
         this.code = code;

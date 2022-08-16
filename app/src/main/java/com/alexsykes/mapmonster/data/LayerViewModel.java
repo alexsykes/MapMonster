@@ -40,4 +40,8 @@ public class LayerViewModel extends AndroidViewModel {
     public void updateLayerVisibility(Set<String> newValue) {
         layerRepository.updateLayerVisibility(newValue);
     }
+
+    public void archiveAll() {
+        layerRepository.archiveAllLayers();
+    }
 }

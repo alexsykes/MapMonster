@@ -16,6 +16,9 @@ public interface LayerDao {
     @Query("DELETE FROM layers")
     void deleteAllLayers();
 
+    @Query("UPDATE layers SET isArchived = 1")
+    void archiveAllLayers();
+
     @Query("SELECT * FROM layers ORDER BY layername")
     LiveData<List<Layer>> allLayers();
 

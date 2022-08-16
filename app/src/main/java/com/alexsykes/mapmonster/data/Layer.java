@@ -12,7 +12,17 @@ public class Layer {
     @ColumnInfo(name="layerID")
     private int layer_id;
     private String layername, code;
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
+    }
+
     private boolean isVisible;
+    private boolean isArchived;
 
     public void setVisible(boolean visible) {
         isVisible = visible;
@@ -26,6 +36,7 @@ public class Layer {
         this.layername = layername;
         this.code = code;
         isVisible = true;
+        isArchived = false;
     }
 
 

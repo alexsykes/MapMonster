@@ -19,18 +19,20 @@ public interface MarkerDao {
     @Query("DELETE FROM markers")
     void deleteAllMarkers();
 
+    @Query("UPDATE markers SET isArchived = 1")
+    void archiveAllMarkers();
+
     @Query("DELETE FROM markers WHERE markerID = :markerID")
     void deleteMarker(int markerID);
 
     @Query("SELECT * FROM markers ORDER BY placename")
     LiveData<List<MMarker>> allMarkers();
 
-
     @Query("SELECT COUNT(*) FROM markers GROUP BY type ORDER BY type, placename")
     List<Integer> markerCountByLayer();
 
 
-    @Query("SELECT * FROM markers ORDER BY placename")
+    @Query("SELECT * FROM markers WHERE isArchived = 0 ORDER BY placename")
     List<MMarker> getMarkerList();
 
     @Query("SELECT * FROM markers WHERE type IN (:layerNames) ORDER BY type, placename")
@@ -40,7 +42,7 @@ public interface MarkerDao {
     void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);
 
     @MapInfo(keyColumn = "layername", valueColumn = "placename")
-    @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.type ORDER BY layername, placename")
+    @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.type WHERE layers.isArchived = 0 ORDER BY layername, placename")
     public Map<String, List<MMarker>> getMarkersByLayer();
 
     @Query("SELECT * FROM markers WHERE markerID = :tag")

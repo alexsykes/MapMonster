@@ -51,4 +51,6 @@
     <string name="hide_alll">Hide all</string>
     <string name="show_alll">Show all</string>
     <string name="marker_id">\"Marker ID: \"</string>
+    <string name="confirm_destroy">Confirm - All waypoint data will be destroyed and cannot be restored.</string>
+    <string name="destroy">Destroy</string>
 </resources>

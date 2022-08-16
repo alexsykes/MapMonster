@@ -6,13 +6,16 @@ import android.util.Log;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.CheckBoxPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.util.HashSet;
 import java.util.List;
@@ -40,13 +43,40 @@ public class SettingsActivity extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private List<Layer> layerList;
         private LayerViewModel layerViewModel;
+        private MarkerViewModel markerViewModel;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-
             MultiSelectListPreference layer_visibility = findPreference("layer_visibility");
+            SwitchPreference destroy_switch = findPreference("destroy_switch");
+            CheckBoxPreference destroy_confirm = findPreference("destroy_confirm");
+            destroy_switch.setChecked(false);
+            destroy_confirm.setVisible(false);
+            destroy_confirm.setChecked(false);
+
+            destroy_switch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    destroy_confirm.setVisible((Boolean) newValue);
+                    destroy_switch.setChecked((Boolean) newValue);
+                    return true;
+                }
+            });
+
+            destroy_confirm.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    destroy_confirm.setChecked((Boolean) newValue);
+                    if((Boolean) newValue) {
+                        destroyData();
+                    }
+                    return true;
+                }
+            });
+
             layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+            markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
 
             // Get lists of layers and visibleLayers
             layerList = layerViewModel.getLayerList();
@@ -74,6 +104,11 @@ public class SettingsActivity extends AppCompatActivity {
                     return false; // Saves in prefs if set to true
                 }
             });
+        }
+
+        private void destroyData() {
+            markerViewModel.archiveAll();
+//            layerViewModel.archiveAll();
         }
     }
 }

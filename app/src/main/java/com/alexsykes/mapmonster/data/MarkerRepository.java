@@ -62,4 +62,8 @@ public class MarkerRepository {
     public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) {
         return markerDao.getVisibleMarkerList(visibleLayerList);
     }
+
+    public void archiveAllMarkers() {
+        markerDao.archiveAllMarkers();
+    }
 }

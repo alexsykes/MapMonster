@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         defaults = this.getPreferences(Context.MODE_PRIVATE);
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();

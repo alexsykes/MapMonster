@@ -46,5 +46,9 @@ public class MarkerViewModel extends AndroidViewModel {
     public MMarker getMarker(int markerId) {
         return markerRepository.getMarker(markerId);
     }
+
+    public void archiveAll() {
+        markerRepository.archiveAllMarkers();
+    }
 }
 
