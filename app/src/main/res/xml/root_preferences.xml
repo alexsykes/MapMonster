@@ -24,15 +24,17 @@
             android:key="map_view_type"
             android:title="Map view" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Nuclear options">
+    <PreferenceCategory
+        android:background="#A84242"
+        android:title="Nuclear options">
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="destroy_switch"
             android:title="@string/destroy" />
         <CheckBoxPreference
-            android:icon="@drawable/warning_24"
             android:defaultValue="false"
+            android:icon="@drawable/warning_24"
             android:key="destroy_confirm"
             android:title="@string/confirm_destroy" />
     </PreferenceCategory>
