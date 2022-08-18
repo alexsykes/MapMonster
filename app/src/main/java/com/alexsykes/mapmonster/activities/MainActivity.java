@@ -59,14 +59,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     RecyclerView markerRV;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
-    private LatLng defaultLocation = new LatLng(54.29750000675,-2.94531856934);
+    private final LatLng defaultLocation = new LatLng(54.29750000675,-2.94531856934);
     private LatLng curLocation;
 
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
 
     SharedPreferences defaults;
-
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
     private List<String> visibleLayerList;
@@ -78,7 +77,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         setContentView(R.layout.activity_main);
 
         // get saved values and editor from prefs
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
+//        defaults = this.getPreferences(Context.MODE_PRIVATE);
+
+        defaults = PreferenceManager.getDefaultSharedPreferences(this);
         editor = defaults.edit();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -376,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
     CameraPosition getSavedCameraPosition() {
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
+        defaults = PreferenceManager.getDefaultSharedPreferences(this);
 
         // "initial longitude" is only used on first startup
         double longitude = defaults.getFloat("longitude", (float) defaultLocation.longitude);
@@ -393,7 +394,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return cameraPosition;
     }
     void saveCameraPosition() {
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
         editor = defaults.edit();
         CameraPosition mMyCam = mMap.getCameraPosition();
         double longitude = mMyCam.target.longitude;

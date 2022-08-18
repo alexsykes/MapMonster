@@ -59,8 +59,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     FloatingActionButton addMarkerButton;
     SwitchMaterial showAllLayerList;
     RecyclerView sectionListRV;
-    SharedPreferences defaults;
+//    SharedPreferences defaults;
     SharedPreferences.Editor editor;
+    SharedPreferences preferences;
     private GoogleMap mMap;
     private final LatLng defaultLocation = new LatLng(53.59,-2.56);
     LinearLayout layerPanelLinearLayout, markerInfoPanel;
@@ -79,8 +80,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_list);
 
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String maptype = preferences.getString("map_view_type","NORMAL");
 
         zoomControlsEnabled = preferences.getBoolean("zoomControlsEnabled", true);
@@ -381,8 +381,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     void saveCameraPosition() {
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
-        editor = defaults.edit();
+//        defaults = this.getPreferences(Context.MODE_PRIVATE);
+        editor = preferences.edit();
         CameraPosition mMyCam = mMap.getCameraPosition();
         double longitude = mMyCam.target.longitude;
         double latitude = mMyCam.target.latitude;
@@ -395,12 +395,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     CameraPosition getSavedCameraPosition() {
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
+//        defaults = this.getPreferences(Context.MODE_PRIVATE);
 
         // "initial longitude" is only used on first startup
-        double longitude = defaults.getFloat("longitude", (float) defaultLocation.longitude);
-        double latitude = defaults.getFloat("latitude", (float) defaultLocation.latitude);
-        float zoom = defaults.getFloat("zoom", DEFAULT_ZOOM);
+        double longitude = preferences.getFloat("longitude", (float) defaultLocation.longitude);
+        double latitude = preferences.getFloat("latitude", (float) defaultLocation.latitude);
+        float zoom = preferences.getFloat("zoom", DEFAULT_ZOOM);
         LatLng startPosition = new LatLng(latitude, longitude);
 
         return new CameraPosition.Builder()
@@ -429,15 +429,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerDetailFragment.show(fm, "marker_detail_edit_name");
 
     }
-
+//  Utility method to use vectorDrawable items as bitmap images
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-
         assert vectorDrawable != null;
         vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(bitmap);
-
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
