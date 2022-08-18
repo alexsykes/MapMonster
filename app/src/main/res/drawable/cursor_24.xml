@@ -20,7 +20,7 @@
             android:name="vert"
             android:strokeColor="@color/black"
             android:strokeWidth="15"
-            android:strokeLineCap="round"
+            android:strokeLineCap="butt"
             android:strokeMiterLimit="8"
             android:pathData="M330, 240 L 300,270 L 270, 240  " />
     </group>
@@ -40,7 +40,7 @@
             android:name="vert"
             android:strokeColor="@color/black"
             android:strokeWidth="15"
-            android:strokeLineCap="round"
+            android:strokeLineCap="butt"
             android:strokeMiterLimit="8"
             android:pathData="M330, 240 L 300,270 L 270, 240  " />
     </group>
@@ -60,7 +60,7 @@
             android:name="vert"
             android:strokeColor="@color/black"
             android:strokeWidth="15"
-            android:strokeLineCap="round"
+            android:strokeLineCap="butt"
             android:strokeMiterLimit="8"
             android:pathData="M330, 240 L 300,270 L 270, 240  " />
     </group>
@@ -80,7 +80,7 @@
             android:name="vert"
             android:strokeColor="@color/black"
             android:strokeWidth="15"
-            android:strokeLineCap="round"
+            android:strokeLineCap="butt"
             android:strokeMiterLimit="8"
             android:pathData="M330, 240 L 300,270 L 270, 240  " />
     </group>
