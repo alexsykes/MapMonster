@@ -93,7 +93,7 @@ public class MarkerDetailFragment extends DialogFragment {
                 Editable markerCode = markerCodeTextEdit.getText();
                 Editable markerNotes = markerNotesTextEdit.getText();
                 //Editable markerDetails =
-                String layer = "Placemark";
+                String layer = "Waypoint";
 
                 if(markerName.length() == 0) { markerName.append("New Placemark") ; }
                 if(markerCode.length() == 0) { markerCode.append("MT") ; }
@@ -130,7 +130,6 @@ public class MarkerDetailFragment extends DialogFragment {
     }
 
     public void onResume() {
-
         // Store access variables for window and blank point
         Window window = getDialog().getWindow();
         Point size = new Point();

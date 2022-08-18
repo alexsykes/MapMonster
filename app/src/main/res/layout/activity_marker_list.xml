@@ -20,6 +20,7 @@
 
     <LinearLayout
         android:id="@+id/markerInfoPanel"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
@@ -115,7 +116,6 @@
 
             <Button
                 android:id="@+id/cancelButton"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/small_margin"
@@ -124,7 +124,6 @@
 
             <Button
                 android:id="@+id/saveButton"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/small_margin"
@@ -141,8 +140,8 @@
         android:layout_margin="@dimen/small_margin"
         android:elevation="@dimen/small_margin"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/addMarkerButton"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/map">
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -167,9 +166,6 @@
             android:translationZ="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -187,10 +183,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@android:color/transparent"
         app:backgroundTint="@android:color/transparent"
-        android:alpha=".5"
+        android:alpha="1"
         android:outlineProvider="none"
         android:elevation="32dp"
-        app:srcCompat="@drawable/cursor_24"
+        app:srcCompat="@drawable/ic_sight"
         tools:ignore="ImageContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
