@@ -57,7 +57,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     EditText markerNameEditText, markerNotesEditText, markerCodeEditText;
     Button saveButton, cancelButton;
     FloatingActionButton addMarkerButton;
-    SwitchMaterial showAllLayerList;
+    SwitchMaterial showAllLayerListSwitch;
     RecyclerView sectionListRV;
 //    SharedPreferences defaults;
     SharedPreferences.Editor editor;
@@ -196,11 +196,11 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         });
 
 
-        showAllLayerList = findViewById(R.id.showLayerList);
-        showAllLayerList.setChecked(true);
-        showAllLayerList.setOnClickListener(v -> {
+        showAllLayerListSwitch = findViewById(R.id.showLayerList);
+        showAllLayerListSwitch.setChecked(true);
+        showAllLayerListSwitch.setOnClickListener(v -> {
             Log.i(TAG, "onClick: showAllMarkers");
-            boolean setVisible = showAllLayerList.isChecked();
+            boolean setVisible = showAllLayerListSwitch.isChecked();
             showAllLayers(setVisible);
         });
 

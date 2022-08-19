@@ -34,19 +34,15 @@ public class MarkerViewModel extends AndroidViewModel {
     public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) { return markerRepository.getVisibleMarkerList(visibleLayerList); }
     public void deleteMarker(int markerID) { markerRepository.deleteMarker(markerID); }
     public void updateMarker(int marker_id, double lat, double lng, boolean isUpdated) {markerRepository.updateMarker(marker_id,  lat,  lng,  isUpdated); }
-
     public Map<String, List<MMarker>> getMarkersByLayer() {
         return markerRepository.getMarkersByLayer();
     }
-
     public void updateMarker(int markerId, String markerCode, String markerNotes, String markerName, double lat, double lng) {
         markerRepository.updateMarker(markerId, markerCode, markerNotes, markerName, lat, lng);
     }
-
     public MMarker getMarker(int markerId) {
         return markerRepository.getMarker(markerId);
     }
-
     public void archiveAll() {
         markerRepository.archiveAllMarkers();
     }
