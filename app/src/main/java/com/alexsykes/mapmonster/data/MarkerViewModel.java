@@ -27,24 +27,23 @@ public class MarkerViewModel extends AndroidViewModel {
        // visibleMarkerList = markerRepository.getVisibleMarkerList();
     }
 
-    public LiveData<List<MMarker>> getAllMarkers() { return  allMarkers; }
-    public List<Integer> getAllMarkersByLayer() { return  markerCountByLayer; }
+    // Mutators
     public void insert(MMarker marker) { markerRepository.insert(marker);}
-    public List<MMarker> getMarkerList() { return markerRepository.getMarkerList(); }
-    public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) { return markerRepository.getVisibleMarkerList(visibleLayerList); }
     public void deleteMarker(int markerID) { markerRepository.deleteMarker(markerID); }
     public void updateMarker(int marker_id, double lat, double lng, boolean isUpdated) {markerRepository.updateMarker(marker_id,  lat,  lng,  isUpdated); }
-    public Map<String, List<MMarker>> getMarkersByLayer() {
-        return markerRepository.getMarkersByLayer();
-    }
-    public void updateMarker(int markerId, String markerCode, String markerNotes, String markerName, double lat, double lng) {
-        markerRepository.updateMarker(markerId, markerCode, markerNotes, markerName, lat, lng);
-    }
-    public MMarker getMarker(int markerId) {
-        return markerRepository.getMarker(markerId);
-    }
+    public void updateMarker(int markerId, String markerCode, String markerNotes, String markerName, double lat, double lng) { markerRepository.updateMarker(markerId, markerCode, markerNotes, markerName, lat, lng); }
     public void archiveAll() {
         markerRepository.archiveAllMarkers();
+    }
+
+    // Accessors
+    public LiveData<List<MMarker>> getAllMarkers() { return  allMarkers; }
+    public List<Integer> getAllMarkersByLayer() { return  markerCountByLayer; }
+    public List<MMarker> getMarkerList() { return markerRepository.getMarkerList(); }
+    public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) { return markerRepository.getVisibleMarkerList(visibleLayerList); }
+    public Map<String, List<MMarker>> getMarkersByLayer() {  return markerRepository.getMarkersByLayer();    }
+    public MMarker getMarker(int markerId) {
+        return markerRepository.getMarker(markerId);
     }
 }
 

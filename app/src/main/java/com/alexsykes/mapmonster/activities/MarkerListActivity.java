@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.collections.MarkerManager;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -59,7 +60,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     FloatingActionButton addMarkerButton;
     SwitchMaterial showAllLayerListSwitch;
     RecyclerView sectionListRV;
-//    SharedPreferences defaults;
     SharedPreferences.Editor editor;
     SharedPreferences preferences;
     private GoogleMap mMap;
@@ -70,38 +70,29 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private Marker currentMarker;
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
-    private ArrayList<String> visibleLayers ;
-    private List<MMarker> visibleMarkerList;
-    Map<String, List<MMarker>> markerMap;
+    private ArrayList<String> visibleLayers ; // ArrayList of currently visible layers
+    private List<MMarker> visibleMarkerList; // List of currently visible markers
+    Map<String, List<MMarker>> markerMap; // Map of all Markers
     private boolean compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
+    MarkerManager markerManager;
+
+    ArrayList<MarkerManager.Collection> layerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_list);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String maptype = preferences.getString("map_view_type","NORMAL");
-
-        zoomControlsEnabled = preferences.getBoolean("zoomControlsEnabled", true);
-        mapToolbarEnabled = preferences.getBoolean("mapToolbarEnabled", true);
-        compassEnabled = preferences.getBoolean("compassEnabled", true);
-
-        MMDatabase db = MMDatabase.getDatabase(this);
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
-        // Get all markers / layers for menu
-        markerMap = markerViewModel.getMarkersByLayer();
-        visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
-
-        setupUI();
+        getPreferences();   // Get saved values
+        getData();          // and saved data
+        setupUI();          //
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-        // Main recyclerView - show list/sbulist of layers/markers
+        // Main recyclerView - show list/sublist of layers/markers
         sectionListRV = findViewById(R.id.sectionListRecyclerView);
         final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap, visibleLayers);
         sectionListRV.setAdapter(layerListAdapter);
@@ -119,7 +110,76 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         super.onStart();
         Log.i(TAG, "onStart: MarkerListActivity");
         // Get list of visible layers
-        visibleMarkerList = getVisibleMarkers();
+//        visibleMarkerList = getVisibleMarkers();
+    }
+
+    @Override
+    public void onReturn(Editable name, Editable code, Editable markerNotes, String layer) {
+        mMap.clear();
+        Log.i(TAG, "onReturn: ");
+        LatLng curLocation = mMap.getCameraPosition().target;
+        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, markerNotes.toString());
+        markerViewModel.insert(mMarker);
+        getData();
+        addMarkers(visibleMarkerList);
+        CameraPosition cameraPosition = new CameraPosition(curLocation,18,0,0);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
+        mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
+        mMap.getUiSettings().setCompassEnabled(compassEnabled);
+
+        // Drag listener
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            final DecimalFormat df = new DecimalFormat("#.#####");
+            String latStr, lngStr;
+            @Override
+            public void onMarkerDrag(@NonNull Marker marker) {
+//                Log.i(TAG, "onMarkerDrag: ");
+                currentLocation = marker.getPosition();
+                latStr = df.format(currentLocation.latitude);
+                lngStr = df.format(currentLocation.longitude);
+                markerLatTextView.setText(latStr);
+                markerLngTextView.setText(lngStr);
+            }
+
+            @Override
+            public void onMarkerDragEnd(@NonNull Marker marker) {
+//                Log.i(TAG, "onMarkerDragEnd: ");
+                currentMarker = marker;
+            }
+
+            @Override
+            public void onMarkerDragStart(@NonNull Marker marker) {
+                currentLocation = marker.getPosition();
+//                Log.i(TAG, "onMarkerDragStart: " + marker.getTag());
+                latStr = df.format(currentLocation.latitude);
+
+                int markerId = (Integer) marker.getTag();
+                MMarker currentMarker = markerViewModel.getMarker(markerId);
+                latStr = df.format(currentLocation.latitude);
+                lngStr = df.format(currentLocation.longitude);
+                markerInfoPanel.setVisibility(View.VISIBLE);
+                layerPanelLinearLayout.setVisibility(View.GONE);
+                addMarkerButton.setVisibility(View.GONE);
+
+                markerIdTextView.setText(new StringBuilder().append(getString(R.string.marker_id)).append(currentMarker.getMarker_id()).toString());
+                markerLatTextView.setText(latStr);
+                markerLngTextView.setText(lngStr);
+
+                markerCodeEditText.setText(currentMarker.getCode());
+                markerNameEditText.setText(currentMarker.getPlacename());
+                markerNotesEditText.setText(currentMarker.getNotes());
+            }
+        });
+
+        CameraPosition cameraPosition = getSavedCameraPosition();
+        addMarkers(visibleMarkerList);
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     // Navigation
@@ -130,6 +190,31 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             return true;
         }
         return false;
+    }
+
+    public void onMarkerListItemClicked(MMarker marker, int isVisible) {
+        LatLng loc = new LatLng(marker.getLatitude(), marker.getLongitude());
+        Log.i(TAG, "onMarkerListItemClicked: " + isVisible);
+    }
+
+//  Utility methods
+    private void getPreferences() {
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String maptype = preferences.getString("map_view_type","NORMAL");
+
+        zoomControlsEnabled = preferences.getBoolean("zoomControlsEnabled", true);
+        mapToolbarEnabled = preferences.getBoolean("mapToolbarEnabled", true);
+        compassEnabled = preferences.getBoolean("compassEnabled", true);
+    }
+
+    private void getData() {
+        MMDatabase db = MMDatabase.getDatabase(this);
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        // Get all markers / layers for menu
+        markerMap = markerViewModel.getMarkersByLayer();
+        visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
+        visibleMarkerList = markerViewModel.getVisibleMarkerList(visibleLayers);
     }
 
     private void toggleLayerPanel() {
@@ -234,21 +319,21 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     // Used from Show/Hide button
-    private void toggleAllMarkers() {
-        // Get database then markerList
-        MMDatabase db = MMDatabase.getDatabase(this);
-
-        if ( showAllMarkersButton.getText().toString().equals(getString(R.string.show_all))) {
-            visibleMarkerList = markerViewModel.getMarkerList();
-            layerViewModel.setVisibilityForAll(true);
-            showAllMarkersButton.setText(R.string.hide_all);
-        } else {
-            layerViewModel.setVisibilityForAll(false);
-            showAllMarkersButton.setText("Show all");
-        }
-        visibleMarkerList = getVisibleMarkers();
-        addMarkers(visibleMarkerList);
-    }
+//    private void toggleAllMarkers() {
+//        // Get database then markerList
+//        MMDatabase db = MMDatabase.getDatabase(this);
+//
+//        if ( showAllMarkersButton.getText().toString().equals(getString(R.string.show_all))) {
+//            visibleMarkerList = markerViewModel.getMarkerList();
+//            layerViewModel.setVisibilityForAll(true);
+//            showAllMarkersButton.setText(R.string.hide_all);
+//        } else {
+//            layerViewModel.setVisibilityForAll(false);
+//            showAllMarkersButton.setText("Show all");
+//        }
+////        visibleMarkerList = getVisibleMarkers();
+//        addMarkers(visibleMarkerList);
+//    }
 
     private void addMarkers(List<MMarker> markerList) {
         // Clear map of current markers, return if markerList is empty
@@ -322,62 +407,17 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
-        mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
-        mMap.getUiSettings().setCompassEnabled(compassEnabled);
-
-        // Get list of visible layers
-        visibleMarkerList = getVisibleMarkers();
-        // Drag listener
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            final DecimalFormat df = new DecimalFormat("#.#####");
-            String latStr, lngStr;
-            @Override
-            public void onMarkerDrag(@NonNull Marker marker) {
-                Log.i(TAG, "onMarkerDrag: ");
-                currentLocation = marker.getPosition();
-                latStr = df.format(currentLocation.latitude);
-                lngStr = df.format(currentLocation.longitude);
-                markerLatTextView.setText(latStr);
-                markerLngTextView.setText(lngStr);
-            }
-
-            @Override
-            public void onMarkerDragEnd(@NonNull Marker marker) {
-                Log.i(TAG, "onMarkerDragEnd: ");
-                currentMarker = marker;
-            }
-
-            @Override
-            public void onMarkerDragStart(@NonNull Marker marker) {
-                currentLocation = marker.getPosition();
-                Log.i(TAG, "onMarkerDragStart: " + marker.getTag());
-                latStr = df.format(currentLocation.latitude);
-
-                int markerId = (Integer) marker.getTag();
-                MMarker currentMarker = markerViewModel.getMarker(markerId);
-                latStr = df.format(currentLocation.latitude);
-                lngStr = df.format(currentLocation.longitude);
-                markerInfoPanel.setVisibility(View.VISIBLE);
-                layerPanelLinearLayout.setVisibility(View.GONE);
-                addMarkerButton.setVisibility(View.GONE);
-
-                markerIdTextView.setText(new StringBuilder().append(getString(R.string.marker_id)).append(currentMarker.getMarker_id()).toString());
-                markerLatTextView.setText(latStr);
-                markerLngTextView.setText(lngStr);
-
-                markerCodeEditText.setText(currentMarker.getCode());
-                markerNameEditText.setText(currentMarker.getPlacename());
-                markerNotesEditText.setText(currentMarker.getNotes());
-            }
-        });
-
-        CameraPosition cameraPosition = getSavedCameraPosition();
+    public void redrawMarkers() {
+        mMap.clear();
+//        visibleMarkerList = getVisibleMarkers();
         addMarkers(visibleMarkerList);
-        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        // Main recyclerView - show list/sbulist of layers/markers
+        visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
+        sectionListRV = findViewById(R.id.sectionListRecyclerView);
+        markerMap = markerViewModel.getMarkersByLayer();
+        final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap, visibleLayers);
+        sectionListRV.setAdapter(layerListAdapter);
     }
 
     void saveCameraPosition() {
@@ -409,19 +449,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 .build();
     }
 
-    List<MMarker> getVisibleMarkers() {
-        MMDatabase db = MMDatabase.getDatabase(this);
-
-        ArrayList<String> visibleLayerList = new ArrayList<>(layerViewModel.getVisibleLayerList());
-        visibleMarkerList = markerViewModel.getVisibleMarkerList(visibleLayerList);
-        return visibleMarkerList;
-    }
-
-    public void onMarkerListItemClicked(MMarker marker, int isVisible) {
-        LatLng loc = new LatLng(marker.getLatitude(), marker.getLongitude());
-        Log.i(TAG, "onMarkerListItemClicked: " + isVisible);
-    }
-
     private void showEditDialog(double lat, double lng) {
         LatLng latLng = new LatLng(lat,lng);
         FragmentManager fm = getSupportFragmentManager();
@@ -429,6 +456,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerDetailFragment.show(fm, "marker_detail_edit_name");
 
     }
+
 //  Utility method to use vectorDrawable items as bitmap images
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
@@ -440,29 +468,5 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    @Override
-    public void onReturn(Editable name, Editable code, Editable markerNotes, String layer) {
-        mMap.clear();
-        Log.i(TAG, "onReturn: ");
-        LatLng curLocation = mMap.getCameraPosition().target;
-        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, markerNotes.toString());
-        markerViewModel.insert(mMarker);
-        getVisibleMarkers();
-        addMarkers(visibleMarkerList);
-        CameraPosition cameraPosition = new CameraPosition(curLocation,18,0,0);
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
 
-    public void redrawMarkers() {
-        mMap.clear();
-        visibleMarkerList = getVisibleMarkers();
-        addMarkers(visibleMarkerList);
-
-        // Main recyclerView - show list/sbulist of layers/markers
-        visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
-        sectionListRV = findViewById(R.id.sectionListRecyclerView);
-        markerMap = markerViewModel.getMarkersByLayer();
-        final SectionListAdapter layerListAdapter = new SectionListAdapter(markerMap, visibleLayers);
-        sectionListRV.setAdapter(layerListAdapter);
-    }
 }

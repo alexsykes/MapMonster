@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
 
-    SharedPreferences defaults;
+    SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
     private List<String> visibleLayerList;
@@ -77,17 +77,20 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         setContentView(R.layout.activity_main);
 
         // get saved values and editor from prefs
-//        defaults = this.getPreferences(Context.MODE_PRIVATE);
-
-        defaults = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = defaults.edit();
+        // defaults = this.getPreferences(Context.MODE_PRIVATE);
+        // Prefs shared across app
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
         setupUIComponents();
+        getData();
+    }
 
+    private void getData() {
         // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
 
     private void setupUIComponents() {
-        defaults = this.getPreferences(Context.MODE_PRIVATE);
+        preferences = this.getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -377,12 +380,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
     CameraPosition getSavedCameraPosition() {
-        defaults = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // "initial longitude" is only used on first startup
-        double longitude = defaults.getFloat("longitude", (float) defaultLocation.longitude);
-        double latitude = defaults.getFloat("latitude", (float) defaultLocation.latitude);
-        float zoom = defaults.getFloat("zoom", DEFAULT_ZOOM);
+        double longitude = preferences.getFloat("longitude", (float) defaultLocation.longitude);
+        double latitude = preferences.getFloat("latitude", (float) defaultLocation.latitude);
+        float zoom = preferences.getFloat("zoom", DEFAULT_ZOOM);
         LatLng startPosition = new LatLng(latitude, longitude);
 
 
@@ -394,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return cameraPosition;
     }
     void saveCameraPosition() {
-        editor = defaults.edit();
+        editor = preferences.edit();
         CameraPosition mMyCam = mMap.getCameraPosition();
         double longitude = mMyCam.target.longitude;
         double latitude = mMyCam.target.latitude;
