@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.activities;
 // See - https://www.youtube.com/watch?v=x5afKIu0JmY
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -29,6 +30,7 @@ import com.alexsykes.mapmonster.SectionListAdapter;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
+import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,7 +56,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     public static final String TAG = "Info";
 
     private static final int DEFAULT_ZOOM = 12;
-    TextView showAllMarkersButton, markerIdTextView, markerLatTextView, markerLngTextView;
+    TextView markerIdTextView, markerLatTextView, markerLngTextView;
     EditText markerNameEditText, markerNotesEditText, markerCodeEditText;
     Button saveButton, cancelButton;
     FloatingActionButton addMarkerButton;
@@ -74,9 +76,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private List<MMarker> visibleMarkerList; // List of currently visible markers
     Map<String, List<MMarker>> markerMap; // Map of all Markers
     private boolean compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
-    MarkerManager markerManager;
-
-    ArrayList<MarkerManager.Collection> layerList;
+    // --Commented out by Inspection (20/08/2022, 09:41):MarkerManager markerManager;
+    // --Commented out by Inspection (20/08/2022, 09:41):ArrayList<MarkerManager.Collection> layerList;
+    MarkerDao markerDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onPause() {
         super.onPause();
-//        Log.i(TAG, "onPause: MarkerListActivity");
         saveCameraPosition();
     }
 
@@ -116,16 +117,20 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onReturn(Editable name, Editable code, Editable markerNotes, String layer) {
         mMap.clear();
+        Log.i(TAG, "Before getData: " + visibleMarkerList.size());
         Log.i(TAG, "onReturn: ");
         LatLng curLocation = mMap.getCameraPosition().target;
         MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, markerNotes.toString());
         markerViewModel.insert(mMarker);
+        Log.i(TAG, "After insert getData: " + visibleMarkerList.size());
         getData();
+        Log.i(TAG, "After getData: " + visibleMarkerList.size());
         addMarkers(visibleMarkerList);
         CameraPosition cameraPosition = new CameraPosition(curLocation,18,0,0);
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -209,12 +214,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     private void getData() {
         MMDatabase db = MMDatabase.getDatabase(this);
+        markerDao = db.markerDao();
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         // Get all markers / layers for menu
         markerMap = markerViewModel.getMarkersByLayer();
         visibleLayers = new ArrayList<>(layerViewModel.getVisibleLayerList());
-        visibleMarkerList = markerViewModel.getVisibleMarkerList(visibleLayers);
+        visibleMarkerList = markerDao.getVisibleMarkerList(visibleLayers);
     }
 
     private void toggleLayerPanel() {
@@ -290,12 +296,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         });
 
         addMarkerButton = findViewById(R.id.addMarkerButton);
-        addMarkerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick: New Marker;");
-                addNewMarker();
-            }
+        addMarkerButton.setOnClickListener(v -> {
+            Log.i(TAG, "onClick: New Marker;");
+            addNewMarker();
         });
     }
 
@@ -317,23 +320,6 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             sectionListRV.setVisibility(View.GONE);
         }
     }
-
-    // Used from Show/Hide button
-//    private void toggleAllMarkers() {
-//        // Get database then markerList
-//        MMDatabase db = MMDatabase.getDatabase(this);
-//
-//        if ( showAllMarkersButton.getText().toString().equals(getString(R.string.show_all))) {
-//            visibleMarkerList = markerViewModel.getMarkerList();
-//            layerViewModel.setVisibilityForAll(true);
-//            showAllMarkersButton.setText(R.string.hide_all);
-//        } else {
-//            layerViewModel.setVisibilityForAll(false);
-//            showAllMarkersButton.setText("Show all");
-//        }
-////        visibleMarkerList = getVisibleMarkers();
-//        addMarkers(visibleMarkerList);
-//    }
 
     private void addMarkers(List<MMarker> markerList) {
         // Clear map of current markers, return if markerList is empty

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -112,10 +113,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onPause: ");
         editor.apply();
         saveCameraPosition();
-    }
-
-    private void setupUIComponents() {
-        preferences = this.getPreferences(Context.MODE_PRIVATE);
     }
 
     @Override
@@ -222,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return false;
     }
 
+
     // Navigation
     private void goMarkerList() {
         Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
@@ -316,8 +314,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
 
     // Utility methods
+    private void setupUIComponents() {
+        preferences = this.getPreferences(Context.MODE_PRIVATE);
+    }
     private void addMarkersToMap() {
         if (markerList.size() == 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No saved markers",
+                    Toast.LENGTH_LONG);
+
+            toast.show();
             return;
         }
         String marker_title, code, type;
