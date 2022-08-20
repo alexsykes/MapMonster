@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -131,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     public void onMapReady(GoogleMap googleMap) {
         Log.i(TAG, "onMapReady: ");
         mMap = googleMap;
+
+        boolean success = mMap.setMapStyle(new MapStyleOptions(getResources()
+                .getString(R.string.map_style)));
+        if (!success) {
+            Log.e(TAG, "Style parsing failed.");
+        }
 
         // Position the map's camera near Sydney, Australia.
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-34, 151)));

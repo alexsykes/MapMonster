@@ -453,6 +453,4 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
-
 }
