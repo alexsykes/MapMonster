@@ -37,5 +37,14 @@
             android:icon="@drawable/warning_24"
             android:key="destroy_confirm"
             android:title="@string/confirm_destroy" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="restore_switch"
+            android:title="@string/restore_deleted_markers" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/warning_24"
+            android:key="restore_confirm"
+            android:title="@string/confirm_restore" />
     </PreferenceCategory>
 </PreferenceScreen>

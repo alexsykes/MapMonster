@@ -3,6 +3,7 @@ package com.alexsykes.mapmonster.activities;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -51,9 +52,16 @@ public class SettingsActivity extends AppCompatActivity {
             MultiSelectListPreference layer_visibility = findPreference("layer_visibility");
             SwitchPreference destroy_switch = findPreference("destroy_switch");
             CheckBoxPreference destroy_confirm = findPreference("destroy_confirm");
+            SwitchPreference restore_switch = findPreference("restore_switch");
+            CheckBoxPreference restore_confirm = findPreference("restore_confirm");
+
             destroy_switch.setChecked(false);
             destroy_confirm.setVisible(false);
             destroy_confirm.setChecked(false);
+
+            restore_switch.setChecked(false);
+            restore_confirm.setVisible(false);
+            restore_confirm.setChecked(false);
 
             destroy_switch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -72,6 +80,26 @@ public class SettingsActivity extends AppCompatActivity {
                         destroyData();
                     }
                     return true;
+                }
+            });
+
+            restore_switch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+                    restore_confirm.setVisible((Boolean) newValue);
+                    restore_switch.setChecked((Boolean) newValue);
+                    return true;
+                }
+            });
+
+            restore_confirm.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+                    restore_confirm.setChecked((Boolean) newValue);
+                    if((Boolean) newValue) {
+                        restoreData();
+                    }
+                    return false;
                 }
             });
 
@@ -108,6 +136,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         private void destroyData() {
             markerViewModel.archiveAll();
+//            layerViewModel.archiveAll();
+        }
+
+        private void restoreData() {
+            markerViewModel.restoreAll();
 //            layerViewModel.archiveAll();
         }
     }

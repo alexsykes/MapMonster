@@ -69,4 +69,8 @@ public class MarkerRepository {
     public void archiveAllMarkers() {
         markerDao.archiveAllMarkers();
     }
+
+    public void restoreAllMarkers() {
+        markerDao.restoreAllMarkers();
+    }
 }

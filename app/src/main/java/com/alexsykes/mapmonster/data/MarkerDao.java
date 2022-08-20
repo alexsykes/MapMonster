@@ -50,6 +50,9 @@ public interface MarkerDao {
 
     @Query("UPDATE markers SET code = :markerCode, placename = :markerName, notes = :markerNotes, latitude = :lat, longitude = :lng WHERE markerID = :markerId")
     void update(int markerId, String markerCode, String markerNotes, String markerName, double lat, double lng);
+
+    @Query("UPDATE markers SET isArchived = 0")
+    void restoreAllMarkers();
 }
 
 
