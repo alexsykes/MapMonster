@@ -186,7 +186,7 @@
         android:alpha="1"
         android:outlineProvider="none"
         android:elevation="32dp"
-        app:srcCompat="@drawable/ic_sight"
+        app:srcCompat="@drawable/crosshairs_gps"
         tools:ignore="ImageContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

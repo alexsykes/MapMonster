@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_24));
                     break;
                 case "Waypoint" :
-                    // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
+                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.airplane));
                     break;
                 case "Food" :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fastfood_24));
