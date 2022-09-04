@@ -12,11 +12,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {MMarker.class, Layer.class}, version = 1, exportSchema = false)
+@Database(entities = {MMarker.class, Layer.class, Icon.class}, version = 1, exportSchema = false)
 
 public abstract class MMDatabase extends RoomDatabase{
     public abstract MarkerDao markerDao();
     public abstract LayerDao layerDao();
+    public abstract IconDao iconDao();
 
     private static volatile MMDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -87,6 +88,46 @@ public abstract class MMDatabase extends RoomDatabase{
                 layerDao.insertLayer(layer);
                 layer = new Layer("Accommodation", "ACC");
                 layerDao.insertLayer(layer);
+
+                IconDao iconDao = INSTANCE.iconDao();
+                iconDao.deleteAllIcons();
+
+                Icon icon = new Icon("add.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("airplane.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("alert.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("arrow_up_thick.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("arrow_up_thin.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("atm.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("camera_outline.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("car.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("car_outline.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("car_wrench.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("crosshairs.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("crosshairs_gps.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("crosshairs_off.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("flag_checkered.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("gas_station.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("hospital_box_outline.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("tent.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("warning_24.xml");
+                iconDao.insertIcon(icon);
             });
         }
     };
