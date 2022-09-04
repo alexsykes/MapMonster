@@ -25,6 +25,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
+import com.alexsykes.mapmonster.data.Icon;
+import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MMarker;
@@ -66,11 +68,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
+    private IconViewModel iconViewModel;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
     private List<String> visibleLayerList;
+    private List<Icon> iconList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +101,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerList = markerViewModel.getMarkerList();
         visibleLayerList = layerViewModel.getVisibleLayerList();
+        iconList = iconViewModel.getIconList();
     }
 
     @Override

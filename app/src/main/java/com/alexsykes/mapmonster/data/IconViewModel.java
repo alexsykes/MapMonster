@@ -22,4 +22,8 @@ public class IconViewModel extends AndroidViewModel {
     public void insert(Icon icon) {
         iconRepository.insert(icon);
     }
+
+    public List<Icon> getIconList() {
+        return iconList;
+    }
 }
