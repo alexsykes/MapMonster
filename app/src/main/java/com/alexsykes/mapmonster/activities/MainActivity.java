@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -105,6 +106,15 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerList = markerViewModel.getMarkerList();
         visibleLayerList = layerViewModel.getVisibleLayerList();
         iconList = iconViewModel.getIconList();
+
+        Resources resources = this.getResources();
+//      Image from database - https://stackoverflow.com/questions/42992989/storing-image-resource-id-in-sqlite-database-and-retrieving-it-in-int-array
+//        https://stackoverflow.com/questions/21402275/best-way-to-store-resource-id-in-database-on-android
+        for (Icon item: iconList) {
+            int resID = resources.getIdentifier(item.getFilename() , "drawable", this.getPackageName());
+            Log.i(TAG, "refID: " + resID);
+        }
+
     }
 
     @Override
@@ -358,10 +368,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
             switch(type)  {
                 case "Accommodation" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_24));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(),R.drawable.alert));
                     break;
                 case "Fuel" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_24));
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.gas_station));
                     break;
                 case "Waypoint" :
                      markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.airplane));

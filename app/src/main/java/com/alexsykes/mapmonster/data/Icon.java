@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.data;
 
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -22,7 +23,7 @@ public class Icon {
 
     // String is icon filename with lower case, underscore and ".xml"
     public Icon(String filename) {
-        this.filename = filename;
+        this.filename = filename.replace(".xml", "");;
         name = filename.replace(".xml", "");
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
         name = name.replace("_", " ");
