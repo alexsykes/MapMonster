@@ -42,7 +42,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.collections.MarkerManager;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -120,7 +119,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         Log.i(TAG, "Before getData: " + visibleMarkerList.size());
         Log.i(TAG, "onReturn: ");
         LatLng curLocation = mMap.getCameraPosition().target;
-        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),layer, markerNotes.toString());
+        MMarker mMarker = new MMarker(curLocation.latitude, curLocation.longitude, name.toString(),code.toString(),2, markerNotes.toString());
         markerViewModel.insert(mMarker);
         Log.i(TAG, "After insert getData: " + visibleMarkerList.size());
         getData();
@@ -329,6 +328,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         String type, snippet, marker_title;
+        int layer_id;
 
         // Setup Bounds builder
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -341,7 +341,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
             // Get data set
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-            type = marker.getType();
+            layer_id = marker.getLayer_id();
             snippet = marker.getNotes();
             marker_title = marker.getPlacename();
 
@@ -354,21 +354,21 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                     .visible(true);
 
             // with custom icons
-            switch(type)  {
-                case "Accommodation" :
+            switch(layer_id)  {
+                case 0 :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.hotel_24));
                     break;
-                case "Fuel" :
+                case 1 :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fuel_24));
                     break;
-                case "Waypoint" :
+                case 2 :
                     // markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.home_48));
                     break;
-                case "Food" :
+                case 3 :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.food_24));
                     break;
-                case "Parking" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_24));
+                case 4 :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.car_park));
                     break;
                 default:
                     break;

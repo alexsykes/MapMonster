@@ -351,12 +351,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
         String marker_title, code, type;
         LatLng latLng;
+        int layer_id;
 
         mMap.clear();
         for (MMarker marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
-            type = marker.getType();
+            layer_id = marker.getLayer_id();
             String snippet = marker.getNotes();
 
             marker_title = marker.getPlacename();
@@ -366,24 +367,24 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     .snippet(code)
                     .visible(true);
 
-            switch(type)  {
-                case "Accommodation" :
+            switch(layer_id)  {
+                case 0 :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(),R.drawable.alert));
                     break;
-                case "Fuel" :
+                case 1 :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.gas_station));
                     break;
-                case "Waypoint" :
+                case 2 :
                      markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.airplane));
                     break;
-                case "Food" :
+                case 3 :
                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fastfood_24));
                     break;
-                case "Junction" :
+                case 4 :
 //                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
                     break;
-                case "Parking" :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_24));
+                case 5 :
+                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.car_park));
                     break;
                 default:
                     break;

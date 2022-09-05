@@ -11,6 +11,16 @@ public class Layer {
     @NonNull
     @ColumnInfo(name="layerID")
     private int layer_id;
+
+    public int getIcon_id() {
+        return icon_id;
+    }
+
+    public void setIcon_id(int icon_id) {
+        this.icon_id = icon_id;
+    }
+
+    private int icon_id;
     private String layername, code;
 
     public boolean isArchived() {
@@ -32,9 +42,10 @@ public class Layer {
         return isVisible;
     }
 
-    public Layer(String layername, String code) {
+    public Layer(String layername, String code, int icon_id) {
         this.layername = layername;
         this.code = code;
+        this.icon_id = icon_id;
         isVisible = true;
         isArchived = false;
     }

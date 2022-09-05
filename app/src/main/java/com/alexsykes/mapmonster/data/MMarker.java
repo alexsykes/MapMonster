@@ -23,31 +23,32 @@ public class MMarker {
     private double latitude, longitude;
     private String placename;
     private String code;
-    private String type;
+
+    public int getLayer_id() {
+        return layer_id;
+    }
+
+    public void setLayer_id(int layer_id) {
+        this.layer_id = layer_id;
+    }
+
+    private int layer_id;
     private boolean isUpdated;
     private boolean isNew;
     private boolean isArchived;
     private String notes;
 
-    public MMarker(double latitude, double longitude, String placename, String code, String type, String notes) {
+    public MMarker(double latitude, double longitude, String placename, String code, int layer_id, String notes) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.placename = placename;
         this.code = code;
         this.notes = notes;
-        this.type = type;
+        this.layer_id = layer_id;
         isVisible = true;
         isUpdated = false;
         isNew = true;
         isArchived = false;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public boolean isUpdated() {
