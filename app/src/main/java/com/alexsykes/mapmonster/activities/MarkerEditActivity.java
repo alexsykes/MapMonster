@@ -3,6 +3,7 @@ package com.alexsykes.mapmonster.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -51,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MarkerListActivity extends AppCompatActivity implements OnMapReadyCallback, MarkerDetailFragment.MarkerDetailFragmentListener {
+public class MarkerEditActivity extends AppCompatActivity implements OnMapReadyCallback, MarkerDetailFragment.MarkerDetailFragmentListener {
     public static final String TAG = "Info";
 
     private static final int DEFAULT_ZOOM = 12;
@@ -82,7 +85,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marker_list);
+        setContentView(R.layout.activity_marker_edit);
 
         getPreferences();   // Get saved values
         getData();          // and saved data
@@ -188,12 +191,46 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     // Navigation
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.layer_edit_menu, menu);
+        return true;
+    }
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.marker_list_item) {
-            toggleLayerPanel();
-            return true;
+//        if (item.getItemId() == R.id.marker_list_item) {
+//            toggleLayerPanel();
+//            return true;
+//        }
+        switch (item.getItemId()) {
+            case R.id.layer_list_item:
+                goLayerList();
+                return true;
+
+            case R.id.settings_menu_item:
+                return true;
+
+            case R.id.marker_list_item:
+                toggleLayerPanel();
+                return true;
+
+            case R.id.marker_list_menu_item:
+                goMarkerList();
+                return true;
+            default:
         }
+
         return false;
+    }
+
+    private void goMarkerList() {
+        Intent intent = new Intent(MarkerEditActivity.this,MarkerListActivity.class);
+        startActivity(intent);
+    }
+
+    private void goLayerList() {
+        Intent intent = new Intent(MarkerEditActivity.this,LayerListActivity.class);
+        startActivity(intent);
     }
 
     public void onMarkerListItemClicked(MMarker marker, int isVisible) {

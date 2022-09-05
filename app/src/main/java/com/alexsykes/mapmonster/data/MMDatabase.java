@@ -128,6 +128,10 @@ public abstract class MMDatabase extends RoomDatabase{
                 iconDao.insertIcon(icon);
                 icon = new Icon("gas_station.xml");
                 iconDao.insertIcon(icon);
+                icon = new Icon("layers.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("layers_outline.xml");
+                iconDao.insertIcon(icon);
                 icon = new Icon("hospital_box_outline.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("map_marker.xml");
