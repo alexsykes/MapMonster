@@ -31,10 +31,6 @@ public interface MarkerDao {
     @Query("SELECT COUNT(*) FROM markers GROUP BY layer_id ORDER BY layer_id, placename")
     List<Integer> markerCountByLayer();
 
-
-    @Query("SELECT * FROM markers WHERE isArchived = 0 ORDER BY placename")
-    List<MMarker> getMarkerList();
-
     @Query("SELECT * FROM markers WHERE layer_id IN (:layerNames) AND isArchived = 0 ORDER BY layer_id, placename")
     List<MMarker> getVisibleMarkerList(ArrayList<String> layerNames);
 
@@ -53,6 +49,75 @@ public interface MarkerDao {
 
     @Query("UPDATE markers SET isArchived = 0")
     void restoreAllMarkers();
+
+
+
+
+    @Query("SELECT markers.*, icons.filename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
+    List<MapMarkerItem> getMarkerList();
+
+    static class MapMarkerItem {
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public String getPlacename() {
+            return placename;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public int getLayer_id() {
+            return layer_id;
+        }
+
+        public boolean isUpdated() {
+            return isUpdated;
+        }
+
+        public boolean isNew() {
+            return isNew;
+        }
+
+        public boolean isArchived() {
+            return isArchived;
+        }
+
+        public String getNotes() {
+            return notes;
+        }
+
+        public String getFilename() {
+            return filename;
+        }
+
+
+        public int getMarkerID() {
+            return markerID;
+        }
+
+        public void setMarkerID(int markerID) {
+            this.markerID = markerID;
+        }
+
+        public int markerID;
+        public double latitude, longitude;
+        public String placename;
+        public String code;
+
+        public int layer_id;
+        public boolean isUpdated;
+        public boolean isNew;
+        public boolean isArchived;
+        public String notes;
+        public String filename;
+    }
 }
 
 

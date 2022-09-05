@@ -12,7 +12,7 @@ public class MarkerRepository {
     private MarkerDao markerDao;
     private LiveData<List<MMarker>> allMarkers;
     private List<Integer> markerCountByLayer;
-    private List<MMarker> markerList;
+    private List<MarkerDao.MapMarkerItem> markerList;
     private List<MMarker> visibleMarkerList;
     private Map<String, List<MMarker>> markerMap;
     private ArrayList<String> layerNames;
@@ -33,7 +33,7 @@ public class MarkerRepository {
     List<Integer> getAllMarkersByLayer() {
         return markerCountByLayer;
     }
-    public List<MMarker> getMarkerList() { return markerList; }
+    public List<MarkerDao.MapMarkerItem> getMarkerList() { return markerList; }
     public List<MMarker> getVisibleMarkerList() { return visibleMarkerList; }
     public Map<String, List<MMarker>> getMarkersByLayer() {
         markerMap = markerDao.getMarkersByLayer();

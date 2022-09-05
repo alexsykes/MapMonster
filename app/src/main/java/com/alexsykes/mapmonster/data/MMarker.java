@@ -24,14 +24,6 @@ public class MMarker {
     private String placename;
     private String code;
 
-    public int getLayer_id() {
-        return layer_id;
-    }
-
-    public void setLayer_id(int layer_id) {
-        this.layer_id = layer_id;
-    }
-
     private int layer_id;
     private boolean isUpdated;
     private boolean isNew;
@@ -51,6 +43,14 @@ public class MMarker {
         isArchived = false;
     }
 
+
+    public int getLayer_id() {
+        return layer_id;
+    }
+
+    public void setLayer_id(int layer_id) {
+        this.layer_id = layer_id;
+    }
     public boolean isUpdated() {
         return isUpdated;
     }

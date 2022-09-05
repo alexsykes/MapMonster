@@ -30,7 +30,7 @@ import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
-import com.alexsykes.mapmonster.data.MMarker;
+import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -50,6 +50,8 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
+
+// TODO Check out use of tag - line 398
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 6;
 
-    private List<MMarker> markerList;
+    private List<MarkerDao.MapMarkerItem> markerList;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -352,14 +354,19 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         String marker_title, code, type;
         LatLng latLng;
         int layer_id;
-
+        String filename;
         mMap.clear();
-        for (MMarker marker : markerList) {
+        for (MarkerDao.MapMarkerItem marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             layer_id = marker.getLayer_id();
             String snippet = marker.getNotes();
+            filename = marker.getFilename();
 
+
+            int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
+
+            Log.i(TAG, "icon: " + filename);
             marker_title = marker.getPlacename();
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latLng)
@@ -367,32 +374,33 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     .snippet(code)
                     .visible(true);
 
-            switch(layer_id)  {
-                case 0 :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(),R.drawable.alert));
-                    break;
-                case 1 :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.gas_station));
-                    break;
-                case 2 :
-                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.airplane));
-                    break;
-                case 3 :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fastfood_24));
-                    break;
-                case 4 :
-//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.parking_36));
-                    break;
-                case 5 :
-                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.car_park));
-                    break;
-                default:
-                    break;
-            }
+//            switch(layer_id)  {
+//                case 0 :
+//                    markerOptions.icon(BitmapFromVector(getApplicationContext(),R.drawable.alert));
+//                    break;
+//                case 1 :
+//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.gas_station));
+//                    break;
+//                case 2 :
+//                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.airplane));
+//                    break;
+//                case 3 :
+//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fastfood_24));
+//                    break;
+//                case 4 :
+//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.car_park));
+//                    break;
+//                case 5 :
+//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.car_park));
+//                    break;
+//                default:
+//                    break;
+//            }
             markerOptions.draggable(false);
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(resID));
 
             Marker marker1 = mMap.addMarker(markerOptions);
-            marker1.setTag(marker.getMarker_id());
+            marker1.setTag(marker.getMarkerID());
         }
     }
     private void updateCamera() {
@@ -400,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             LatLng latLng;
-            for (MMarker marker : markerList) {
+            for (MarkerDao.MapMarkerItem marker : markerList) {
                 latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
                 builder.include(latLng);
             }
