@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.MarkerEditActivity;
+import com.alexsykes.mapmonster.activities.MapEditActivity;
 import com.alexsykes.mapmonster.data.MMarker;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -82,7 +82,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onBindViewHolder - onClick: ");
-                ((MarkerEditActivity) context).onLayerListItemClicked(section, holder.markerItemsRecyclerView.getVisibility());
+                ((MapEditActivity) context).onLayerListItemClicked(section, holder.markerItemsRecyclerView.getVisibility());
 //                ((MarkerListActivity) context).onLayerListItemClicked(section, holder.sectionSwitch.isChecked());
                 if(holder.markerItemsRecyclerView.getVisibility() == View.VISIBLE) {
                     holder.markerItemsRecyclerView.setVisibility(View.GONE);

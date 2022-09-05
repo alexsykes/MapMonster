@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MarkerEditActivity extends AppCompatActivity implements OnMapReadyCallback, MarkerDetailFragment.MarkerDetailFragmentListener {
+public class MapEditActivity extends AppCompatActivity implements OnMapReadyCallback, MarkerDetailFragment.MarkerDetailFragmentListener {
     public static final String TAG = "Info";
 
     private static final int DEFAULT_ZOOM = 12;
@@ -85,7 +85,7 @@ public class MarkerEditActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marker_edit);
+        setContentView(R.layout.activity_map_edit);
 
         getPreferences();   // Get saved values
         getData();          // and saved data
@@ -193,7 +193,7 @@ public class MarkerEditActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.layer_edit_menu, menu);
+        inflater.inflate(R.menu.map_edit_menu, menu);
         return true;
     }
     @Override
@@ -224,12 +224,12 @@ public class MarkerEditActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void goMarkerList() {
-        Intent intent = new Intent(MarkerEditActivity.this,MarkerListActivity.class);
+        Intent intent = new Intent(MapEditActivity.this,MarkerListActivity.class);
         startActivity(intent);
     }
 
     private void goLayerList() {
-        Intent intent = new Intent(MarkerEditActivity.this,LayerListActivity.class);
+        Intent intent = new Intent(MapEditActivity.this,LayerListActivity.class);
         startActivity(intent);
     }
 

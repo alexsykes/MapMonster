@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.MarkerEditActivity;
+import com.alexsykes.mapmonster.activities.MapEditActivity;
 import com.alexsykes.mapmonster.data.MMarker;
 
 import java.text.DecimalFormat;
@@ -60,7 +60,7 @@ public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerList
                     holder.detailContainer.setVisibility(View.VISIBLE);
                                     }
                 isVisible = holder.detailContainer.getVisibility();
-                ((MarkerEditActivity) context).onMarkerListItemClicked(marker, isVisible);
+                ((MapEditActivity) context).onMarkerListItemClicked(marker, isVisible);
             }
         });
     }
