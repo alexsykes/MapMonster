@@ -14,20 +14,24 @@ public class LayerViewModel extends AndroidViewModel {
     private final LiveData<List<Layer>> allLayers;
     private final List<Layer> layerList;
     private final List<String> visibleLayerList;
+    private final List<LayerDao.LayerData> layerData;
 
     public LayerViewModel(@NonNull Application application) {
         super(application);
         layerRepository = new LayerRepository(application);
+        layerData = layerRepository.getLayerData();
         allLayers = layerRepository.getAllLabels();
         layerList = layerRepository.getLayerList();
         visibleLayerList = layerRepository.getVisibleLayerList();
     }
 
     public LiveData<List<Layer>> getAllLayers() { return allLayers; }
-    public void insert(Layer layer) {layerRepository.insert(layer); }
     public List<Layer> getLayerList() { return layerRepository.getLayerList();  }
-    public void setVisibility(boolean isVisible, int layerID) { layerRepository.setVisibility(isVisible,layerID); }
+    public List<LayerDao.LayerData> getLayerData() { return layerRepository.getLayerData();  }
     public List<String> getVisibleLayerList() { return  layerRepository.getVisibleLayerList(); }
+
+    public void insert(Layer layer) {layerRepository.insert(layer); }
+    public void setVisibility(boolean isVisible, int layerID) { layerRepository.setVisibility(isVisible,layerID); }
 
     public void setVisibility(String layerName, boolean visibility) {
         layerRepository.setVisibility(layerName, visibility);
@@ -44,4 +48,5 @@ public class LayerViewModel extends AndroidViewModel {
     public void archiveAll() {
         layerRepository.archiveAllLayers();
     }
+
 }

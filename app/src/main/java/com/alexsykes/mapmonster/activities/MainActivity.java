@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         setContentView(R.layout.activity_main);
 
 //      Remove once no longer needed
-        goMarkerList();
+//        goMarkerList();
 
         // get saved values and editor from prefs
         // defaults = this.getPreferences(Context.MODE_PRIVATE);

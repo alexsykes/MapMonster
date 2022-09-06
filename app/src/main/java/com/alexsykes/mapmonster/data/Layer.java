@@ -11,6 +11,9 @@ public class Layer {
     @NonNull
     @ColumnInfo(name="layerID")
     private int layer_id;
+    private int icon_id;
+    private String layername, code;
+    private boolean isVisible, isArchived;
 
     public int getIcon_id() {
         return icon_id;
@@ -20,9 +23,6 @@ public class Layer {
         this.icon_id = icon_id;
     }
 
-    private int icon_id;
-    private String layername, code;
-
     public boolean isArchived() {
         return isArchived;
     }
@@ -30,9 +30,6 @@ public class Layer {
     public void setArchived(boolean archived) {
         isArchived = archived;
     }
-
-    private boolean isVisible;
-    private boolean isArchived;
 
     public void setVisible(boolean visible) {
         isVisible = visible;

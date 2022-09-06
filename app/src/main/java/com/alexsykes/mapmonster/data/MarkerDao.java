@@ -57,6 +57,20 @@ public interface MarkerDao {
     List<MapMarkerItem> getMarkerList();
 
     static class MapMarkerItem {
+
+        public int markerID;
+        public double latitude, longitude;
+        public String placename;
+        public String code;
+        public int layer_id;
+        public boolean isUpdated;
+        public boolean isNew;
+        public boolean isArchived;
+
+
+        public boolean isVisible;
+        public String notes;
+        public String filename;
         public double getLatitude() {
             return latitude;
         }
@@ -97,6 +111,10 @@ public interface MarkerDao {
             return filename;
         }
 
+        public boolean isVisible() {  return isVisible; }
+
+        public void setVisible(boolean visible) { isVisible = visible; }
+
 
         public int getMarkerID() {
             return markerID;
@@ -105,18 +123,6 @@ public interface MarkerDao {
         public void setMarkerID(int markerID) {
             this.markerID = markerID;
         }
-
-        public int markerID;
-        public double latitude, longitude;
-        public String placename;
-        public String code;
-
-        public int layer_id;
-        public boolean isUpdated;
-        public boolean isNew;
-        public boolean isArchived;
-        public String notes;
-        public String filename;
     }
 }
 
