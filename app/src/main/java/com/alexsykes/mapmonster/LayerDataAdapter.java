@@ -1,5 +1,6 @@
 package com.alexsykes.mapmonster;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,12 +22,14 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
     @NonNull
     @Override
     public LayerDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.layer_data_item, parent, false);
+        return new LayerDataViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull LayerDataViewHolder holder, int position) {
-
+        holder.getLayerNameTextView().setText(layerData.get(position).layername);
     }
 
 
@@ -35,11 +38,15 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         return layerData.size();
     }
 
-    public class LayerDataViewHolder extends RecyclerView.ViewHolder {
-        TextView layerNameTextView;
+    public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
+        private final TextView layerNameTextView;
         public LayerDataViewHolder(@NonNull View itemView) {
             super(itemView);
             layerNameTextView = itemView.findViewById(R.id.layerNameTextView);
+        }
+
+        public TextView getLayerNameTextView() {
+            return layerNameTextView;
         }
     }
 }
