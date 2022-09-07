@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EDE7F6"
     tools:context=".activities.MarkerListActivity">
 
     <TextView
@@ -25,10 +26,10 @@
         android:id="@+id/markerDataRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@id/listTitleView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
+        android:padding="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="@+id/listTitleView"
+        app:layout_constraintStart_toStartOf="@+id/listTitleView"
         app:layout_constraintTop_toBottomOf="@id/listTitleView" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

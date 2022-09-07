@@ -2,6 +2,8 @@ package com.alexsykes.mapmonster.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,11 +49,12 @@ public class MarkerListActivity extends AppCompatActivity {
         markerDataRV = findViewById(R.id.markerDataRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         markerDataRV.setLayoutManager(llm);
+//        markerDataRV.setLayoutManager(new GridLayoutManager(this, 2));
         markerDataRV.setHasFixedSize(true);
+        markerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(allMarkers);
         markerDataRV.setAdapter(markerDataAdapter);
     }
-
     private void getData() {
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
@@ -60,5 +63,9 @@ public class MarkerListActivity extends AppCompatActivity {
         allIcons = iconViewModel.getIconList();
         allLayers = layerViewModel.getLayerData();
         allMarkers = markerViewModel.getMarkerList();
+    }
+
+    public void onClickCalled(int position) {
+        Log.i(TAG, "Marker selected: " + position);
     }
 }

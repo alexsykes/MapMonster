@@ -1,5 +1,6 @@
 package com.alexsykes.mapmonster;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexsykes.mapmonster.activities.LayerListActivity;
+import com.alexsykes.mapmonster.activities.MarkerListActivity;
 import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.MarkerDao;
 
@@ -44,6 +47,15 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
     @Override
     public void onBindViewHolder(@NonNull MarkerDataViewHolder holder, int position) {
         holder.getMarkerNameTextView().setText(markerDataItems.get(position).placename);
+        holder.getMarkerNameTextView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                int position = holder.getAdapterPosition();
+                ((MarkerListActivity) context).onClickCalled(position);
+            }
+        });
+
     }
 
     @Override

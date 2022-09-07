@@ -2,6 +2,7 @@ package com.alexsykes.mapmonster.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,6 +48,7 @@ public class LayerListActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         layerDataRV.setLayoutManager(llm);
         layerDataRV.setHasFixedSize(true);
+        layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
         layerDataRV.setAdapter(layerDataAdapter);
     }
@@ -59,5 +61,9 @@ public class LayerListActivity extends AppCompatActivity {
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         allIcons = iconViewModel.getIconList();
         allLayers = layerViewModel.getLayerData();
+    }
+
+    public void onClickCalled(int position) {
+        Log.i(TAG, "Layer selected: " + position);
     }
 }
