@@ -14,7 +14,7 @@ import java.util.List;
 
 public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.LayerDataViewHolder> {
 
-    List<LayerDao.LayerData> layerData;
+    List<LayerDao.LayerDataItem> layerDataItems;
 
     public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
         private final TextView layerNameTextView;
@@ -29,8 +29,8 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         }
     }
 
-    public LayerDataAdapter(List<LayerDao.LayerData> allLayers) {
-        layerData = allLayers;
+    public LayerDataAdapter(List<LayerDao.LayerDataItem> allLayers) {
+        layerDataItems = allLayers;
     }
 
     @NonNull
@@ -43,13 +43,13 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
 
     @Override
     public void onBindViewHolder(@NonNull LayerDataViewHolder holder, int position) {
-        holder.getLayerNameTextView().setText(layerData.get(position).layername);
+        holder.getLayerNameTextView().setText(layerDataItems.get(position).layername);
     }
 
 
     @Override
     public int getItemCount() {
-        return layerData.size();
+        return layerDataItems.size();
     }
 
 }

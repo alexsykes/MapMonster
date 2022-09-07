@@ -41,9 +41,9 @@ public interface LayerDao {
     void updateLayerVisibility(String[] values);
 
     @Query("SELECT layers.*, icons.filename FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE isArchived = 0 ORDER BY layername" )
-    List<LayerData> getLayerData();
+    List<LayerDataItem> getLayerData();
 
-    class LayerData {
+    class LayerDataItem {
         public int layerID;
         public int icon_id;
         public String layername, code, filename;

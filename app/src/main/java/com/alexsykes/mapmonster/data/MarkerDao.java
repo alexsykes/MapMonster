@@ -50,27 +50,23 @@ public interface MarkerDao {
     @Query("UPDATE markers SET isArchived = 0")
     void restoreAllMarkers();
 
+    @Query("SELECT markers.*, layers.layername, icons.filename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
+    List<MapMarkerDataItem> getMarkerData();
 
+    static class MapMarkerDataItem {
 
-
-    @Query("SELECT markers.*, icons.filename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
-    List<MapMarkerItem> getMarkerList();
-
-    static class MapMarkerItem {
-
-        public int markerID;
+        public int markerID, layer_id;
         public double latitude, longitude;
-        public String placename;
-        public String code;
-        public int layer_id;
-        public boolean isUpdated;
-        public boolean isNew;
-        public boolean isArchived;
+        public String placename, code;
+        public boolean isUpdated, isNew,  isArchived;
 
 
         public boolean isVisible;
         public String notes;
-        public String filename;
+        public String filename,  layername;
+
+        public String getLayername() {  return layername;   }
+        public void setLayername(String layername) { this.layername = layername;  }
         public double getLatitude() {
             return latitude;
         }
@@ -114,7 +110,6 @@ public interface MarkerDao {
         public boolean isVisible() {  return isVisible; }
 
         public void setVisible(boolean visible) { isVisible = visible; }
-
 
         public int getMarkerID() {
             return markerID;

@@ -12,7 +12,6 @@ import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
@@ -28,7 +27,7 @@ public class LayerListActivity extends AppCompatActivity {
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
     List<Icon> allIcons;
-    List<LayerDao.LayerData> allLayers;
+    List<LayerDao.LayerDataItem> allLayers;
 
     // UIComponents
     RecyclerView layerDataRV;

@@ -1,0 +1,54 @@
+package com.alexsykes.mapmonster;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.alexsykes.mapmonster.data.LayerDao;
+import com.alexsykes.mapmonster.data.MarkerDao;
+
+import java.util.List;
+
+public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.MarkerDataViewHolder> {
+
+    List<MarkerDao.MapMarkerDataItem> markerDataItems;
+
+    public class MarkerDataViewHolder extends RecyclerView.ViewHolder {
+        private final TextView markerNameTextView;
+
+        public MarkerDataViewHolder(@NonNull View itemView) {
+            super(itemView);
+            markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
+        }
+        public TextView getMarkerNameTextView() {
+            return markerNameTextView;
+        }
+    }
+
+    public MarkerDataAdapter(List<MarkerDao.MapMarkerDataItem> allMarkers) {
+        markerDataItems = allMarkers;
+    }
+
+    @NonNull
+    @Override
+    public MarkerDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.marker_data_item, parent, false);
+        return new MarkerDataViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MarkerDataViewHolder holder, int position) {
+        holder.getMarkerNameTextView().setText(markerDataItems.get(position).placename);
+    }
+
+    @Override
+    public int getItemCount() {
+        return markerDataItems.size();
+    }
+
+}
