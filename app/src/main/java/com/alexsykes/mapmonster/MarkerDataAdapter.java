@@ -22,6 +22,7 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
 
     public class MarkerDataViewHolder extends RecyclerView.ViewHolder {
         private final TextView markerNameTextView;
+        private  int marker_id;
 
         public MarkerDataViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -45,14 +46,16 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
     }
 
     @Override
+    // Consider adding marker_identifier to MarkerDataViewHolder
     public void onBindViewHolder(@NonNull MarkerDataViewHolder holder, int position) {
         holder.getMarkerNameTextView().setText(markerDataItems.get(position).placename);
+        holder.marker_id = markerDataItems.get(position).getMarkerID();
         holder.getMarkerNameTextView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                int position = holder.getAdapterPosition();
-                ((MarkerListActivity) context).onClickCalled(position);
+//                int position = holder.getAdapterPosition();
+                ((MarkerListActivity) context).onClickCalled(holder.marker_id);
             }
         });
 

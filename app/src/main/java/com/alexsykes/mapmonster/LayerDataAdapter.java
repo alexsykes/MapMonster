@@ -22,6 +22,7 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
 
     public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
         private final TextView layerNameTextView;
+        private int layer_id;
 
         public LayerDataViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -49,13 +50,13 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
     @Override
     public void onBindViewHolder(@NonNull LayerDataViewHolder holder, int position) {
         holder.getLayerNameTextView().setText(layerDataItems.get(position).layername);
-
+        holder.layer_id = layerDataItems.get(position).getLayer_id();
         holder.getLayerNameTextView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                int position = holder.getAdapterPosition();
-                ((LayerListActivity) context).onClickCalled(position);
+//                int position = holder.getAdapterPosition();
+                ((LayerListActivity) context).onClickCalled(holder.layer_id);
             }
         });
     }
