@@ -45,9 +45,9 @@ public class LayerListActivity extends AppCompatActivity {
 
     private void setupLayerRV() {
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
-//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-//        layerDataRV.setLayoutManager(llm);
-//        layerDataRV.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        layerDataRV.setLayoutManager(llm);
+        layerDataRV.setHasFixedSize(true);
         final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
         layerDataRV.setAdapter(layerDataAdapter);
     }

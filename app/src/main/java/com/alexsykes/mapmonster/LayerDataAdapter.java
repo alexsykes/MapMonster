@@ -13,17 +13,31 @@ import com.alexsykes.mapmonster.data.LayerDao;
 import java.util.List;
 
 public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.LayerDataViewHolder> {
+
     List<LayerDao.LayerData> layerData;
-    public LayerDataAdapter(List<LayerDao.LayerData> allLayers) {
-        this.layerData = allLayers;
+
+    public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
+        private final TextView layerNameTextView;
+
+        public LayerDataViewHolder(@NonNull View itemView) {
+            super(itemView);
+            layerNameTextView = itemView.findViewById(R.id.layerNameTextView);
+        }
+
+        public TextView getLayerNameTextView() {
+            return layerNameTextView;
+        }
     }
 
+    public LayerDataAdapter(List<LayerDao.LayerData> allLayers) {
+        layerData = allLayers;
+    }
 
     @NonNull
     @Override
-    public LayerDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layer_data_item, parent, false);
+    public LayerDataViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.layer_data_item, viewGroup, false);
         return new LayerDataViewHolder(view);
     }
 
@@ -38,15 +52,4 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         return layerData.size();
     }
 
-    public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
-        private final TextView layerNameTextView;
-        public LayerDataViewHolder(@NonNull View itemView) {
-            super(itemView);
-            layerNameTextView = itemView.findViewById(R.id.layerNameTextView);
-        }
-
-        public TextView getLayerNameTextView() {
-            return layerNameTextView;
-        }
-    }
 }
