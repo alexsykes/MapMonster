@@ -52,7 +52,10 @@ public class LayerViewModel extends AndroidViewModel {
     }
 
     public LayerDataItem getLayerDataItem(int position) {
-        layerDataItem = layerRepository.getLayerDataItem(position);
-        return layerDataItem;
+        return layerRepository.getLayerDataItem(position);
+    }
+
+    public List<MapMarkerDataItem> getMapMarkerItems(int position) {
+        return layerRepository.getMapMarkerItems(position);
     }
 }

@@ -21,6 +21,7 @@ import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
+import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.util.List;
@@ -81,15 +82,16 @@ public class LayerListActivity extends AppCompatActivity {
 
     public void onClickCalled(int position) {
         Log.i(TAG, "Layer selected: " + position);
-        LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
 
-//        layerIdTextView.setText(String.valueOf(layerDataItem.getLayer_id()));
+        // get layerData and markerData for layer
+        LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
+        List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
+
+        // Show layer data in UI
         layernameTextView.setText(layerDataItem.layername);
         layerCodeTextView.setText(layerDataItem.code);
         layerIconTextView.setText(layerDataItem.filename);
-
         boolean showOnMap = layerDataItem.isVisible;
-
         visibilitySwitch.setChecked(showOnMap);
     }
 }

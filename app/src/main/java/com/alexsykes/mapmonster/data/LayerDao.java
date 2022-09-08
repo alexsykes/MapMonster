@@ -46,6 +46,9 @@ public interface LayerDao {
     @Query("SELECT layers.*, icons.filename FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE layerID = :id " )
     LayerDataItem getLayerDataItem(int id);
 
+    @Query("SELECT markers.* FROM markers WHERE layer_id = :position")
+    List<MapMarkerDataItem> getMapMarkerItems(int position);
+
 //    class LayerDataItem {
 //        public int layerID;
 //        public int icon_id;

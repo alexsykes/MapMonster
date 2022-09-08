@@ -30,6 +30,9 @@ public class LayerRepository {
     List<String> getVisibleLayerList() { return visibleLayerList; };
     List<LayerDataItem> getLayerData() { return layerDataItems; }
     LayerDataItem getLayerDataItem(int position) { return layerDao.getLayerDataItem(position); }
+    List<MapMarkerDataItem> getMapMarkerItems(int position) {
+        return layerDao.getMapMarkerItems(position);
+    }
     void insert(Layer layer) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
             layerDao.insertLayer(layer);
@@ -57,4 +60,6 @@ public class LayerRepository {
     public void archiveAllLayers() {
         layerDao.archiveAllLayers();
     }
+
+
 }
