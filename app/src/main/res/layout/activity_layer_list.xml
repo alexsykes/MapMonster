@@ -46,7 +46,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/listTitleView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/twenty_percent"
@@ -54,32 +54,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.2" />
-
-        <TextView
-            android:id="@+id/layerIdTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text=""
-            android:textColor="@color/purple_700"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/twenty_percent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/layerIdlabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/layer_id"
-            android:textColor="@color/purple_700"
-            app:layout_constraintEnd_toStartOf="@+id/twenty_percent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/layerNameLabel"
@@ -92,15 +66,17 @@
             android:textColor="@color/purple_700"
             app:layout_constraintEnd_toStartOf="@+id/twenty_percent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layerIdlabel" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/layernameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/purple_700"
-            app:layout_constraintEnd_toEndOf="@+id/layerIdTextView"
-            app:layout_constraintStart_toStartOf="@+id/layerIdTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/twenty_percent"
             app:layout_constraintTop_toTopOf="@+id/layerNameLabel" />
 
         <TextView
@@ -120,9 +96,11 @@
             android:id="@+id/layerCodeTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/purple_700"
-            app:layout_constraintEnd_toEndOf="@+id/layerIdTextView"
-            app:layout_constraintStart_toStartOf="@+id/layerIdTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/twenty_percent"
             app:layout_constraintTop_toTopOf="@+id/layerCodeLabel" />
 
         <TextView
@@ -142,9 +120,11 @@
             android:id="@+id/layerIconTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/purple_700"
-            app:layout_constraintEnd_toEndOf="@+id/layerIdTextView"
-            app:layout_constraintStart_toStartOf="@+id/layerIdTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/twenty_percent"
             app:layout_constraintTop_toTopOf="@+id/layerIconLabel" />
 
         <TextView
@@ -159,7 +139,7 @@
             app:layout_constraintEnd_toStartOf="@+id/twenty_percent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/visibilitySwitch"
             android:layout_width="48dp"
             android:layout_height="48dp"

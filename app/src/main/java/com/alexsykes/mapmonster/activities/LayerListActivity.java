@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +38,7 @@ public class LayerListActivity extends AppCompatActivity {
     // UIComponents
     RecyclerView layerDataRV;
     TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView;
-    Switch visibilitySwitch;
+    SwitchCompat visibilitySwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,6 @@ public class LayerListActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        layerIdTextView = findViewById(R.id.layerIdTextView);
         layernameTextView = findViewById(R.id.layernameTextView);
         layerIconTextView = findViewById(R.id.layerIconTextView);
         layerCodeTextView = findViewById(R.id.layerCodeTextView);
@@ -83,7 +83,7 @@ public class LayerListActivity extends AppCompatActivity {
         Log.i(TAG, "Layer selected: " + position);
         LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
 
-        layerIdTextView.setText(String.valueOf(layerDataItem.getLayer_id()));
+//        layerIdTextView.setText(String.valueOf(layerDataItem.getLayer_id()));
         layernameTextView.setText(layerDataItem.layername);
         layerCodeTextView.setText(layerDataItem.code);
         layerIconTextView.setText(layerDataItem.filename);
