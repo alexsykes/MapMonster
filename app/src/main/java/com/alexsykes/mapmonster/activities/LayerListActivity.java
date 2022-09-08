@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.R;
@@ -33,15 +36,27 @@ public class LayerListActivity extends AppCompatActivity {
 
     // UIComponents
     RecyclerView layerDataRV;
+    TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView;
+    Switch visibilitySwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layer_list);
 
+        setupUI();
         getData();
         setupLayerRV();
 
+    }
+
+    private void setupUI() {
+        layerIdTextView = findViewById(R.id.layerIdTextView);
+        layernameTextView = findViewById(R.id.layernameTextView);
+        layerIconTextView = findViewById(R.id.layerIconTextView);
+        layerCodeTextView = findViewById(R.id.layerCodeTextView);
+
+        visibilitySwitch = findViewById(R.id.visibilitySwitch);
     }
 
     private void setupLayerRV() {
@@ -68,5 +83,13 @@ public class LayerListActivity extends AppCompatActivity {
         Log.i(TAG, "Layer selected: " + position);
         LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
 
+        layerIdTextView.setText(String.valueOf(layerDataItem.getLayer_id()));
+        layernameTextView.setText(layerDataItem.layername);
+        layerCodeTextView.setText(layerDataItem.code);
+        layerIconTextView.setText(layerDataItem.filename);
+
+        boolean showOnMap = layerDataItem.isVisible;
+
+        visibilitySwitch.setChecked(showOnMap);
     }
 }

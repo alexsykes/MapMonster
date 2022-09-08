@@ -29,7 +29,7 @@ public class LayerRepository {
     public List<Layer> getLayerList() { return layerList; }
     List<String> getVisibleLayerList() { return visibleLayerList; };
     List<LayerDataItem> getLayerData() { return layerDataItems; }
-    LayerDataItem getLayerDataItem(int position) { return layerDataItems.get(position); }
+    LayerDataItem getLayerDataItem(int position) { return layerDao.getLayerDataItem(position); }
     void insert(Layer layer) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
             layerDao.insertLayer(layer);
