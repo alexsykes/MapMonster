@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexsykes.mapmonster.activities.LayerListActivity;
 import com.alexsykes.mapmonster.activities.MarkerListActivity;
 import com.alexsykes.mapmonster.data.LayerDao;
+import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerDao;
 
 import java.util.List;
 
 public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.MarkerDataViewHolder> {
 
-    List<MarkerDao.MapMarkerDataItem> markerDataItems;
+    List<MapMarkerDataItem> markerDataItems;
 
     public class MarkerDataViewHolder extends RecyclerView.ViewHolder {
         private final TextView markerNameTextView;
@@ -33,7 +34,7 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
         }
     }
 
-    public MarkerDataAdapter(List<MarkerDao.MapMarkerDataItem> allMarkers) {
+    public MarkerDataAdapter(List<MapMarkerDataItem> allMarkers) {
         markerDataItems = allMarkers;
     }
 

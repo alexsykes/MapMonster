@@ -16,8 +16,10 @@ import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerDao;
+import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
+import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
@@ -31,8 +33,8 @@ public class MarkerListActivity extends AppCompatActivity {
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
     List<Icon> allIcons;
-    List<LayerDao.LayerDataItem> allLayers;
-    List<MarkerDao.MapMarkerDataItem> allMarkers;
+    List<LayerDataItem> allLayers;
+    List<MapMarkerDataItem> allMarkers;
 
     // UIComponents
     RecyclerView markerDataRV;

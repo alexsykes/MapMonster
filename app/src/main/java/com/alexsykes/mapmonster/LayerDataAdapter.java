@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.activities.LayerListActivity;
 import com.alexsykes.mapmonster.data.LayerDao;
+import com.alexsykes.mapmonster.data.LayerDataItem;
 
 import java.util.List;
 
 public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.LayerDataViewHolder> {
 
-    List<LayerDao.LayerDataItem> layerDataItems;
+    List<LayerDataItem> layerDataItems;
     public static final String TAG = "Info";
 
     public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
@@ -35,7 +36,7 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         }
     }
 
-    public LayerDataAdapter(List<LayerDao.LayerDataItem> allLayers) {
+    public LayerDataAdapter(List<LayerDataItem> allLayers) {
         layerDataItems = allLayers;
     }
 

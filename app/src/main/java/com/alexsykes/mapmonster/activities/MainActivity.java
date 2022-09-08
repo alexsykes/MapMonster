@@ -30,6 +30,7 @@ import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
+import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 6;
 
-    private List<MarkerDao.MapMarkerDataItem> markerList;
+    private List<MapMarkerDataItem> markerList;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -359,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         int layer_id;
         String filename;
         mMap.clear();
-        for (MarkerDao.MapMarkerDataItem marker : markerList) {
+        for (MapMarkerDataItem marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             layer_id = marker.getLayer_id();
@@ -411,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             LatLng latLng;
-            for (MarkerDao.MapMarkerDataItem marker : markerList) {
+            for (MapMarkerDataItem marker : markerList) {
                 latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
                 builder.include(latLng);
             }

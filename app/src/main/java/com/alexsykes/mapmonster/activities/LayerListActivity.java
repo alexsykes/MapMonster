@@ -14,6 +14,7 @@ import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerDao;
+import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
@@ -28,7 +29,7 @@ public class LayerListActivity extends AppCompatActivity {
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
     List<Icon> allIcons;
-    List<LayerDao.LayerDataItem> allLayers;
+    List<LayerDataItem> allLayers;
 
     // UIComponents
     RecyclerView layerDataRV;
@@ -65,5 +66,7 @@ public class LayerListActivity extends AppCompatActivity {
 
     public void onClickCalled(int position) {
         Log.i(TAG, "Layer selected: " + position);
+        LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
+
     }
 }
