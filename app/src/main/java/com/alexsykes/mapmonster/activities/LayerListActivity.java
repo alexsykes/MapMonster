@@ -14,6 +14,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alexsykes.mapmonster.LayerDataAdapter;
+import com.alexsykes.mapmonster.MarkerDataAdapter;
+import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
@@ -37,7 +39,7 @@ public class LayerListActivity extends AppCompatActivity {
     List<LayerDataItem> allLayers;
 
     // UIComponents
-    RecyclerView layerDataRV;
+    RecyclerView layerDataRV, markerListRV;
     TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView;
     SwitchCompat visibilitySwitch;
 
@@ -81,7 +83,6 @@ public class LayerListActivity extends AppCompatActivity {
     }
 
     public void onClickCalled(int position) {
-        Log.i(TAG, "Layer selected: " + position);
 
         // get layerData and markerData for layer
         LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
@@ -93,5 +94,15 @@ public class LayerListActivity extends AppCompatActivity {
         layerIconTextView.setText(layerDataItem.filename);
         boolean showOnMap = layerDataItem.isVisible;
         visibilitySwitch.setChecked(showOnMap);
+
+        markerListRV = findViewById(R.id.markerListRV);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        markerListRV.setLayoutManager(linearLayoutManager);
+        markerListRV.setHasFixedSize(true);
+        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        final MarkerDataAdapter markerListAdapter = new MarkerDataAdapter(mapMarkerDataItems);
+        markerListRV.setAdapter(markerListAdapter);
+
+        Log.i(TAG, "Layer selected: " + position + " (" + mapMarkerDataItems.size() + ") markers");
     }
 }

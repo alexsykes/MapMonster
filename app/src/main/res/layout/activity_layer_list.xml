@@ -60,7 +60,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="@dimen/small_margin"
-
             android:background="@color/purple_500"
             android:text="@string/layer_details"
             android:textAlignment="center"
@@ -162,6 +161,28 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/twenty_percent"
             app:layout_constraintTop_toBottomOf="@+id/layerIconTextView" />
+
+        <TextView
+            android:id="@+id/markerListHeaderLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_margin"
+            android:layout_marginTop="8dp"
+            android:background="@color/purple_500"
+            android:text="@string/markers"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/visibilityLabel" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/markerListRV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/markerListHeaderLabel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
