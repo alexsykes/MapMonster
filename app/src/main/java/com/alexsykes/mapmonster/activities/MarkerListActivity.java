@@ -3,24 +3,20 @@ package com.alexsykes.mapmonster.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 
-import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.MarkerDataAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
-import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.util.List;
@@ -67,7 +63,7 @@ public class MarkerListActivity extends AppCompatActivity {
         allMarkers = markerViewModel.getMarkerList();
     }
 
-    public void onClickCalled(int position) {
+    public void onMarkerClickCalled(int position) {
         Log.i(TAG, "Marker selected: " + position);
     }
 }

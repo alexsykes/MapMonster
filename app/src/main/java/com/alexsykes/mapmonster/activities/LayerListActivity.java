@@ -9,17 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.CheckBox;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.MarkerDataAdapter;
-import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
@@ -87,8 +83,12 @@ public class LayerListActivity extends AppCompatActivity {
         allIcons = iconViewModel.getIconList();
         allLayers = layerViewModel.getLayerData();
     }
+    
+    public void onMarkerClickCalled(int position ) {
 
-    public void onClickCalled(int position) {
+    }
+
+    public void onLayerClickCalled(int position) {
 
         // get layerData and markerData for layer
         LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);

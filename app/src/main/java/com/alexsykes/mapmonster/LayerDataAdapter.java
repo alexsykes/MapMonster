@@ -1,7 +1,6 @@
 package com.alexsykes.mapmonster;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.activities.LayerListActivity;
-import com.alexsykes.mapmonster.data.LayerDao;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 
 import java.util.List;
@@ -57,7 +55,7 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
             public void onClick(View v) {
                 Context context = v.getContext();
 //                int position = holder.getAdapterPosition();
-                ((LayerListActivity) context).onClickCalled(holder.layer_id);
+                ((LayerListActivity) context).onLayerClickCalled(holder.layer_id);
             }
         });
     }
