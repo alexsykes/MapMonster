@@ -60,14 +60,20 @@ public class LayerListActivity extends AppCompatActivity {
         layerCodeTextView = findViewById(R.id.layerCodeTextView);
 
         visibilitySwitch = findViewById(R.id.visibilitySwitch);
+        layerDataRV = findViewById(R.id.layerDataRecyclerView);
+        layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+
+        markerListRV = findViewById(R.id.markerListRV);
+        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        markerListRV.setLayoutManager(linearLayoutManager);
+        markerListRV.setHasFixedSize(true);
     }
 
     private void setupLayerRV() {
-        layerDataRV = findViewById(R.id.layerDataRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         layerDataRV.setLayoutManager(llm);
         layerDataRV.setHasFixedSize(true);
-        layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
         layerDataRV.setAdapter(layerDataAdapter);
     }
@@ -94,14 +100,8 @@ public class LayerListActivity extends AppCompatActivity {
         layerIconTextView.setText(layerDataItem.filename);
         boolean showOnMap = layerDataItem.isVisible;
         visibilitySwitch.setChecked(showOnMap);
-
-        markerListRV = findViewById(R.id.markerListRV);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        markerListRV.setLayoutManager(linearLayoutManager);
-        markerListRV.setHasFixedSize(true);
-        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        final MarkerDataAdapter markerListAdapter = new MarkerDataAdapter(mapMarkerDataItems);
-        markerListRV.setAdapter(markerListAdapter);
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(mapMarkerDataItems);
+        markerListRV.setAdapter(markerDataAdapter);
 
         Log.i(TAG, "Layer selected: " + position + " (" + mapMarkerDataItems.size() + ") markers");
     }
