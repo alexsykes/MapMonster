@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.alexsykes.mapmonster.LayerDataAdapter;
@@ -100,6 +103,23 @@ public class LayerListActivity extends AppCompatActivity {
 
         // Show layer data in UI
         layerNameTextInput.setText(layerDataItem.layername);
+        layerNameTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.i(TAG, "beforeTextChanged: ");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.i(TAG, "onTextChanged: ");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Log.i(TAG, "afterTextChanged: " + editable);
+            }
+        });
+
         layerCodeTextInput.setText(layerDataItem.code);
 //        layerIconTextView.setText(layerDataItem.filename);
         boolean showOnMap = layerDataItem.isVisible;
