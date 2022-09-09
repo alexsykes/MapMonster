@@ -21,6 +21,7 @@ import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class LayerListActivity extends AppCompatActivity {
     RecyclerView layerDataRV, markerListRV;
     TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView;
     SwitchCompat visibilitySwitch;
+    TextInputEditText layerNameTextInput, layerCodeTextInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +53,11 @@ public class LayerListActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        layernameTextView = findViewById(R.id.layernameTextView);
-        layerIconTextView = findViewById(R.id.layerIconTextView);
-        layerCodeTextView = findViewById(R.id.layerCodeTextView);
+//        layernameTextView = findViewById(R.id.layernameTextView);
+//        layerIconTextView = findViewById(R.id.layerIconTextView);
+//        layerCodeTextView = findViewById(R.id.layerCodeTextView);
+        layerNameTextInput = findViewById(R.id.layerNameTextInput);
+        layerCodeTextInput = findViewById(R.id.layerCodeTextInput);
 
         visibilitySwitch = findViewById(R.id.visibilitySwitch);
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
@@ -95,9 +99,9 @@ public class LayerListActivity extends AppCompatActivity {
         List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
         // Show layer data in UI
-        layernameTextView.setText(layerDataItem.layername);
-        layerCodeTextView.setText(layerDataItem.code);
-        layerIconTextView.setText(layerDataItem.filename);
+        layerNameTextInput.setText(layerDataItem.layername);
+        layerCodeTextInput.setText(layerDataItem.code);
+//        layerIconTextView.setText(layerDataItem.filename);
         boolean showOnMap = layerDataItem.isVisible;
         visibilitySwitch.setChecked(showOnMap);
         final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(mapMarkerDataItems);
