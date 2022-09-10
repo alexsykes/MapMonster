@@ -43,73 +43,9 @@ public interface LayerDao {
     @Query("SELECT layers.*, icons.filename FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE isArchived = 0 ORDER BY layername" )
     List<LayerDataItem> getLayerData();
 
-    @Query("SELECT layers.*, icons.filename FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE layerID = :id " )
+    @Query("SELECT layers.*, icons.filename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE layerID = :id " )
     LayerDataItem getLayerDataItem(int id);
 
     @Query("SELECT markers.* FROM markers WHERE layer_id = :position")
     List<MapMarkerDataItem> getMapMarkerItems(int position);
-
-//    class LayerDataItem {
-//        public int layerID;
-//        public int icon_id;
-//        public String layername, code, filename;
-//        public boolean isVisible, isArchived;
-//
-//
-//        public int getLayer_id() {
-//            return layerID;
-//        }
-//
-//        public void setLayer_id(int layer_id) {
-//            this.layerID = layer_id;
-//        }
-//
-//        public int getIcon_id() {
-//            return icon_id;
-//        }
-//
-//        public void setIcon_id(int icon_id) {
-//            this.icon_id = icon_id;
-//        }
-//
-//        public String getLayername() {
-//            return layername;
-//        }
-//
-//        public void setLayername(String layername) {
-//            this.layername = layername;
-//        }
-//
-//        public String getCode() {
-//            return code;
-//        }
-//
-//        public void setCode(String code) {
-//            this.code = code;
-//        }
-//
-//        public String getFilename() {
-//            return filename;
-//        }
-//
-//        public void setFilename(String filename) {
-//            this.filename = filename;
-//        }
-//
-//        public boolean isVisible() {
-//            return isVisible;
-//        }
-//
-//        public void setVisible(boolean visible) {
-//            isVisible = visible;
-//        }
-//
-//        public boolean isArchived() {
-//            return isArchived;
-//        }
-//
-//        public void setArchived(boolean archived) {
-//            isArchived = archived;
-//        }
-//    }
 }

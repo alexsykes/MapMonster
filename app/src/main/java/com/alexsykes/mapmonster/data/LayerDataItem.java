@@ -3,7 +3,15 @@ package com.alexsykes.mapmonster.data;
 public class LayerDataItem {
         public int layerID;
         public int icon_id;
-        public String layername, code, filename;
+        public String layername;
+    public String code;
+    public String filename;
+    public String iconName;
+
+    public String getName() {  return iconName;  }
+
+    public void setName(String name) {  this.iconName = name;   }
+
         public boolean isVisible, isArchived;
 
 

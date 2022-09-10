@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alexsykes.mapmonster.LayerDataAdapter;
@@ -39,8 +40,9 @@ public class LayerListActivity extends AppCompatActivity {
     List<LayerDataItem> allLayers;
 
     // UIComponents
+    LinearLayout buttonLinearLayout;
     RecyclerView layerDataRV, markerListRV;
-    TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView;
+    TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView, iconNameTextView;
     SwitchCompat visibilitySwitch;
     TextInputEditText layerNameTextInput, layerCodeTextInput;
     Button dismissButton, saveChangesButton;
@@ -60,6 +62,9 @@ public class LayerListActivity extends AppCompatActivity {
 //        layernameTextView = findViewById(R.id.layernameTextView);
 //        layerIconTextView = findViewById(R.id.layerIconTextView);
 //        layerCodeTextView = findViewById(R.id.layerCodeTextView);
+        iconNameTextView = findViewById(R.id.iconNameTextView);
+        buttonLinearLayout = findViewById(R.id.buttonLinearLayout);
+        buttonLinearLayout.setVisibility(View.GONE);
         layerNameTextInput = findViewById(R.id.layerNameTextInput);
         layerCodeTextInput = findViewById(R.id.layerCodeTextInput);
         visibilitySwitch = findViewById(R.id.visibilitySwitch);
@@ -75,8 +80,12 @@ public class LayerListActivity extends AppCompatActivity {
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
 
-        saveChangesButton.setVisibility(View.GONE);
-        dismissButton.setVisibility(View.GONE);
+        saveChangesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showButtons(false);
+            }
+        });
 
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,27 +124,10 @@ public class LayerListActivity extends AppCompatActivity {
         LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
         List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
-
-        // Show layer data in UI
+        // Show existing layer data in UI
         layerNameTextInput.setText(layerDataItem.layername);
-//        layerNameTextInput.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                Log.i(TAG, "beforeTextChanged: ");
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                Log.i(TAG, "onTextChanged: ");
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                Log.i(TAG, "afterTextChanged: " + editable);
-//            }
-//        });
+        iconNameTextView.setText(layerDataItem.iconName);
         layerCodeTextInput.setText(layerDataItem.code);
-//        layerIconTextView.setText(layerDataItem.filename);
         boolean showOnMap = layerDataItem.isVisible;
         visibilitySwitch.setChecked(showOnMap);
         final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(mapMarkerDataItems);
@@ -172,11 +164,9 @@ public class LayerListActivity extends AppCompatActivity {
 
     private void showButtons(boolean hasFocus) {
         if(hasFocus) {
-            saveChangesButton.setVisibility(View.VISIBLE);
-            dismissButton.setVisibility(View.VISIBLE);
+            buttonLinearLayout.setVisibility(View.VISIBLE);
         } else {
-            saveChangesButton.setVisibility(View.GONE);
-            dismissButton.setVisibility(View.GONE);
+            buttonLinearLayout.setVisibility(View.GONE);
         }
     }
 }
