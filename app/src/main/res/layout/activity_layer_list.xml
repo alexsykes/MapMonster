@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layerHeaderTextView"
+    android:elevation="@dimen/small_margin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDE7F6"
@@ -29,7 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:background="@color/white"
-        android:elevation="@dimen/small_margin"
         app:layout_constraintEnd_toEndOf="@+id/listTitleView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/listTitleView" />
@@ -41,7 +41,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/layerDataRecyclerView"
         app:layout_constraintHorizontal_bias="0.0"
@@ -70,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="80dp" />
+            app:layout_constraintGuide_percent=".5" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layerCodeTextLayout"
@@ -153,33 +152,55 @@
             android:id="@+id/visibilitySwitch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:background="@color/white"
             android:text="@string/show_on_map"
             android:textColor="@color/purple_700"
+            android:padding="@dimen/small_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layerCodeTextLayout" />
+
+        <Button
+            android:id="@+id/dismissButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/cancel"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/markerListHeaderLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/visibilitySwitch" />
+
+        <Button
+            android:id="@+id/saveChangesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/save"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/markerListHeaderLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dismissButton" />
 
         <TextView
             android:id="@+id/markerListHeaderLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/small_margin"
-            android:layout_marginTop="8dp"
             android:background="@color/purple_500"
+            android:padding="@dimen/small_margin"
             android:text="@string/markers"
             android:textAlignment="center"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/visibilitySwitch" />
+            app:layout_constraintTop_toBottomOf="@+id/dismissButton" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/markerListRV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/markerListHeaderLabel" />
