@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class LayerListActivity extends AppCompatActivity {
     SwitchCompat visibilitySwitch;
     TextInputEditText layerNameTextInput, layerCodeTextInput;
     Button dismissButton, saveChangesButton;
+    ImageButton iconImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class LayerListActivity extends AppCompatActivity {
 //        layernameTextView = findViewById(R.id.layernameTextView);
 //        layerIconTextView = findViewById(R.id.layerIconTextView);
 //        layerCodeTextView = findViewById(R.id.layerCodeTextView);
+        iconImageButton = findViewById(R.id.iconImageButton);
         iconNameTextView = findViewById(R.id.iconNameTextView);
         buttonLinearLayout = findViewById(R.id.buttonLinearLayout);
         buttonLinearLayout.setVisibility(View.GONE);
@@ -124,7 +127,11 @@ public class LayerListActivity extends AppCompatActivity {
         LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
         List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
-        // Show existing layer data in UI
+        int resID = getResources().getIdentifier(layerDataItem.filename, "drawable", getPackageName());
+
+        iconImageButton.setImageResource(resID);
+        Log.i(TAG, "iconID: " + resID);
+//         Show existing layer data in UI
         layerNameTextInput.setText(layerDataItem.layername);
         iconNameTextView.setText(layerDataItem.iconName);
         layerCodeTextInput.setText(layerDataItem.code);

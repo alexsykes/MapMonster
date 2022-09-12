@@ -98,4 +98,5 @@
     <string name="show_on_map">Show on map</string>
     <string name="layer_details">Layer details</string>
     <string name="layer_code">Layer code</string>
+    <string name="icon_for_layer">Layer icon</string>
 </resources>

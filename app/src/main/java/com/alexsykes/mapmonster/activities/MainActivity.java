@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     // Navigation
     private void goMarkerList() {
-        Intent intent = new Intent(MainActivity.this, MapEditActivity.class);
+        Intent intent = new Intent(MainActivity.this, LayerListActivity.class);
         startActivity(intent);
     }
     private void goSettings() {

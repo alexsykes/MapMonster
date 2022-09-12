@@ -111,9 +111,16 @@
                     android:text="@string/icon"
                     android:textColor="@color/purple_700" />
 
-                <ImageButton
+                <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/iconImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/icon_for_layer"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
                     app:srcCompat="@drawable/bed" />
@@ -164,6 +171,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <TextView
