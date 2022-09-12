@@ -1,8 +1,10 @@
 package com.alexsykes.mapmonster;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +28,16 @@ public class IconImageAdapter extends RecyclerView.Adapter<IconImageAdapter.Icon
 
     @Override
     public void onBindViewHolder(@NonNull IconImageViewHolder holder, int position) {
-        holder.getImageView().setImageResource(iconIds[position]);
+        ImageButton button = holder.getImageButton();
+        button.setImageResource(iconIds[position]);
+        holder.resid = iconIds[position];
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("Info", "onClick: " + holder.resid);
+            }
+        });
 
     }
 
@@ -36,13 +47,14 @@ public class IconImageAdapter extends RecyclerView.Adapter<IconImageAdapter.Icon
     }
 
     public class IconImageViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView imageView;
+        private final ImageButton imageButton;
+        int resid;
 
         public IconImageViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.iconImageView);
+            imageButton = itemView.findViewById(R.id.iconImageButton);
         }
 
-        public ImageView getImageView() { return imageView; }
+        public ImageButton getImageButton() { return imageButton; }
     }
 }

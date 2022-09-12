@@ -112,9 +112,9 @@
                     android:textColor="@color/purple_700" />
 
                 <Space
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="2" />
 
                 <ImageButton
                     android:id="@+id/iconImageButton"
@@ -197,12 +197,11 @@
         android:id="@+id/iconImageRV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:background="@color/white"
         android:elevation="@dimen/large_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/layerDataLL"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
