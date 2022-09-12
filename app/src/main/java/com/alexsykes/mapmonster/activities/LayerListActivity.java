@@ -44,7 +44,7 @@ public class LayerListActivity extends AppCompatActivity {
     int[] iconIds;
 
     // UIComponents
-    LinearLayout buttonLinearLayout;
+    LinearLayout buttonLinearLayout, layerDetailLinearList, markerDetailLinearList;
     RecyclerView layerDataRV, markerListRV, iconImageRV;
     TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView, iconNameTextView;
     SwitchCompat visibilitySwitch;
@@ -60,14 +60,12 @@ public class LayerListActivity extends AppCompatActivity {
         getData();
         setupUI();
         setupLayerRV();
-
     }
 
     private void setupUI() {
-//        layernameTextView = findViewById(R.id.layernameTextView);
-//        layerIconTextView = findViewById(R.id.layerIconTextView);
-//        layerCodeTextView = findViewById(R.id.layerCodeTextView);
         iconImageButton = findViewById(R.id.iconImageButton);
+        layerDetailLinearList = findViewById(R.id.layerDetailsLL);
+        markerDetailLinearList = findViewById(R.id.markerListLL);
         iconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +94,7 @@ public class LayerListActivity extends AppCompatActivity {
 
         final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
         iconImageRV.setAdapter(iconImageAdapter);
+        iconImageRV.setVisibility(View.GONE);
 
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
@@ -118,7 +117,8 @@ public class LayerListActivity extends AppCompatActivity {
 
     private void displayIconImages() {
         // iconIds - array of identifies for resources
-
+        iconImageRV.setVisibility(View.VISIBLE);
+        buttonLinearLayout.setVisibility(View.VISIBLE);
     }
 
     private void setupLayerRV() {
@@ -150,6 +150,9 @@ public class LayerListActivity extends AppCompatActivity {
     }
 
     public void onLayerClickCalled(int position) {
+        // Display Marker detail linear list
+        layerDetailLinearList.setVisibility(View.VISIBLE);
+        markerDetailLinearList.setVisibility(View.VISIBLE);
 
         // get layerData and markerData for layer
         LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
@@ -207,5 +210,7 @@ public class LayerListActivity extends AppCompatActivity {
 
     public void onIconClicked(int resid) {
         Log.i(TAG, "onIconClicked: " + resid);
+        iconImageButton.setImageResource(resid);
+        iconImageRV.setVisibility(View.GONE);
     }
 }
