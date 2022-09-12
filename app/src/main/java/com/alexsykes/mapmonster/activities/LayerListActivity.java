@@ -204,4 +204,8 @@ public class LayerListActivity extends AppCompatActivity {
             buttonLinearLayout.setVisibility(View.GONE);
         }
     }
+
+    public void onIconClicked(int resid) {
+        Log.i(TAG, "onIconClicked: " + resid);
+    }
 }
