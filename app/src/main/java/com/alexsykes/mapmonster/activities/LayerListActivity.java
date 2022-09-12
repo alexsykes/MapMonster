@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alexsykes.mapmonster.IconImageAdapter;
 import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.MarkerDataAdapter;
 import com.alexsykes.mapmonster.R;
@@ -39,10 +41,11 @@ public class LayerListActivity extends AppCompatActivity {
     private IconViewModel iconViewModel;
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
+    int[] iconIds;
 
     // UIComponents
     LinearLayout buttonLinearLayout;
-    RecyclerView layerDataRV, markerListRV;
+    RecyclerView layerDataRV, markerListRV, iconImageRV;
     TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView, iconNameTextView;
     SwitchCompat visibilitySwitch;
     TextInputEditText layerNameTextInput, layerCodeTextInput;
@@ -54,8 +57,8 @@ public class LayerListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layer_list);
 
-        setupUI();
         getData();
+        setupUI();
         setupLayerRV();
 
     }
@@ -65,6 +68,13 @@ public class LayerListActivity extends AppCompatActivity {
 //        layerIconTextView = findViewById(R.id.layerIconTextView);
 //        layerCodeTextView = findViewById(R.id.layerCodeTextView);
         iconImageButton = findViewById(R.id.iconImageButton);
+        iconImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "iconImageButton Clicked: ");
+                displayIconImages();
+            }
+        });
         iconNameTextView = findViewById(R.id.iconNameTextView);
         buttonLinearLayout = findViewById(R.id.buttonLinearLayout);
         buttonLinearLayout.setVisibility(View.GONE);
@@ -79,6 +89,13 @@ public class LayerListActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         markerListRV.setLayoutManager(linearLayoutManager);
         markerListRV.setHasFixedSize(true);
+
+        iconImageRV = findViewById(R.id.iconImageRV);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
+        iconImageRV.setLayoutManager(gridLayoutManager);
+
+        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
+        iconImageRV.setAdapter(iconImageAdapter);
 
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
@@ -99,6 +116,11 @@ public class LayerListActivity extends AppCompatActivity {
 
     }
 
+    private void displayIconImages() {
+        // iconIds - array of identifies for resources
+
+    }
+
     private void setupLayerRV() {
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         layerDataRV.setLayoutManager(llm);
@@ -115,6 +137,12 @@ public class LayerListActivity extends AppCompatActivity {
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         allIcons = iconViewModel.getIconList();
         allLayers = layerViewModel.getLayerData();
+
+        // Populate array of icon IDs
+        iconIds = new int[allIcons.size()];
+        for (int i = 0; i < allIcons.size(); i++) {
+            iconIds[i] = getResources().getIdentifier(allIcons.get(i).getFilename(), "drawable", getPackageName());
+        }
     }
     
     public void onMarkerClickCalled(int position ) {

@@ -122,8 +122,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/icon_for_layer"
                     android:minWidth="48dp"
-                    android:minHeight="48dp"
-                    app:srcCompat="@drawable/bed" />
+                    android:minHeight="48dp" />
             </LinearLayout>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -193,5 +192,17 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/iconImageRV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@color/white"
+        android:elevation="@dimen/large_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layerDataLL"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

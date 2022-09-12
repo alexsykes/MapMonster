@@ -99,4 +99,5 @@
     <string name="layer_details">Layer details</string>
     <string name="layer_code">Layer code</string>
     <string name="icon_for_layer">Layer icon</string>
+    <string name="icon_image">Icon image</string>
 </resources>

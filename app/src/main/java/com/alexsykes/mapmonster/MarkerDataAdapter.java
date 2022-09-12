@@ -19,18 +19,6 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
 
     List<MapMarkerDataItem> markerDataItems;
 
-    public class MarkerDataViewHolder extends RecyclerView.ViewHolder {
-        private final TextView markerNameTextView;
-        private  int marker_id;
-
-        public MarkerDataViewHolder(@NonNull View itemView) {
-            super(itemView);
-            markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
-        }
-        public TextView getMarkerNameTextView() {
-            return markerNameTextView;
-        }
-    }
 
     public MarkerDataAdapter(List<MapMarkerDataItem> allMarkers) {
         markerDataItems = allMarkers;
@@ -70,4 +58,16 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
         return markerDataItems.size();
     }
 
+    public class MarkerDataViewHolder extends RecyclerView.ViewHolder {
+        private final TextView markerNameTextView;
+        private  int marker_id;
+
+        public MarkerDataViewHolder(@NonNull View itemView) {
+            super(itemView);
+            markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
+        }
+        public TextView getMarkerNameTextView() {
+            return markerNameTextView;
+        }
+    }
 }
