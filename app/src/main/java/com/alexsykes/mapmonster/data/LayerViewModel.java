@@ -16,6 +16,7 @@ public class LayerViewModel extends AndroidViewModel {
     private final List<String> visibleLayerList;
     private final List<LayerDataItem> layerDataItems;
     private  LayerDataItem layerDataItem;
+    private LiveData<List<Layer>> liveLayerList;
 
     public LayerViewModel(@NonNull Application application) {
         super(application);
@@ -24,7 +25,7 @@ public class LayerViewModel extends AndroidViewModel {
         allLayers = layerRepository.getAllLabels();
         layerList = layerRepository.getLayerList();
         visibleLayerList = layerRepository.getVisibleLayerList();
-
+        liveLayerList = layerRepository.getLiveLayerList();
     }
 
     public LiveData<List<Layer>> getAllLayers() { return allLayers; }
