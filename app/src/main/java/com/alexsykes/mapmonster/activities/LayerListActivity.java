@@ -123,7 +123,6 @@ public class LayerListActivity extends AppCompatActivity {
                 showButtons(false);
             }
         });
-
     }
 
     private void displayIconImages() {
@@ -173,11 +172,12 @@ public class LayerListActivity extends AppCompatActivity {
 
         iconImageButton.setImageResource(resID);
         Log.i(TAG, "iconID: " + resID);
+
 //         Show existing layer data in UI
         layerNameTextInput.setText(currentLayerDataItem.layername);
         iconNameTextView.setText(currentLayerDataItem.iconName);
+        currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.filename);
         layerCodeTextInput.setText(currentLayerDataItem.code);
-//        boolean showOnMap = currentLayerDataItem.isVisible;
         visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
 
         final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(mapMarkerDataItems);
