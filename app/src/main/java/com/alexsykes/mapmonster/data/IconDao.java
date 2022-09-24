@@ -17,4 +17,7 @@ public interface IconDao {
 
     @Query("DELETE FROM icons")
     void deleteAllIcons();
+
+    @Query("SELECT * FROM icons WHERE filename = :filename")
+    Icon getIconByFilename(String filename);
 }

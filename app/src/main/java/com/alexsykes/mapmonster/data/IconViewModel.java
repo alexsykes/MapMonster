@@ -17,6 +17,9 @@ public class IconViewModel extends AndroidViewModel {
         iconRepository = new IconRepository(application);
         iconList = iconRepository.getIconList();
     }
+    public Icon getIconByFilename(String filename) {
+        return iconRepository.getIconByFilename(filename);
+    }
 
     // Mutators
     public void insert(Icon icon) {

@@ -19,6 +19,8 @@ public class IconRepository {
         return iconDao.getIconList();
     }
 
+    public Icon getIconByFilename(String filename) { return iconDao.getIconByFilename(filename); }
+
     public void insert(Icon icon) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
             iconDao.insertIcon(icon);

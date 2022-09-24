@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +43,7 @@ public class LayerListActivity extends AppCompatActivity {
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     int[] iconIds;
+    LayerDataItem currentLayerDataItem;
 
     // UIComponents
     LinearLayout buttonLinearLayout, layerDetailLinearList, markerDetailLinearList;
@@ -102,6 +104,12 @@ public class LayerListActivity extends AppCompatActivity {
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Get values and update currentLayerDataItem
+                currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
+                currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
+                currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
+                Icon currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.filename);
                 showButtons(false);
             }
         });
@@ -155,19 +163,20 @@ public class LayerListActivity extends AppCompatActivity {
         markerDetailLinearList.setVisibility(View.VISIBLE);
 
         // get layerData and markerData for layer
-        LayerDataItem layerDataItem = layerViewModel.getLayerDataItem(position);
+        currentLayerDataItem = layerViewModel.getLayerDataItem(position);
         List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
-        int resID = getResources().getIdentifier(layerDataItem.filename, "drawable", getPackageName());
+        int resID = getResources().getIdentifier(currentLayerDataItem.filename, "drawable", getPackageName());
 
         iconImageButton.setImageResource(resID);
         Log.i(TAG, "iconID: " + resID);
 //         Show existing layer data in UI
-        layerNameTextInput.setText(layerDataItem.layername);
-        iconNameTextView.setText(layerDataItem.iconName);
-        layerCodeTextInput.setText(layerDataItem.code);
-        boolean showOnMap = layerDataItem.isVisible;
-        visibilitySwitch.setChecked(showOnMap);
+        layerNameTextInput.setText(currentLayerDataItem.layername);
+        iconNameTextView.setText(currentLayerDataItem.iconName);
+        layerCodeTextInput.setText(currentLayerDataItem.code);
+//        boolean showOnMap = currentLayerDataItem.isVisible;
+        visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
+
         final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(mapMarkerDataItems);
         markerListRV.setAdapter(markerDataAdapter);
 
@@ -209,8 +218,17 @@ public class LayerListActivity extends AppCompatActivity {
     }
 
     public void onIconClicked(int resid) {
-        Log.i(TAG, "onIconClicked: " + resid);
+//      Change icon on button
         iconImageButton.setImageResource(resid);
+
+//      Get icon name from
+        String filename = getResources().getResourceEntryName(resid);
+        String label = filename.replace("_", " ");
+        label = label.substring(0, 1).toUpperCase() + label.substring(1);
+        iconNameTextView.setText(label);
+        currentLayerDataItem.setFilename(filename);
+        currentLayerDataItem.setName(label);
+
         iconImageRV.setVisibility(View.GONE);
     }
 }
