@@ -62,4 +62,7 @@ public class LayerRepository {
     }
 
 
+    public void updateLayer(LayerDataItem currentLayerDataItem) {
+        layerDao.updateLayerData(currentLayerDataItem.layerID, currentLayerDataItem.icon_id, currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.isVisible);
+    }
 }

@@ -58,4 +58,8 @@ public class LayerViewModel extends AndroidViewModel {
     public List<MapMarkerDataItem> getMapMarkerItems(int position) {
         return layerRepository.getMapMarkerItems(position);
     }
+
+    public void updateLayer(LayerDataItem currentLayerDataItem) {
+        layerRepository.updateLayer(currentLayerDataItem);
+    }
 }

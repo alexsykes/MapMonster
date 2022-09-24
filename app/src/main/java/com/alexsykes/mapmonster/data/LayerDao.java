@@ -48,4 +48,7 @@ public interface LayerDao {
 
     @Query("SELECT markers.* FROM markers WHERE layer_id = :position")
     List<MapMarkerDataItem> getMapMarkerItems(int position);
+
+    @Query("UPDATE layers SET icon_id = :icon_id, layername = :layername, code = :code, isVisible = :isVisible  WHERE layerID=:layerID")
+    void updateLayerData(int layerID, int icon_id, String layername, String code, boolean isVisible);
 }

@@ -40,6 +40,7 @@ public class LayerListActivity extends AppCompatActivity {
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
+    Icon currentIcon;
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     int[] iconIds;
@@ -109,11 +110,13 @@ public class LayerListActivity extends AppCompatActivity {
                 currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
                 currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
                 currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-                Icon currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.filename);
+                currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+
+//              Update database
+                layerViewModel.updateLayer(currentLayerDataItem);
                 showButtons(false);
             }
         });
-
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,7 +231,7 @@ public class LayerListActivity extends AppCompatActivity {
         iconNameTextView.setText(label);
         currentLayerDataItem.setFilename(filename);
         currentLayerDataItem.setName(label);
-
+        currentIcon = iconViewModel.getIconByFilename(filename);
         iconImageRV.setVisibility(View.GONE);
     }
 }
