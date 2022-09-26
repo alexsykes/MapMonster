@@ -25,7 +25,7 @@ public class LayerRepository {
 //        layerDataItem = layerDao.getLayerDataItem();
     }
 
-    LiveData<List<Layer>> getAllLabels() { return allLabels; }
+    LiveData<List<Layer>> getAllLayers() { return allLabels; }
     public List<Layer> getLayerList() { return layerList; }
     List<String> getVisibleLayerList() { return visibleLayerList; };
     List<LayerDataItem> getLayerData() { return layerDataItems; }

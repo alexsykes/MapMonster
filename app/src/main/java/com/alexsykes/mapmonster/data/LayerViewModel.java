@@ -22,7 +22,7 @@ public class LayerViewModel extends AndroidViewModel {
         super(application);
         layerRepository = new LayerRepository(application);
         layerDataItems = layerRepository.getLayerData();
-        allLayers = layerRepository.getAllLabels();
+        allLayers = layerRepository.getAllLayers();
         layerList = layerRepository.getLayerList();
         visibleLayerList = layerRepository.getVisibleLayerList();
         liveLayerList = layerRepository.getLiveLayerList();

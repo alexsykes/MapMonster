@@ -2,6 +2,7 @@ package com.alexsykes.mapmonster.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -24,6 +25,7 @@ import com.alexsykes.mapmonster.MarkerDataAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
+import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
@@ -43,6 +45,7 @@ public class LayerListActivity extends AppCompatActivity {
     Icon currentIcon;
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
+    LiveData<List<Layer>> layerLiveData;
     int[] iconIds;
     LayerDataItem currentLayerDataItem;
 
@@ -147,6 +150,7 @@ public class LayerListActivity extends AppCompatActivity {
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         allIcons = iconViewModel.getIconList();
         allLayers = layerViewModel.getLayerData();
+        layerLiveData = layerViewModel.getAllLayers();
 
         // Populate array of icon IDs
         iconIds = new int[allIcons.size()];
