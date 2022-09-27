@@ -86,9 +86,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
 
-//      Remove once no longer needed
-//        goMarkerList();
-
         // get saved values and editor from prefs
         // defaults = this.getPreferences(Context.MODE_PRIVATE);
         // Prefs shared across app
@@ -100,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
         setupUIComponents();
-        getData();
     }
 
     private void getData() {
@@ -118,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //        https://stackoverflow.com/questions/21402275/best-way-to-store-resource-id-in-database-on-android
         for (Icon item: iconList) {
             int resID = resources.getIdentifier(item.getFilename() , "drawable", this.getPackageName());
-            Log.i(TAG, "refID: " + resID);
+//            Log.i(TAG, "refID: " + resID);
         }
 
     }
@@ -127,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
+        getData();
         getSavedCameraPosition();
     }
 
@@ -369,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
 
-            Log.i(TAG, "icon: " + filename);
+//            Log.i(TAG, "icon: " + filename);
             marker_title = marker.getPlacename();
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latLng)
@@ -405,7 +402,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         double latitude = preferences.getFloat("latitude", (float) defaultLocation.latitude);
         float zoom = preferences.getFloat("zoom", DEFAULT_ZOOM);
         LatLng startPosition = new LatLng(latitude, longitude);
-
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(startPosition)      // Sets the center of the map to Mountain View

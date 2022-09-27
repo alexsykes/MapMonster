@@ -132,6 +132,14 @@ public abstract class MMDatabase extends RoomDatabase{
                 iconDao.insertIcon(icon);
                 icon = new Icon("tent.xml");
                 iconDao.insertIcon(icon);
+                icon = new Icon("turn_right.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("turn_left.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("turn_slight_right.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("turn_slight_left.xml");
+                iconDao.insertIcon(icon);
                 icon = new Icon("warning_24.xml");
                 iconDao.insertIcon(icon);
             });

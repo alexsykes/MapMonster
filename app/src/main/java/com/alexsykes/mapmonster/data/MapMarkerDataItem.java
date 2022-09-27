@@ -1,17 +1,13 @@
 package com.alexsykes.mapmonster.data;
 
 public class MapMarkerDataItem {
-
-
     public int markerID, layer_id;
     public double latitude, longitude;
     public String placename, code;
     public boolean isUpdated, isNew,  isArchived;
-
-
     public boolean isVisible;
     public String notes;
-    public String filename,  layername;
+    public String filename, layername;
 
     public String getLayername() {  return layername;   }
     public void setLayername(String layername) { this.layername = layername;  }

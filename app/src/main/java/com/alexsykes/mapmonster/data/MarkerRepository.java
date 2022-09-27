@@ -33,7 +33,7 @@ public class MarkerRepository {
     List<Integer> getAllMarkersByLayer() {
         return markerCountByLayer;
     }
-    public List<MapMarkerDataItem> getMarkerList() { return markerList; }
+    public List<MapMarkerDataItem> getMarkerList() { return markerDao.getMarkerData(); }
     public List<MMarker> getVisibleMarkerList() { return visibleMarkerList; }
     public Map<String, List<MMarker>> getMarkersByLayer() {
         markerMap = markerDao.getMarkersByLayer();
