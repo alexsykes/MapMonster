@@ -117,6 +117,9 @@ public class LayerListActivity extends AppCompatActivity {
 
 //              Update database
                 layerViewModel.updateLayer(currentLayerDataItem);
+
+                allLayers = layerViewModel.getLayerData();
+                setupLayerRV();
                 showButtons(false);
             }
         });

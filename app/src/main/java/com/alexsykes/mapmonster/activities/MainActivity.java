@@ -367,7 +367,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             String snippet = marker.getNotes();
             filename = marker.getFilename();
 
-
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
 
             Log.i(TAG, "icon: " + filename);
@@ -375,33 +374,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latLng)
                     .title(marker_title)
+                    .draggable(false)
                     .snippet(code)
+                    .icon(BitmapFromVector(getApplicationContext(), resID))
                     .visible(true);
-
-//            switch(layer_id)  {
-//                case 0 :
-//                    markerOptions.icon(BitmapFromVector(getApplicationContext(),R.drawable.alert));
-//                    break;
-//                case 1 :
-//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.gas_station));
-//                    break;
-//                case 2 :
-//                     markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.airplane));
-//                    break;
-//                case 3 :
-//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.fastfood_24));
-//                    break;
-//                case 4 :
-//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.car_park));
-//                    break;
-//                case 5 :
-//                    markerOptions.icon(BitmapFromVector(getApplicationContext(), R.drawable.car_park));
-//                    break;
-//                default:
-//                    break;
-//            }
-            markerOptions.draggable(false);
-//            markerOptions.icon(BitmapDescriptorFactory.fromResource(resID));
 
             Marker marker1 = mMap.addMarker(markerOptions);
             marker1.setTag(marker.getMarkerID());

@@ -28,7 +28,7 @@ public class LayerRepository {
     LiveData<List<Layer>> getAllLayers() { return allLabels; }
     public List<Layer> getLayerList() { return layerList; }
     List<String> getVisibleLayerList() { return visibleLayerList; };
-    List<LayerDataItem> getLayerData() { return layerDataItems; }
+    List<LayerDataItem> getLayerData() { return layerDao.getLayerData(); }
     LayerDataItem getLayerDataItem(int position) { return layerDao.getLayerDataItem(position); }
     List<MapMarkerDataItem> getMapMarkerItems(int position) {
         return layerDao.getMapMarkerItems(position);
