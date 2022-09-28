@@ -1,5 +1,6 @@
 package com.alexsykes.mapmonster.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.LiveData;
@@ -9,8 +10,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,14 +34,22 @@ import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
+import java.util.Objects;
 
-public class LayerListActivity extends AppCompatActivity {
+public class LayerListActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "Info";
-    
-//  Data
+
+    //  Data
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
@@ -52,32 +63,47 @@ public class LayerListActivity extends AppCompatActivity {
     // UIComponents
     LinearLayout buttonLinearLayout, layerDetailLinearList, markerDetailLinearList;
     RecyclerView layerDataRV, markerListRV, iconImageRV;
-    TextView  layernameTextView, layerIdTextView, layerIconTextView, layerCodeTextView, iconNameTextView;
+    TextView iconNameTextView;
     SwitchCompat visibilitySwitch;
     TextInputEditText layerNameTextInput, layerCodeTextInput;
     Button dismissButton, saveChangesButton;
     ImageButton iconImageButton;
 
+    // General
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+    private GoogleMap mMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layer_list);
-
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.layerMap);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
         getData();
         setupUI();
         setupLayerRV();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
+        editor.apply();
+        saveCameraPosition();
     }
 
     private void setupUI() {
         iconImageButton = findViewById(R.id.iconImageButton);
         layerDetailLinearList = findViewById(R.id.layerDetailsLL);
         markerDetailLinearList = findViewById(R.id.markerListLL);
-        iconImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "iconImageButton Clicked: ");
-                displayIconImages();
-            }
+        iconImageButton.setOnClickListener(v -> {
+            Log.i(TAG, "iconImageButton Clicked: ");
+            displayIconImages();
         });
         iconNameTextView = findViewById(R.id.iconNameTextView);
         buttonLinearLayout = findViewById(R.id.buttonLinearLayout);
@@ -105,30 +131,22 @@ public class LayerListActivity extends AppCompatActivity {
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
 
-        saveChangesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        saveChangesButton.setOnClickListener(v -> {
 
-                // Get values and update currentLayerDataItem
-                currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
-                currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
-                currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-                currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+            // Get values and update currentLayerDataItem
+            currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
+            currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
+            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
+            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
 //              Update database
-                layerViewModel.updateLayer(currentLayerDataItem);
+            layerViewModel.updateLayer(currentLayerDataItem);
 
-                allLayers = layerViewModel.getLayerData();
-                setupLayerRV();
-                showButtons(false);
-            }
+            allLayers = layerViewModel.getLayerData();
+            setupLayerRV();
+            showButtons(false);
         });
-        dismissButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showButtons(false);
-            }
-        });
+        dismissButton.setOnClickListener(v -> showButtons(false));
     }
 
     private void displayIconImages() {
@@ -147,8 +165,8 @@ public class LayerListActivity extends AppCompatActivity {
 
     private void getData() {
         Log.i(TAG, "getData: ");
-        MMDatabase db = MMDatabase.getDatabase(this);
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+//        MMDatabase db = MMDatabase.getDatabase(this);
+//        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         allIcons = iconViewModel.getIconList();
@@ -161,9 +179,10 @@ public class LayerListActivity extends AppCompatActivity {
             iconIds[i] = getResources().getIdentifier(allIcons.get(i).getFilename(), "drawable", getPackageName());
         }
     }
-    
+
     public void onMarkerClickCalled(int position ) {
 
+        Log.i(TAG, "onMarkerClickCalled: " + position);
     }
 
     public void onLayerClickCalled(int position) {
@@ -191,30 +210,19 @@ public class LayerListActivity extends AppCompatActivity {
         markerListRV.setAdapter(markerDataAdapter);
 
         // Setup UI
-        layerNameTextInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
-                    showButtons(hasFocus);
-                }
-            }
-        });
-
-        layerCodeTextInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
-                    showButtons(hasFocus);
-                }
-            }
-        });
-
-        visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        layerNameTextInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus) {
                 showButtons(true);
             }
         });
+
+        layerCodeTextInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus) {
+                showButtons(true);
+            }
+        });
+
+        visibilitySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> showButtons(true));
 
         Log.i(TAG, "Layer selected: " + position + " (" + mapMarkerDataItems.size() + ") markers");
     }
@@ -240,5 +248,46 @@ public class LayerListActivity extends AppCompatActivity {
         currentLayerDataItem.setName(label);
         currentIcon = iconViewModel.getIconByFilename(filename);
         iconImageRV.setVisibility(View.GONE);
+    }
+
+
+    CameraPosition getSavedCameraPosition() {
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // "initial longitude" is only used on first startup
+        double longitude = preferences.getFloat("longitude", (float) 0);
+        double latitude = preferences.getFloat("latitude", (float) 0);
+        float zoom = preferences.getFloat("zoom", 8);
+        LatLng startPosition = new LatLng(latitude, longitude);
+
+        return new CameraPosition.Builder()
+                .target(startPosition)      // Sets the center of the map to Mountain View
+                .zoom(zoom)
+                .build();
+    }
+    void saveCameraPosition() {
+        editor = preferences.edit();
+        CameraPosition mMyCam = mMap.getCameraPosition();
+        double longitude = mMyCam.target.longitude;
+        double latitude = mMyCam.target.latitude;
+        float zoom = mMyCam.zoom;
+
+        editor.putFloat("longitude", (float) longitude);
+        editor.putFloat("latitude", (float) latitude);
+        editor.putFloat("zoom", zoom);
+        editor.apply();
+    }
+
+//    @Override
+//    public void onPointerCaptureChanged(boolean hasCapture) {
+//        super.onPointerCaptureChanged(hasCapture);
+//    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        CameraPosition cameraPosition = getSavedCameraPosition();
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
     }
 }

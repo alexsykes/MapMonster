@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     RecyclerView markerRV;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
-    private final LatLng defaultLocation = new LatLng(54.29750000675,-2.94531856934);
+    private final LatLng defaultLocation = new LatLng(22.900998,41.139339);
     private LatLng curLocation;
 
     private MarkerViewModel markerViewModel;
