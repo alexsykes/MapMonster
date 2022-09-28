@@ -76,7 +76,7 @@ public abstract class MMDatabase extends RoomDatabase{
                 LayerDao layerDao   = INSTANCE.layerDao();
                 layerDao.deleteAllLayers();
 
-                Layer layer = new Layer("Parking", "CP", 0);
+                Layer layer = new Layer("Parking", "CP", 13);
                 layerDao.insertLayer(layer);
                 layer = new Layer("Waypoint", "WP", 12);
                 layerDao.insertLayer(layer);
@@ -121,6 +121,8 @@ public abstract class MMDatabase extends RoomDatabase{
                 icon = new Icon("car_outline.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("car_wrench.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("cell_tower.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("coffee.xml");
                 iconDao.insertIcon(icon);

@@ -12,7 +12,7 @@ public interface IconDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertIcon(Icon icon);
 
-    @Query("SELECT * FROM icons ORDER BY name")
+    @Query("SELECT * FROM icons ORDER BY iconID")
     List<Icon> getIconList();
 
     @Query("DELETE FROM icons")
