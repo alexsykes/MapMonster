@@ -171,9 +171,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         compassEnabled = preferences.getBoolean("compassEnabled", true);
 
         switch (maptype) {
-            case "normal":
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                break;
             case "satellite":
                 mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 break;
@@ -301,11 +298,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                                                 lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             }
                         } else {
-//                            Log.d(TAG, "Current location is null. Using defaults.");
-//                            Log.e(TAG, "Exception: %s", task.getException());
-//                            mMap.moveCamera(CameraUpdateFactory
-//                                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-//                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
                         }
                     }
                 });

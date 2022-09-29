@@ -165,8 +165,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
     private void getData() {
         Log.i(TAG, "getData: ");
-//        MMDatabase db = MMDatabase.getDatabase(this);
-//        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         allIcons = iconViewModel.getIconList();
@@ -278,10 +277,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         editor.apply();
     }
 
-//    @Override
-//    public void onPointerCaptureChanged(boolean hasCapture) {
-//        super.onPointerCaptureChanged(hasCapture);
-//    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {

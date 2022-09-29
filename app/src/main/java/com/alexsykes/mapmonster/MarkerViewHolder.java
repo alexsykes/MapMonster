@@ -21,16 +21,6 @@ public class MarkerViewHolder extends RecyclerView.ViewHolder {
     public void bind(MMarker marker) {
         codeTextView.setText(marker.getCode());
         markerTextView.setText(marker.getPlacename());
-
-        int marker_id = marker.getMarker_id();
-
-//        itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Context context = itemView.getContext();
-//                ((MainActivity) context).onMarkerListItemClicked(marker);
-//            }
-//        });
     }
 
     static MarkerViewHolder create(ViewGroup parent) {

@@ -198,10 +198,6 @@ public class MapEditActivity extends AppCompatActivity implements OnMapReadyCall
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        if (item.getItemId() == R.id.marker_list_item) {
-//            toggleLayerPanel();
-//            return true;
-//        }
         switch (item.getItemId()) {
             case R.id.layer_list_item:
                 goLayerList();

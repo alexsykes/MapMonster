@@ -32,7 +32,7 @@ import java.util.List;
 
 
 public class MarkerDetailFragment extends DialogFragment {
-    private  static  LatLng latLng;
+    private static  LatLng latLng;
     private static String TAG = "Info";
     //    private TextInputLayout markerNameEditText, markerCodeEditText;
     private EditText markerNameTextEdit, markerCodeTextEdit, markerNotesTextEdit;
