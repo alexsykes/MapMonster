@@ -3,6 +3,7 @@ package com.alexsykes.mapmonster.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -10,17 +11,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alexsykes.mapmonster.IconImageAdapter;
 import com.alexsykes.mapmonster.LayerDataAdapter;
@@ -31,16 +35,18 @@ import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
-import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
@@ -145,8 +151,12 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             allLayers = layerViewModel.getLayerData();
             setupLayerRV();
             showButtons(false);
+            showLayerDetails(false);
         });
-        dismissButton.setOnClickListener(v -> showButtons(false));
+        dismissButton.setOnClickListener(v -> { showButtons(false);
+                    showLayerDetails(false);
+                }
+        );
     }
 
     private void displayIconImages() {
@@ -185,18 +195,20 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void onLayerClickCalled(int position) {
-        // Display Marker detail linear list
-        layerDetailLinearList.setVisibility(View.VISIBLE);
-        markerDetailLinearList.setVisibility(View.VISIBLE);
+        showLayerDetails(true);
 
-        // get layerData and markerData for layer
+//       get layerData and markerData for layer
         currentLayerDataItem = layerViewModel.getLayerDataItem(position);
         List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
-        int resID = getResources().getIdentifier(currentLayerDataItem.filename, "drawable", getPackageName());
 
+//      Get icon resource from resources
+        int resID = getResources().getIdentifier(currentLayerDataItem.filename, "drawable", getPackageName());
         iconImageButton.setImageResource(resID);
         Log.i(TAG, "iconID: " + resID);
+
+//      Add markers to map
+        addMarkersToMap(mapMarkerDataItems, resID);
 
 //         Show existing layer data in UI
         layerNameTextInput.setText(currentLayerDataItem.layername);
@@ -231,6 +243,17 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             buttonLinearLayout.setVisibility(View.VISIBLE);
         } else {
             buttonLinearLayout.setVisibility(View.GONE);
+        }
+    }
+    private void showLayerDetails(boolean visibility) {
+        if(visibility){
+            // Display Marker detail linear list
+            layerDetailLinearList.setVisibility(View.VISIBLE);
+//            markerDetailLinearList.setVisibility(View.VISIBLE);
+        } else {
+            // Hide Marker detail linear list
+            layerDetailLinearList.setVisibility(View.GONE);
+//            markerDetailLinearList.setVisibility(View.GONE);
         }
     }
 
@@ -284,5 +307,48 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+    }
+
+
+    private void addMarkersToMap(List<MapMarkerDataItem> mapMarkerDataItems, int resID) {
+        mMap.clear();
+        if (mapMarkerDataItems.size() == 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No saved markers",
+                    Toast.LENGTH_LONG);
+
+            toast.show();
+            return;
+        }
+        String marker_title, code, type;
+        LatLng latLng;
+        int layer_id;
+        String filename;
+        for (MapMarkerDataItem marker : mapMarkerDataItems) {
+            latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+            code = marker.getCode();
+
+            marker_title = marker.getPlacename();
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(marker_title)
+                    .draggable(false)
+                    .snippet(code)
+                    .icon(BitmapFromVector(getApplicationContext(), resID))
+                    .visible(true);
+            Marker marker1 = mMap.addMarker(markerOptions);
+            marker1.setTag(marker.getMarkerID());
+        }
+    }
+
+    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+        vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

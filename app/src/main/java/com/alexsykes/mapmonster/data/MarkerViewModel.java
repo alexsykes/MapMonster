@@ -49,5 +49,9 @@ public class MarkerViewModel extends AndroidViewModel {
     public void restoreAll()  {
         markerRepository.restoreAllMarkers();
     }
+
+    public List<MapMarkerDataItem> getVisibleMarkerDataList() {
+        return markerRepository.getVisibleMarkerDataList();
+    }
 }
 

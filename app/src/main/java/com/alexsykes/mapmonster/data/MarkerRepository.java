@@ -73,4 +73,8 @@ public class MarkerRepository {
     public void restoreAllMarkers() {
         markerDao.restoreAllMarkers();
     }
+
+    public List<MapMarkerDataItem> getVisibleMarkerDataList() {
+        return markerDao.getVisibleMarkerDataList();
+    }
 }

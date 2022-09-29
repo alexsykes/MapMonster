@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private GoogleMap mMap;
 
     private static final String TAG = "Info";
-    private static final int DEFAULT_ZOOM = 6;
+    private static final int DEFAULT_ZOOM = 0;
 
     private List<MapMarkerDataItem> markerList;
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     RecyclerView markerRV;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private Location lastKnownLocation;
-    private final LatLng defaultLocation = new LatLng(22.900998,41.139339);
+//    private final LatLng defaultLocation = new LatLng(22.900998,41.139339);
     private LatLng curLocation;
 
     private MarkerViewModel markerViewModel;
@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerList = markerViewModel.getMarkerList();
+
+        markerList = markerViewModel.getVisibleMarkerDataList();
         visibleLayerList = layerViewModel.getVisibleLayerList();
         iconList = iconViewModel.getIconList();
 
@@ -296,6 +298,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
                                                 lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+
+                                editor.putFloat("lastKnownLat", (float) lastKnownLocation.getLatitude());
+                                editor.putFloat("lastKnownLng", (float) lastKnownLocation.getLongitude());
+                                editor.apply();
                             }
                         } else {
 
@@ -391,11 +397,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // "initial longitude" is only used on first startup
-        double longitude = preferences.getFloat("longitude", (float) defaultLocation.longitude);
-        double latitude = preferences.getFloat("latitude", (float) defaultLocation.latitude);
+        double longitude = preferences.getFloat("longitude", 0.0F);
+        double latitude = preferences.getFloat("latitude", 0.0F);
         float zoom = preferences.getFloat("zoom", DEFAULT_ZOOM);
-        LatLng startPosition = new LatLng(latitude, longitude);
-
+//        if(latitude && latitude) {
+            LatLng startPosition = new LatLng(latitude, longitude);
+//        }
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(startPosition)      // Sets the center of the map to Mountain View
                 .zoom(zoom)
