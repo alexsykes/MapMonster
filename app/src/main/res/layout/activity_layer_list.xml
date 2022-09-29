@@ -29,13 +29,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/purple_500">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/purple_500">-->
         <TextView
             android:id="@+id/listTitleView"
-            android:layout_width="170dp"
+            android:layout_width="match_parent"
+            android:background="@color/purple_500"
             android:layout_height="wrap_content"
             android:padding="@dimen/small_margin"
             android:text="@string/layers"
@@ -43,13 +44,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/white" />
 
-            <ImageView
-                android:id="@+id/addLayer"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/add" />
+<!--            <ImageView-->
+<!--                android:id="@+id/addLayer"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:srcCompat="@drawable/add" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/layerDataRecyclerView"
             android:layout_width="match_parent"
@@ -213,5 +214,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newLayerFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_marker"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/add_layer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

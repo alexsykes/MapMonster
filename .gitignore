@@ -825,3 +825,8 @@ app/build/outputs/apk/debug/app-debug.apk
 app/build/outputs/apk/debug/output-metadata.json
 /app/build/generated/ap_generated_sources/debug/out/
 /app/build/generated/source/buildConfig/debug/
+*.jar
+*.dex
+*.flat
+*.class
+*.xml

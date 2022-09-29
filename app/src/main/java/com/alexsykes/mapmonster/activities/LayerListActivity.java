@@ -45,8 +45,10 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
@@ -73,6 +75,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     SwitchCompat visibilitySwitch;
     TextInputEditText layerNameTextInput, layerCodeTextInput;
     Button dismissButton, saveChangesButton;
+    FloatingActionButton newLayerFAB;
     ImageButton iconImageButton;
 
     // General
@@ -105,6 +108,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
     private void setupUI() {
         iconImageButton = findViewById(R.id.iconImageButton);
+        newLayerFAB = findViewById(R.id.newLayerFAB);
         layerDetailLinearList = findViewById(R.id.layerDetailsLL);
         markerDetailLinearList = findViewById(R.id.markerListLL);
         iconImageButton.setOnClickListener(v -> {
@@ -137,6 +141,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
 
+//      Button actions
         saveChangesButton.setOnClickListener(v -> {
 
             // Get values and update currentLayerDataItem
@@ -157,6 +162,13 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
                     showLayerDetails(false);
                 }
         );
+        
+        newLayerFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: new Marker");
+            }
+        });
     }
 
     private void displayIconImages() {
@@ -209,6 +221,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
 //      Add markers to map
         addMarkersToMap(mapMarkerDataItems, resID);
+        updateCamera(mapMarkerDataItems);
 
 //         Show existing layer data in UI
         layerNameTextInput.setText(currentLayerDataItem.layername);
@@ -247,13 +260,9 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     }
     private void showLayerDetails(boolean visibility) {
         if(visibility){
-            // Display Marker detail linear list
             layerDetailLinearList.setVisibility(View.VISIBLE);
-//            markerDetailLinearList.setVisibility(View.VISIBLE);
         } else {
-            // Hide Marker detail linear list
             layerDetailLinearList.setVisibility(View.GONE);
-//            markerDetailLinearList.setVisibility(View.GONE);
         }
     }
 
@@ -338,6 +347,26 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
                     .visible(true);
             Marker marker1 = mMap.addMarker(markerOptions);
             marker1.setTag(marker.getMarkerID());
+        }
+    }
+
+    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
+        LatLng latLng;
+        if (!mapMarkerDataItems.isEmpty()) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            for (MapMarkerDataItem marker : mapMarkerDataItems) {
+                latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+                builder.include(latLng);
+            }
+            LatLngBounds bounds =
+                    builder.build();
+
+            if (mapMarkerDataItems.size() > 1) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 16));
+            }
         }
     }
 
