@@ -61,7 +61,9 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
+
     Icon currentIcon;
+
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     LiveData<List<Layer>> layerLiveData;
@@ -82,6 +84,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,8 +98,8 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         getData();
         setupUI();
         setupLayerRV();
+        setupIconImageRV();
     }
-
 
     @Override
     protected void onPause() {
@@ -104,6 +107,14 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         Log.i(TAG, "onPause: ");
         editor.apply();
         saveCameraPosition();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        CameraPosition cameraPosition = getSavedCameraPosition();
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
     }
 
     private void setupUI() {
@@ -129,38 +140,22 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         markerListRV.setLayoutManager(linearLayoutManager);
         markerListRV.setHasFixedSize(true);
-
-        iconImageRV = findViewById(R.id.iconImageRV);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
-        iconImageRV.setLayoutManager(gridLayoutManager);
-
-        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
-        iconImageRV.setAdapter(iconImageAdapter);
-        iconImageRV.setVisibility(View.GONE);
-
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
 
-
-        
         newLayerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onClick: new Layer");
+                currentLayerDataItem = new LayerDataItem();
                 layerNameTextInput.setText("");
                 layerCodeTextInput.setText("");
-visibilitySwitch.setChecked(true);
+                visibilitySwitch.setChecked(true);
                 int resID = getResources().getIdentifier("map_marker", "drawable", getPackageName());
                 iconImageButton.setImageResource(resID);
                 layerDetailLinearList.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    private void displayIconImages() {
-        // iconIds - array of identifies for resources
-        iconImageRV.setVisibility(View.VISIBLE);
-        buttonLinearLayout.setVisibility(View.VISIBLE);
     }
 
     private void setupLayerRV() {
@@ -170,60 +165,31 @@ visibilitySwitch.setChecked(true);
         final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
         layerDataRV.setAdapter(layerDataAdapter);
     }
+    private void setupIconImageRV() {
+        iconImageRV = findViewById(R.id.iconImageRV);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
+        iconImageRV.setLayoutManager(gridLayoutManager);
 
-    private void getData() {
-        Log.i(TAG, "getData: ");
-
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
-        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
-        allIcons = iconViewModel.getIconList();
-        allLayers = layerViewModel.getLayerData();
-        layerLiveData = layerViewModel.getAllLayers();
-
-        // Populate array of icon IDs
-        iconIds = new int[allIcons.size()];
-        for (int i = 0; i < allIcons.size(); i++) {
-            iconIds[i] = getResources().getIdentifier(allIcons.get(i).getFilename(), "drawable", getPackageName());
-        }
+        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
+        iconImageRV.setAdapter(iconImageAdapter);
+        iconImageRV.setVisibility(View.GONE);
     }
 
+    //  Event handling
     public void onMarkerClickCalled(int position ) {
 
         Log.i(TAG, "onMarkerClickCalled: " + position);
     }
-
     public void onLayerClickCalled(int position) {
-        showLayerDetails(true);
-        //      Button actions
-        saveChangesButton.setOnClickListener(v -> {
-
-            // Get values and update currentLayerDataItem
-            currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
-            currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
-            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
-
-//              Update database
-            layerViewModel.updateLayer(currentLayerDataItem);
-
-            allLayers = layerViewModel.getLayerData();
-            setupLayerRV();
-            showButtons(false);
-            showLayerDetails(false);
-        });
-        dismissButton.setOnClickListener(v -> { showButtons(false);
-                    showLayerDetails(false);
-                }
-        );
+        // Display details
+        showLayerDetailLinearList(true);
 
 //       get layerData and markerData for layer
         currentLayerDataItem = layerViewModel.getLayerDataItem(position);
         List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
-
 //      Get icon resource from resources
         int resID = getResources().getIdentifier(currentLayerDataItem.filename, "drawable", getPackageName());
-        iconImageButton.setImageResource(resID);
         Log.i(TAG, "iconID: " + resID);
 
 //      Add markers to map
@@ -234,6 +200,7 @@ visibilitySwitch.setChecked(true);
         layerNameTextInput.setText(currentLayerDataItem.layername);
         iconNameTextView.setText(currentLayerDataItem.iconName);
         currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.filename);
+        iconImageButton.setImageResource(resID);
         layerCodeTextInput.setText(currentLayerDataItem.code);
         visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
 
@@ -256,24 +223,27 @@ visibilitySwitch.setChecked(true);
         visibilitySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> showButtons(true));
 
         Log.i(TAG, "Layer selected: " + position + " (" + mapMarkerDataItems.size() + ") markers");
-    }
+        //      Add button actions
+        saveChangesButton.setOnClickListener(v -> {
 
-    private void showButtons(boolean hasFocus) {
-        if(hasFocus) {
-            buttonLinearLayout.setVisibility(View.VISIBLE);
-        } else {
-            buttonLinearLayout.setVisibility(View.GONE);
-        }
-    }
+            // Get values and update currentLayerDataItem
+            currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
+            currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
+            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
+            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
-    private void showLayerDetails(boolean visibility) {
-        if(visibility){
-            layerDetailLinearList.setVisibility(View.VISIBLE);
-        } else {
-            layerDetailLinearList.setVisibility(View.GONE);
-        }
-    }
+//              Update database
+            layerViewModel.updateLayer(currentLayerDataItem);
 
+            allLayers = layerViewModel.getLayerData();
+            setupLayerRV();
+            showButtons(false);
+            showLayerDetailLinearList(false);
+        });
+        dismissButton.setOnClickListener(v -> { showButtons(false);
+            showLayerDetailLinearList(false);
+        });
+    }
     public void onIconClicked(int resid) {
         Log.i(TAG, "onIconClicked: ");
 //      Change icon on button
@@ -287,13 +257,14 @@ visibilitySwitch.setChecked(true);
         currentIcon = iconViewModel.getIconByFilename(filename);
         iconImageRV.setVisibility(View.GONE);
 
-        if(currentLayerDataItem != null) {
-            currentLayerDataItem.setFilename(filename);
-            currentLayerDataItem.setName(label);
-        }
+//        if(currentLayerDataItem != null) {
+        currentLayerDataItem.setFilename(filename);
+        currentLayerDataItem.setName(label);
+//        }
     }
 
-    CameraPosition getSavedCameraPosition() {
+//  Utility methods
+    private CameraPosition getSavedCameraPosition() {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // "initial longitude" is only used on first startup
@@ -307,7 +278,7 @@ visibilitySwitch.setChecked(true);
                 .zoom(zoom)
                 .build();
     }
-    void saveCameraPosition() {
+    private void saveCameraPosition() {
         editor = preferences.edit();
         CameraPosition mMyCam = mMap.getCameraPosition();
         double longitude = mMyCam.target.longitude;
@@ -319,16 +290,73 @@ visibilitySwitch.setChecked(true);
         editor.putFloat("zoom", zoom);
         editor.apply();
     }
+    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
+        LatLng latLng;
+        if (!mapMarkerDataItems.isEmpty()) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            for (MapMarkerDataItem marker : mapMarkerDataItems) {
+                latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+                builder.include(latLng);
+            }
+            LatLngBounds bounds =
+                    builder.build();
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        CameraPosition cameraPosition = getSavedCameraPosition();
-        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+            if (mapMarkerDataItems.size() > 1) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 16));
+            }
+        }
     }
 
+    private void getData() {
+        Log.i(TAG, "getData: ");
 
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
+        allIcons = iconViewModel.getIconList();
+        allLayers = layerViewModel.getLayerData();
+        layerLiveData = layerViewModel.getAllLayers();
+
+        // Populate array of icon IDs
+        iconIds = new int[allIcons.size()];
+        for (int i = 0; i < allIcons.size(); i++) {
+            iconIds[i] = getResources().getIdentifier(allIcons.get(i).getFilename(), "drawable", getPackageName());
+        }
+    }
+
+    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+        vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+//  Display
+    private void displayIconImages() {
+        // iconIds - array of identifies for resources
+        iconImageRV.setVisibility(View.VISIBLE);
+        buttonLinearLayout.setVisibility(View.VISIBLE);
+    }
+    private void showButtons(boolean hasFocus) {
+        if(hasFocus) {
+            buttonLinearLayout.setVisibility(View.VISIBLE);
+        } else {
+            buttonLinearLayout.setVisibility(View.GONE);
+        }
+    }
+    private void showLayerDetailLinearList(boolean visibility) {
+        if(visibility){
+            layerDetailLinearList.setVisibility(View.VISIBLE);
+        } else {
+            layerDetailLinearList.setVisibility(View.GONE);
+        }
+    }
     private void addMarkersToMap(List<MapMarkerDataItem> mapMarkerDataItems, int resID) {
         mMap.clear();
         if (mapMarkerDataItems.size() == 0) {
@@ -360,34 +388,4 @@ visibilitySwitch.setChecked(true);
         }
     }
 
-    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
-        LatLng latLng;
-        if (!mapMarkerDataItems.isEmpty()) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            int padding = 100;
-            for (MapMarkerDataItem marker : mapMarkerDataItems) {
-                latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-                builder.include(latLng);
-            }
-            LatLngBounds bounds =
-                    builder.build();
-
-            if (mapMarkerDataItems.size() > 1) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            } else {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 16));
-            }
-        }
-    }
-
-    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-
-        vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
-        Canvas canvas = new Canvas(bitmap);
-
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
 }
