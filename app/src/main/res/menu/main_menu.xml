@@ -3,9 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/marker_list_item"
-        android:icon="@drawable/list_48"
-        android:title="@string/markers"
+        android:id="@+id/go_layer_list"
+        android:icon="@drawable/layers"
+        android:title="@string/go_layer_list"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/go_marker_list"
+        android:icon="@drawable/map_markers_white_48"
+        android:title="@string/go_marker_list"
         app:showAsAction="always" />
     <item
         android:id="@+id/settings_menu_item"

@@ -141,32 +141,18 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
 
-//      Button actions
-        saveChangesButton.setOnClickListener(v -> {
 
-            // Get values and update currentLayerDataItem
-            currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
-            currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
-            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
-
-//              Update database
-            layerViewModel.updateLayer(currentLayerDataItem);
-
-            allLayers = layerViewModel.getLayerData();
-            setupLayerRV();
-            showButtons(false);
-            showLayerDetails(false);
-        });
-        dismissButton.setOnClickListener(v -> { showButtons(false);
-                    showLayerDetails(false);
-                }
-        );
         
         newLayerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick: new Marker");
+                Log.i(TAG, "onClick: new Layer");
+                layerNameTextInput.setText("");
+                layerCodeTextInput.setText("");
+visibilitySwitch.setChecked(true);
+                int resID = getResources().getIdentifier("map_marker", "drawable", getPackageName());
+                iconImageButton.setImageResource(resID);
+                layerDetailLinearList.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -208,6 +194,27 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onLayerClickCalled(int position) {
         showLayerDetails(true);
+        //      Button actions
+        saveChangesButton.setOnClickListener(v -> {
+
+            // Get values and update currentLayerDataItem
+            currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
+            currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
+            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
+            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+
+//              Update database
+            layerViewModel.updateLayer(currentLayerDataItem);
+
+            allLayers = layerViewModel.getLayerData();
+            setupLayerRV();
+            showButtons(false);
+            showLayerDetails(false);
+        });
+        dismissButton.setOnClickListener(v -> { showButtons(false);
+                    showLayerDetails(false);
+                }
+        );
 
 //       get layerData and markerData for layer
         currentLayerDataItem = layerViewModel.getLayerDataItem(position);
@@ -258,6 +265,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             buttonLinearLayout.setVisibility(View.GONE);
         }
     }
+
     private void showLayerDetails(boolean visibility) {
         if(visibility){
             layerDetailLinearList.setVisibility(View.VISIBLE);
@@ -267,6 +275,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void onIconClicked(int resid) {
+        Log.i(TAG, "onIconClicked: ");
 //      Change icon on button
         iconImageButton.setImageResource(resid);
 
@@ -275,12 +284,14 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         String label = filename.replace("_", " ");
         label = label.substring(0, 1).toUpperCase() + label.substring(1);
         iconNameTextView.setText(label);
-        currentLayerDataItem.setFilename(filename);
-        currentLayerDataItem.setName(label);
         currentIcon = iconViewModel.getIconByFilename(filename);
         iconImageRV.setVisibility(View.GONE);
-    }
 
+        if(currentLayerDataItem != null) {
+            currentLayerDataItem.setFilename(filename);
+            currentLayerDataItem.setName(label);
+        }
+    }
 
     CameraPosition getSavedCameraPosition() {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -308,7 +319,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         editor.putFloat("zoom", zoom);
         editor.apply();
     }
-
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {

@@ -78,6 +78,20 @@
                 android:textColor="@color/white" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layernameTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxBackgroundColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/layerNameTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/layer_name"
+                    android:textColor="@color/purple_700" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layerCodeTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,20 +103,6 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/layer_code"
                     android:inputType="textCapCharacters"
-                    android:textColor="@color/purple_700" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layernameTextLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/white">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/layerNameTextInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/layer_name"
                     android:textColor="@color/purple_700" />
             </com.google.android.material.textfield.TextInputLayout>
 

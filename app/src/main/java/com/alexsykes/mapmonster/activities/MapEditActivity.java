@@ -206,7 +206,7 @@ public class MapEditActivity extends AppCompatActivity implements OnMapReadyCall
             case R.id.settings_menu_item:
                 return true;
 
-            case R.id.marker_list_item:
+            case R.id.go_layer_list:
                 toggleLayerPanel();
                 return true;
 

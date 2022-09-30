@@ -31,7 +31,6 @@ import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
-import com.alexsykes.mapmonster.data.MarkerDao;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -236,7 +235,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 goSettings();
                 return true;
 
-            case R.id.marker_list_item:
+            case R.id.go_layer_list:
+                goLayerList();
+                return true;
+
+            case R.id.go_marker_list:
                 goMarkerList();
                 return true;
             default:
@@ -244,11 +247,17 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return false;
     }
 
-
     // Navigation
-    private void goMarkerList() {
+    private void goLayerList() {
         Intent intent = new Intent(MainActivity.this, LayerListActivity.class);
         startActivity(intent);
+    }
+    private void goMarkerList() {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "Not implemented",
+                Toast.LENGTH_LONG);
+
+        toast.show();
     }
     private void goSettings() {
         Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
