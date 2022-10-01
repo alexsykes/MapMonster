@@ -69,4 +69,9 @@ public class LayerRepository {
     public LiveData<List<Layer>> getLiveLayerList() {
         return  layerDao.getLiveLayerList();
     }
+
+    public void insertLayer(LayerDataItem currentLayerDataItem) {
+        Layer layer = new Layer(currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.icon_id, currentLayerDataItem.isVisible);
+        layerDao.insertLayer(layer);
+    }
 }

@@ -3,6 +3,7 @@ package com.alexsykes.mapmonster.data;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "layers")
@@ -39,6 +40,7 @@ public class Layer {
         return isVisible;
     }
 
+    @Ignore
     public Layer(String layername, String code, int icon_id) {
         this.layername = layername;
         this.code = code;
@@ -46,7 +48,13 @@ public class Layer {
         isVisible = true;
         isArchived = false;
     }
-
+    public Layer(String layername, String code, int icon_id, boolean isVisible) {
+        this.layername = layername;
+        this.code = code;
+        this.icon_id = icon_id;
+        this.isVisible = isVisible;
+        isArchived = false;
+    }
 
     public String getLayername() {
         return layername;
