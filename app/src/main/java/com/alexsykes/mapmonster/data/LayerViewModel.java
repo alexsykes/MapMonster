@@ -67,4 +67,7 @@ public class LayerViewModel extends AndroidViewModel {
     public void insertLayer(LayerDataItem currentLayerDataItem) {
         layerRepository.insertLayer(currentLayerDataItem);
     }
+
+    public void deleteAll() { layerRepository.deleteAllLayers();
+    }
 }

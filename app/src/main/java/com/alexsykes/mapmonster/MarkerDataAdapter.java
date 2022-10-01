@@ -46,7 +46,7 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
                     ((MarkerListActivity) context).onMarkerClickCalled(holder.marker_id);
                 }
                 else if (context.getClass() == LayerListActivity.class ) {
-                    ((LayerListActivity) context).onMarkerClickCalled(holder.marker_id);
+//                    ((LayerListActivity) context).onMarkerClickCalled(holder.marker_id);
                 }
             }
         });

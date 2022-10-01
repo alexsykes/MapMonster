@@ -163,11 +163,11 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             public void onClick(View v) {
                 Log.i(TAG, "onClick: new Layer");
                 currentLayerDataItem = new LayerDataItem();
-                layerNameTextInput.setText("");
-                layerCodeTextInput.setText("");
+                layerNameTextInput.setText("New layer");
+                layerCodeTextInput.setText("NL");
                 visibilitySwitch.setChecked(true);
                 int resID = getResources().getIdentifier("map_marker", "drawable", getPackageName());
-                iconImageButton.setImageResource(resID);
+                iconImageButton.setImageResource(android.R.color.transparent);
                 layerDetailLinearList.setVisibility(View.VISIBLE);
 
                 saveChangesButton.setOnClickListener(new View.OnClickListener() {
@@ -179,16 +179,23 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
                         currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
                         currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
                         currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-//                        resID = currentIcon.getIcon_id();
-                        currentLayerDataItem.icon_id = 27;
+                        if(currentIcon != null) {
+                            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+                        } else {
+                            currentLayerDataItem.icon_id = 0;
+                        }
                         saveLayerDataItem(currentLayerDataItem);
+
+                        showButtons(false);
+                        showLayerDetailLinearList(false);
                     }
                 });
 
                 dismissButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i(TAG, "onClickDismissButton: ");
+                        showButtons(false);
+                        showLayerDetailLinearList(false);
                     }
                 });
             }
@@ -202,7 +209,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             layerViewModel.updateLayer(currentLayerDataItem);
         }
     }
-
     private void setupLayerRV() {
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         layerDataRV.setLayoutManager(llm);
@@ -221,10 +227,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     //  Event handling
-    public void onMarkerClickCalled(int position ) {
-
-        Log.i(TAG, "onMarkerClickCalled: " + position);
-    }
     public void onLayerClickCalled(int position) {
         // Display details
         showLayerDetailLinearList(true);

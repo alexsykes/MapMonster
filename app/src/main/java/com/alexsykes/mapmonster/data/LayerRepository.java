@@ -74,4 +74,8 @@ public class LayerRepository {
         Layer layer = new Layer(currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.icon_id, currentLayerDataItem.isVisible);
         layerDao.insertLayer(layer);
     }
+
+    public void deleteAllLayers() {
+        layerDao.deleteAllLayers();
+    }
 }

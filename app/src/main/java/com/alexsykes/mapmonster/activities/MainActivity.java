@@ -253,11 +253,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         startActivity(intent);
     }
     private void goMarkerList() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "Not implemented",
-                Toast.LENGTH_LONG);
-
-        toast.show();
+        Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
+        startActivity(intent);
     }
     private void goSettings() {
         Intent intent = new Intent(MainActivity.this,SettingsActivity.class);

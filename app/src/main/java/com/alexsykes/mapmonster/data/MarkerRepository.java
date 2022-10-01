@@ -77,4 +77,8 @@ public class MarkerRepository {
     public List<MapMarkerDataItem> getVisibleMarkerDataList() {
         return markerDao.getVisibleMarkerDataList();
     }
+
+    public void deleteAll() {
+        markerDao.deleteAllMarkers();
+    }
 }
