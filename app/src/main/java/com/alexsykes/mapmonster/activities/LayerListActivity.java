@@ -18,6 +18,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -139,21 +141,58 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         visibilitySwitch = findViewById(R.id.visibilitySwitch);
 
         // Setup LayerList UI components
-        layerNameTextInput.setOnFocusChangeListener((v, hasFocus) -> {
-            if(hasFocus) {
-                saveChangesButton.setEnabled(true);
-//                showButtons(true);
+//        layerNameTextInput.setOnFocusChangeListener((v, hasFocus) -> {
+//            if(hasFocus) {
+//                validate();
+////                saveChangesButton.setEnabled(true);
+////                showButtons(true);
+//            }
+//        });
+
+//        layerNameTextInput.getText().toString();
+        layerNameTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-        });
-        layerCodeTextInput.setOnFocusChangeListener((v, hasFocus) -> {
-            if(hasFocus) {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 saveChangesButton.setEnabled(true);
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
         });
+
+        layerCodeTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                saveChangesButton.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+        });
+//
+//        layerCodeTextInput.setOnFocusChangeListener((v, hasFocus) -> {
+//            if(hasFocus) {
+//  validate();
+////                saveChangesButton.setEnabled(true);
+//            }
+//        });
         visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                saveChangesButton.setEnabled(true);
+//                saveChangesButton.setEnabled(true);
+                validate();
             }
         });
 
@@ -211,6 +250,13 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 //                });
             }
         });
+    }
+
+    private void validate() {
+        if((layerNameTextInput.getText().toString() != "") && (layerCodeTextInput.getText().toString() != "")) {
+            saveChangesButton.setEnabled(true);
+        }
+        else { saveChangesButton.setEnabled(false); }
     }
 
     private void saveLayerDataItem(LayerDataItem currentLayerDataItem) {
@@ -357,6 +403,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         // iconIds - array of identifies for resources
         iconImageRV.setVisibility(View.VISIBLE);
         buttonLinearLayout.setVisibility(View.VISIBLE);
+        saveChangesButton.setEnabled(false);
     }
     private void showButtons(boolean hasFocus) {
         if(hasFocus) {
@@ -454,17 +501,19 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             layerCodeTextInput.setText(currentLayerDataItem.code);
             visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
         }
+
+        saveChangesButton.setEnabled(false);
             saveChangesButton.setOnClickListener(v -> {
 
                 Log.i(TAG, "onLayerClickCalled: ");
                 // Get values and update currentLayerDataItem
-                currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
-                currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
+                currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
+                currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
                 currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
                 currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
 //              Update database
-//                saveLayerDataItem(currentLayerDataItem);
+                saveLayerDataItem(currentLayerDataItem);
 
                 allLayers = layerViewModel.getLayerData();
                 setupLayerRV();
@@ -474,7 +523,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 //                layerDataRV.setVisibility(View.VISIBLE);
 //                layerDetailLinearList.setVisibility(View.GONE);
 
-                toggleEditView(true);
+                toggleEditView(false);
             });
 
     }
