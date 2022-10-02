@@ -50,10 +50,10 @@ public interface MarkerDao {
     @Query("UPDATE markers SET isArchived = 0")
     void restoreAllMarkers();
 
-    @Query("SELECT markers.*, layers.layername, icons.filename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
     List<MapMarkerDataItem> getMarkerData();
 
-    @Query("SELECT markers.*, layers.layername, icons.filename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 AND layers.isVisible ORDER BY placename")
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 AND layers.isVisible ORDER BY placename")
     List<MapMarkerDataItem> getVisibleMarkerDataList();
 }
 

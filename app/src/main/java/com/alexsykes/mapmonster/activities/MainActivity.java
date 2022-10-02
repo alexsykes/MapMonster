@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //      Image from database - https://stackoverflow.com/questions/42992989/storing-image-resource-id-in-sqlite-database-and-retrieving-it-in-int-array
 //        https://stackoverflow.com/questions/21402275/best-way-to-store-resource-id-in-database-on-android
         for (Icon item: iconList) {
-            int resID = resources.getIdentifier(item.getFilename() , "drawable", this.getPackageName());
+            int resID = resources.getIdentifier(item.getIconFilename() , "drawable", this.getPackageName());
 //            Log.i(TAG, "refID: " + resID);
         }
 

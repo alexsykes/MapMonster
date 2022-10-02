@@ -5,7 +5,7 @@ public class LayerDataItem {
     public int icon_id;
     public String layername;
     public String code;
-    public String filename;
+    public String iconFilename;
     public String iconName;
 
     public String getName() {  return iconName;  }
@@ -46,12 +46,12 @@ public class LayerDataItem {
         this.code = code;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getIconFilename() {
+        return iconFilename;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setIconFilename(String iconFilename) {
+        this.iconFilename = iconFilename;
     }
 
     public boolean isVisible() {

@@ -1,14 +1,11 @@
 package com.alexsykes.mapmonster.data;
 
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import java.util.Locale;
 
 @Entity(tableName = "icons")
 public class Icon {
@@ -19,28 +16,28 @@ public class Icon {
     private int icon_id;
 
     private String name;
-    private String filename;
+    private String iconFilename;
 
     // String is icon filename with lower case, underscore and ".xml"
-    public Icon(String filename) {
-        this.filename = filename.replace(".xml", "");;
-        name = filename.replace(".xml", "");
+    public Icon(String iconFilename) {
+        this.iconFilename = iconFilename.replace(".xml", "");;
+        name = iconFilename.replace(".xml", "");
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
         name = name.replace("_", " ");
         this.name = name;
     }
 
     @Ignore
-    public Icon(int icon_id, String name, String filename) {
+    public Icon(int icon_id, String name, String iconFilename) {
         this.icon_id = icon_id;
         this.name = name;
-        this.filename = filename;
+        this.iconFilename = iconFilename;
     }
 
     @Ignore
-    public Icon(String name, String filename) {
+    public Icon(String name, String iconFilename) {
         this.name = name;
-        this.filename = filename;
+        this.iconFilename = iconFilename;
     }
 
     public void setIcon_id(int icon_id) {
@@ -60,11 +57,11 @@ public class Icon {
         this.name = name;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getIconFilename() {
+        return iconFilename;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setIconFilename(String iconFilename) {
+        this.iconFilename = iconFilename;
     }
 }

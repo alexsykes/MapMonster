@@ -43,10 +43,10 @@ public interface LayerDao {
     @Query("UPDATE layers SET isVisible = 1 WHERE layername IN (:values) ")
     void updateLayerVisibility(String[] values);
 
-    @Query("SELECT layers.*, icons.filename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE isArchived = 0 ORDER BY layername" )
+    @Query("SELECT layers.*, icons.iconFilename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE isArchived = 0 ORDER BY layername" )
     List<LayerDataItem> getLayerData();
 
-    @Query("SELECT layers.*, icons.filename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE layerID = :id " )
+    @Query("SELECT layers.*, icons.iconFilename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE layerID = :id " )
     LayerDataItem getLayerDataItem(int id);
 
     @Query("SELECT markers.* FROM markers WHERE layer_id = :position")

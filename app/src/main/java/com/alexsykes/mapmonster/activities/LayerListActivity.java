@@ -71,9 +71,9 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     LayerDataItem currentLayerDataItem;
 
     // UIComponents
-    LinearLayout buttonLinearLayout, layerDetailLinearList, markerDetailLinearList;
+    LinearLayout buttonLinearLayout, layerDetailLinearList;
     RecyclerView layerDataRV, iconImageRV; // markerListRV
-    TextView iconNameTextView;
+    TextView iconNameTextView, listTitleView;
     SwitchCompat visibilitySwitch;
     TextInputEditText layerNameTextInput, layerCodeTextInput;
     Button dismissButton, saveChangesButton;
@@ -120,8 +120,8 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     private void setupUI() {
         iconImageButton = findViewById(R.id.iconImageButton);
         newLayerFAB = findViewById(R.id.newLayerFAB);
+        listTitleView = findViewById(R.id.listTitleView);
         layerDetailLinearList = findViewById(R.id.layerDetailsLL);
-        markerDetailLinearList = findViewById(R.id.markerListLL);
         iconImageButton.setOnClickListener(v -> {
             Log.i(TAG, "iconImageButton Clicked: ");
             displayIconImages();
@@ -131,6 +131,8 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
         buttonLinearLayout.setVisibility(View.GONE);
+        saveChangesButton.setVisibility(View.VISIBLE);
+        dismissButton.setVisibility(View.VISIBLE);
 
         layerNameTextInput = findViewById(R.id.layerNameTextInput);
         layerCodeTextInput = findViewById(R.id.layerCodeTextInput);
@@ -139,18 +141,19 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         // Setup LayerList UI components
         layerNameTextInput.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus) {
+                saveChangesButton.setEnabled(true);
 //                showButtons(true);
             }
         });
         layerCodeTextInput.setOnFocusChangeListener((v, hasFocus) -> {
-//            if(hasFocus) {
-//                showButtons(true);
-//            }
+            if(hasFocus) {
+                saveChangesButton.setEnabled(true);
+            }
         });
         visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                saveChangesButton.setEnabled(true);
             }
         });
 
@@ -237,29 +240,29 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     //  Event handling
     public void onLayerClickCalled(int position) {
         // Display details
-//        showLayerDetailLinearList(true);
-
-
 //       get layerData and markerData for layer
         currentLayerDataItem = layerViewModel.getLayerDataItem(position);
         List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
 //      Get icon resource from resources
-        int resID = getResources().getIdentifier(currentLayerDataItem.filename, "drawable", getPackageName());
+        int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
         Log.i(TAG, "iconID: " + resID);
 
 //      Add markers to map
         addMarkersToMap(mapMarkerDataItems, resID);
         updateCamera(mapMarkerDataItems);
 
-        // Display layer details for editing
+//         Display layer details for editing
         showLayerDetailList(currentLayerDataItem);
+        saveChangesButton.setEnabled(false);
+        dismissButton.setEnabled(true);
     }
 
     public void onIconClicked(int resid) {
         Log.i(TAG, "onIconClicked: ");
 //      Change icon on button
         iconImageButton.setImageResource(resid);
+        saveChangesButton.setEnabled(true);
 
 //      Get icon name from
         String filename = getResources().getResourceEntryName(resid);
@@ -270,12 +273,12 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         iconImageRV.setVisibility(View.GONE);
 
 //        if(currentLayerDataItem != null) {
-        currentLayerDataItem.setFilename(filename);
+        currentLayerDataItem.setIconFilename(filename);
         currentLayerDataItem.setName(label);
 //        }
     }
 
-//  Utility methods
+    //  Utility methods
     private CameraPosition getSavedCameraPosition() {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -334,7 +337,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         // Populate array of icon IDs
         iconIds = new int[allIcons.size()];
         for (int i = 0; i < allIcons.size(); i++) {
-            iconIds[i] = getResources().getIdentifier(allIcons.get(i).getFilename(), "drawable", getPackageName());
+            iconIds[i] = getResources().getIdentifier(allIcons.get(i).getIconFilename(), "drawable", getPackageName());
         }
     }
 
@@ -349,7 +352,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-//  Display
+    //  Display
     private void displayIconImages() {
         // iconIds - array of identifies for resources
         iconImageRV.setVisibility(View.VISIBLE);
@@ -362,13 +365,13 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             buttonLinearLayout.setVisibility(View.GONE);
         }
     }
-    private void showLayerDetailLinearList(boolean visibility) {
-        if(visibility){
-            layerDetailLinearList.setVisibility(View.VISIBLE);
-        } else {
-            layerDetailLinearList.setVisibility(View.GONE);
-        }
-    }
+//    private void showLayerDetailLinearList(boolean visibility) {
+//        if(visibility){
+//            layerDetailLinearList.setVisibility(View.VISIBLE);
+//        } else {
+//            layerDetailLinearList.setVisibility(View.GONE);
+//        }
+//    }
     private void addMarkersToMap(List<MapMarkerDataItem> mapMarkerDataItems, int resID) {
         mMap.clear();
         if (mapMarkerDataItems.size() == 0) {
@@ -401,11 +404,16 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void showLayerDetailList(LayerDataItem currentLayerDataItem) {
+        listTitleView.setVisibility(View.GONE);
+        layerDataRV.setVisibility(View.GONE);
         layerDetailLinearList.setVisibility(View.VISIBLE);
-        saveChangesButton.setVisibility(View.VISIBLE);
-        saveChangesButton.setActivated(false);
-        dismissButton.setVisibility(View.VISIBLE);
-        dismissButton.setActivated(true);
+        buttonLinearLayout.setVisibility(View.VISIBLE);
+        newLayerFAB.setVisibility(View.GONE);
+//        toggleEditView(false);
+
+        dismissButton.setOnClickListener(v -> { showButtons(false);
+            toggleEditView(false);
+        });
 
         if(currentLayerDataItem.layerID == 0) {
             Log.i(TAG, "new Layer: ");
@@ -414,44 +422,38 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 //            currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.filename);
 //            iconImageButton.setImageResource(resID);
             layerCodeTextInput.setText("");
-            visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
+            visibilitySwitch.setChecked(true);
 
-            saveChangesButton.setOnClickListener(v -> {
-
-                Log.i(TAG, "onLayerClickCalled: ");
-                // Get values and update currentLayerDataItem
-                currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
-                currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
-                currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-                currentLayerDataItem.icon_id = currentIcon.getIcon_id();
-
-
-//              Update database
-                saveLayerDataItem(currentLayerDataItem);
-
-                allLayers = layerViewModel.getLayerData();
-                setupLayerRV();
-                showButtons(false);
-                iconImageRV.setVisibility(View.GONE);
-                showLayerDetailLinearList(false);
-            });
-            dismissButton.setOnClickListener(v -> { showButtons(false);
-                showLayerDetailLinearList(false);
-                iconImageRV.setVisibility(View.GONE);
-            });
+//            saveChangesButton.setOnClickListener(v -> {
+//
+//                Log.i(TAG, "onLayerClickCalled: ");
+//                // Get values and update currentLayerDataItem
+//                currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
+//                currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
+//                currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
+//                currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+//
+////              Update database
+//                saveLayerDataItem(currentLayerDataItem);
+//
+//                allLayers = layerViewModel.getLayerData();
+//                setupLayerRV();
+////                showButtons(false);
+////                iconImageRV.setVisibility(View.GONE);
+//                showLayerDetailLinearList(false);
+//            });
 
         } else {
             Log.i(TAG, "editing Layer: " + currentLayerDataItem.layerID);
-            int resID = getResources().getIdentifier(currentLayerDataItem.filename, "drawable", getPackageName());
-
+            int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
 
             layerNameTextInput.setText(currentLayerDataItem.layername);
             iconNameTextView.setText(currentLayerDataItem.iconName);
-            currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.filename);
+            currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.iconFilename);
             iconImageButton.setImageResource(resID);
             layerCodeTextInput.setText(currentLayerDataItem.code);
             visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
-
+        }
             saveChangesButton.setOnClickListener(v -> {
 
                 Log.i(TAG, "onLayerClickCalled: ");
@@ -462,19 +464,37 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
                 currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
 //              Update database
-                saveLayerDataItem(currentLayerDataItem);
+//                saveLayerDataItem(currentLayerDataItem);
 
                 allLayers = layerViewModel.getLayerData();
                 setupLayerRV();
                 showButtons(false);
-                iconImageRV.setVisibility(View.GONE);
-                showLayerDetailLinearList(false);
-            });
-            dismissButton.setOnClickListener(v -> { showButtons(false);
-                showLayerDetailLinearList(false);
-                iconImageRV.setVisibility(View.GONE);
+//                showLayerDetailLinearList(false);
+//                listTitleView.setVisibility(View.VISIBLE);
+//                layerDataRV.setVisibility(View.VISIBLE);
+//                layerDetailLinearList.setVisibility(View.GONE);
+
+                toggleEditView(true);
             });
 
+    }
+
+    private void toggleEditView(boolean b) {
+        if(b) {
+            listTitleView.setVisibility(View.GONE);
+            layerDataRV.setVisibility(View.GONE);
+            layerDetailLinearList.setVisibility(View.VISIBLE);
+            iconImageRV.setVisibility(View.VISIBLE);
+            layerDetailLinearList.setVisibility(View.VISIBLE);
+            newLayerFAB.setVisibility(View.GONE);
+        } else {
+            listTitleView.setVisibility(View.VISIBLE);
+            layerDataRV.setVisibility(View.VISIBLE);
+            newLayerFAB.setVisibility(View.VISIBLE);
+            layerDetailLinearList.setVisibility(View.GONE);
+            iconImageRV.setVisibility(View.GONE);
+            layerDetailLinearList.setVisibility(View.GONE);
+            iconImageRV.setVisibility(View.GONE);
         }
     }
 
