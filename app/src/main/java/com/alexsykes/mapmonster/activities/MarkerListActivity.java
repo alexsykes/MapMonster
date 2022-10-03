@@ -65,6 +65,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     Button dismissButton, saveChangesButton;
     FloatingActionButton newMarkerFAB;
     LinearLayout markerDetailLL, buttonLL;
+    RecyclerView layerDataRV;
 
     // General
     SharedPreferences preferences;
