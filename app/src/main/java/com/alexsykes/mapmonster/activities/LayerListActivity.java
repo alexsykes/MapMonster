@@ -192,20 +192,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
 
-    private void validate() {
-        if((layerNameTextInput.getText().toString() != "") && (layerCodeTextInput.getText().toString() != "")) {
-            saveChangesButton.setEnabled(true);
-        }
-        else { saveChangesButton.setEnabled(false); }
-    }
-
-    private void saveLayerDataItem(LayerDataItem currentLayerDataItem) {
-        if(currentLayerDataItem.layerID == 0) {
-            layerViewModel.insertLayer(currentLayerDataItem);
-        } else {
-            layerViewModel.updateLayer(currentLayerDataItem);
-        }
-    }
     private void setupLayerRV() {
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         layerDataRV.setLayoutManager(llm);
@@ -396,18 +382,16 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             toggleEditView(false);
         });
 
+        // New layer - set initial values
         if(currentLayerDataItem.layerID == 0) {
-            Log.i(TAG, "new Layer: ");
             int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
             iconImageButton.setImageResource(resID);
             iconNameTextView.setText("Map marker");
-            layerNameTextInput.setText("");
-            layerCodeTextInput.setText("");
+            layerNameTextInput.setText("New Layer");
+            layerCodeTextInput.setText("XX");
             visibilitySwitch.setChecked(true);
-
+            currentIcon = iconViewModel.getIconByFilename("map_marker");
         } else {
-            Log.i(TAG, "editing Layer: " + currentLayerDataItem.layerID);
-
             layerNameTextInput.setText(currentLayerDataItem.layername);
             int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
             iconNameTextView.setText(currentLayerDataItem.iconName);
@@ -419,8 +403,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
         saveChangesButton.setEnabled(false);
             saveChangesButton.setOnClickListener(v -> {
-
-                Log.i(TAG, "onLayerClickCalled: ");
                 // Get values and update currentLayerDataItem
                 currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
                 currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
@@ -438,8 +420,16 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    private void saveLayerDataItem(LayerDataItem currentLayerDataItem) {
+        if (currentLayerDataItem.layerID == 0) {
+            layerViewModel.insertLayer(currentLayerDataItem);
+        } else {
+            layerViewModel.updateLayer(currentLayerDataItem);
+        }
+    }
+
     private void toggleEditView(boolean b) {
-        if(b) {
+        if (b) {
             listTitleView.setVisibility(View.GONE);
             layerDataRV.setVisibility(View.GONE);
             layerDetailLinearList.setVisibility(View.VISIBLE);

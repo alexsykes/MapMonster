@@ -117,6 +117,8 @@ public abstract class MMDatabase extends RoomDatabase{
                 iconDao.insertIcon(icon);
                 icon = new Icon("camera_outline.xml");
                 iconDao.insertIcon(icon);
+                icon = new Icon("compass_rose.xml");
+                iconDao.insertIcon(icon);
                 icon = new Icon("car.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("car_park.xml");
@@ -127,7 +129,11 @@ public abstract class MMDatabase extends RoomDatabase{
                 iconDao.insertIcon(icon);
                 icon = new Icon("cell_tower.xml");
                 iconDao.insertIcon(icon);
+                icon = new Icon("tower.xml");
+                iconDao.insertIcon(icon);
                 icon = new Icon("coffee.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("knife_fork.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("crosshairs.xml");
                 iconDao.insertIcon(icon);
