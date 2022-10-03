@@ -1,16 +1,5 @@
 package com.alexsykes.mapmonster.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -29,6 +18,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alexsykes.mapmonster.IconImageAdapter;
 import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.R;
@@ -38,7 +38,6 @@ import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
-import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -54,13 +53,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
-import java.util.Objects;
 
 public class LayerListActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "Info";
 
     //  Data
-    private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
 
@@ -138,18 +135,8 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
         layerNameTextInput = findViewById(R.id.layerNameTextInput);
         layerCodeTextInput = findViewById(R.id.layerCodeTextInput);
-        visibilitySwitch = findViewById(R.id.visibilitySwitch);
 
         // Setup LayerList UI components
-//        layerNameTextInput.setOnFocusChangeListener((v, hasFocus) -> {
-//            if(hasFocus) {
-//                validate();
-////                saveChangesButton.setEnabled(true);
-////                showButtons(true);
-//            }
-//        });
-
-//        layerNameTextInput.getText().toString();
         layerNameTextInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -163,7 +150,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void afterTextChanged(Editable s) {
             }
-
         });
 
         layerCodeTextInput.addTextChangedListener(new TextWatcher() {
@@ -179,20 +165,13 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void afterTextChanged(Editable s) {
             }
-
         });
-//
-//        layerCodeTextInput.setOnFocusChangeListener((v, hasFocus) -> {
-//            if(hasFocus) {
-//  validate();
-////                saveChangesButton.setEnabled(true);
-//            }
-//        });
+
+        visibilitySwitch = findViewById(R.id.visibilitySwitch);
         visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                saveChangesButton.setEnabled(true);
-                validate();
+                saveChangesButton.setEnabled(true);
             }
         });
 
@@ -200,54 +179,15 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
         layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
-//        markerListRV = findViewById(R.id.markerListRV);
-//        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-//        markerListRV.setLayoutManager(linearLayoutManager);
-//        markerListRV.setHasFixedSize(true);
-
         newLayerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Log.i(TAG, "onClick: new Layer");
                 currentLayerDataItem = new LayerDataItem();
                 currentLayerDataItem.layerID = 0;
+                currentLayerDataItem.icon_id = 1;
+                currentLayerDataItem.iconFilename = "map_marker";
                 showLayerDetailList(currentLayerDataItem);
-//                layerNameTextInput.setText("New layer");
-//                layerCodeTextInput.setText("NL");
-//                visibilitySwitch.setChecked(true);
-//                int resID = getResources().getIdentifier("map_marker", "drawable", getPackageName());
-//                iconImageButton.setImageResource(android.R.color.transparent);
-//                layerDetailLinearList.setVisibility(View.VISIBLE);
-//
-//                saveChangesButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Log.i(TAG, "onClickSaveButton: ");
-//                        // Get values and update currentLayerDataItem
-//                        currentLayerDataItem.layerID = 0;
-//                        currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
-//                        currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
-//                        currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-//                        if(currentIcon != null) {
-//                            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
-//                        } else {
-//                            currentLayerDataItem.icon_id = 0;
-//                        }
-//                        saveLayerDataItem(currentLayerDataItem);
-//
-//                        showButtons(false);
-//                        showLayerDetailLinearList(false);
-//                    }
-//                });
-//
-//                dismissButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        showButtons(false);
-//                        showLayerDetailLinearList(false);
-//                    }
-//                });
             }
         });
     }
@@ -405,6 +345,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         buttonLinearLayout.setVisibility(View.VISIBLE);
         saveChangesButton.setEnabled(false);
     }
+
     private void showButtons(boolean hasFocus) {
         if(hasFocus) {
             buttonLinearLayout.setVisibility(View.VISIBLE);
@@ -412,13 +353,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             buttonLinearLayout.setVisibility(View.GONE);
         }
     }
-//    private void showLayerDetailLinearList(boolean visibility) {
-//        if(visibility){
-//            layerDetailLinearList.setVisibility(View.VISIBLE);
-//        } else {
-//            layerDetailLinearList.setVisibility(View.GONE);
-//        }
-//    }
+
     private void addMarkersToMap(List<MapMarkerDataItem> mapMarkerDataItems, int resID) {
         mMap.clear();
         if (mapMarkerDataItems.size() == 0) {
@@ -431,8 +366,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         }
         String marker_title, code, type;
         LatLng latLng;
-        int layer_id;
-        String filename;
+
         for (MapMarkerDataItem marker : mapMarkerDataItems) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
@@ -464,37 +398,18 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
         if(currentLayerDataItem.layerID == 0) {
             Log.i(TAG, "new Layer: ");
+            int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
+            iconImageButton.setImageResource(resID);
+            iconNameTextView.setText("Map marker");
             layerNameTextInput.setText("");
-            iconNameTextView.setText("");
-//            currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.filename);
-//            iconImageButton.setImageResource(resID);
             layerCodeTextInput.setText("");
             visibilitySwitch.setChecked(true);
 
-//            saveChangesButton.setOnClickListener(v -> {
-//
-//                Log.i(TAG, "onLayerClickCalled: ");
-//                // Get values and update currentLayerDataItem
-//                currentLayerDataItem.setLayername(Objects.requireNonNull(layerNameTextInput.getText()).toString());
-//                currentLayerDataItem.setCode(Objects.requireNonNull(layerCodeTextInput.getText()).toString());
-//                currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-//                currentLayerDataItem.icon_id = currentIcon.getIcon_id();
-//
-////              Update database
-//                saveLayerDataItem(currentLayerDataItem);
-//
-//                allLayers = layerViewModel.getLayerData();
-//                setupLayerRV();
-////                showButtons(false);
-////                iconImageRV.setVisibility(View.GONE);
-//                showLayerDetailLinearList(false);
-//            });
-
         } else {
             Log.i(TAG, "editing Layer: " + currentLayerDataItem.layerID);
-            int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
 
             layerNameTextInput.setText(currentLayerDataItem.layername);
+            int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
             iconNameTextView.setText(currentLayerDataItem.iconName);
             currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.iconFilename);
             iconImageButton.setImageResource(resID);
@@ -518,11 +433,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
                 allLayers = layerViewModel.getLayerData();
                 setupLayerRV();
                 showButtons(false);
-//                showLayerDetailLinearList(false);
-//                listTitleView.setVisibility(View.VISIBLE);
-//                layerDataRV.setVisibility(View.VISIBLE);
-//                layerDetailLinearList.setVisibility(View.GONE);
-
                 toggleEditView(false);
             });
 
@@ -546,5 +456,4 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             iconImageRV.setVisibility(View.GONE);
         }
     }
-
 }

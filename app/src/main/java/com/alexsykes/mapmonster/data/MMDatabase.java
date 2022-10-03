@@ -92,7 +92,10 @@ public abstract class MMDatabase extends RoomDatabase{
                 IconDao iconDao = INSTANCE.iconDao();
                 iconDao.deleteAllIcons();
 
-                Icon icon = new Icon("airplane.xml");
+                // Default icon should be first on list - iconID = 1
+                Icon icon = new Icon("map_marker.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("airplane.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("alert.xml");
                 iconDao.insertIcon(icon);
@@ -137,8 +140,6 @@ public abstract class MMDatabase extends RoomDatabase{
                 icon = new Icon("gas_station.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("hospital_box_outline.xml");
-                iconDao.insertIcon(icon);
-                icon = new Icon("map_marker.xml");
                 iconDao.insertIcon(icon);
                 icon = new Icon("knife_fork.xml");
                 iconDao.insertIcon(icon);
