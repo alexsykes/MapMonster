@@ -81,4 +81,8 @@ public class MarkerRepository {
     public void deleteAll() {
         markerDao.deleteAllMarkers();
     }
+
+    public List<MapMarkerDataItem> getMarkerListByLayer() {
+        return markerDao.getMarkerListByLayer();
+    }
 }

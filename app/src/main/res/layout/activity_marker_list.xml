@@ -7,6 +7,15 @@
     android:background="#EDE7F6"
     tools:context=".activities.MarkerListActivity">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/markerMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/listTitleView"
         android:layout_width="200dp"
@@ -32,18 +41,16 @@
         app:layout_constraintStart_toStartOf="@+id/listTitleView"
         app:layout_constraintTop_toBottomOf="@id/listTitleView" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layerDataLL"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newMarkerFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_marker"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/markerDataRecyclerView"
-        app:layout_constraintTop_toTopOf="parent">
+        app:srcCompat="@drawable/add_layer" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

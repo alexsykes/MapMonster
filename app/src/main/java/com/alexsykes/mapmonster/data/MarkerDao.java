@@ -55,6 +55,9 @@ public interface MarkerDao {
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 AND layers.isVisible ORDER BY placename")
     List<MapMarkerDataItem> getVisibleMarkerDataList();
+
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY layers.layername, placename")
+    List<MapMarkerDataItem> getMarkerListByLayer();
 }
 
 

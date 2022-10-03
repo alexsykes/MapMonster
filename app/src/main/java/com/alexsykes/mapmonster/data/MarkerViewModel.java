@@ -57,5 +57,10 @@ public class MarkerViewModel extends AndroidViewModel {
     public void deleteAll() {
         markerRepository.deleteAll();
     }
+
+    public List<MapMarkerDataItem> getMarkerListByLayer() {
+        return markerRepository.getMarkerListByLayer();
+
+    }
 }
 
