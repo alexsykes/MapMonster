@@ -88,6 +88,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/layer_name"
+                    android:inputType="text|textCapSentences"
+                    android:maxLines="1"
                     android:textColor="@color/purple_700" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/layer_code"
                     android:inputType="textCapCharacters"
+                    android:maxLines="1"
                     android:textColor="@color/purple_700" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,7 +149,7 @@
                 android:textColor="@color/purple_700" />
 
             <LinearLayout
-                android:id="@+id/buttonLinearLayout"
+                android:id="@+id/buttonLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/large_margin"

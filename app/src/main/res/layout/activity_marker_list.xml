@@ -16,6 +16,111 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/markerDetailLL"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/markerTitleView"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_500"
+            android:padding="@dimen/small_margin"
+            android:text="@string/markers"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/markerNameTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/marker_name"
+            app:boxBackgroundColor="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/markerNameTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textCapSentences"
+                android:maxLines="1"
+                android:text="@string/marker_name"
+                android:textColor="@color/purple_700" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/markerCodeTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/marker_code"
+            app:boxBackgroundColor="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/markerCodeTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textCapCharacters"
+                android:maxLines="1"
+                android:text="@string/marker_code"
+                android:textColor="@color/purple_700" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/markerNotesTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/marker_notes"
+            app:boxBackgroundColor="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/markerNotesTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lines="3"
+                android:nestedScrollingEnabled="true"
+                android:textColor="@color/purple_700" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/large_margin"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/dismissButton"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Space
+                android:layout_width="@dimen/large_margin"
+                android:layout_height="match_parent"
+                android:layout_weight="0" />
+
+            <Button
+                android:id="@+id/saveChangesButton"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/save" />
+        </LinearLayout>
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/listTitleView"
         android:layout_width="200dp"
@@ -49,6 +154,7 @@
         android:layout_marginBottom="24dp"
         android:clickable="true"
         android:contentDescription="@string/add_marker"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/add_layer" />

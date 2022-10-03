@@ -8,7 +8,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +43,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
@@ -56,13 +60,17 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     // UIComponents
     RecyclerView markerDataRV;
+    TextView listTitleView, markerTitleView;
+    TextInputEditText markerNameTextInput, markerCodeTextInput, markerNotesTextInput;
     Button dismissButton, saveChangesButton;
-    FloatingActionButton newLayerFAB;
+    FloatingActionButton newMarkerFAB;
+    LinearLayout markerDetailLL, buttonLL;
 
     // General
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
+    private MapMarkerDataItem currentMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +90,54 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void setupUI() {
-        newLayerFAB = findViewById(R.id.newMarkerFAB);
+        listTitleView = findViewById(R.id.listTitleView);
+        markerTitleView = findViewById(R.id.markerTitleView);
+        markerDetailLL = findViewById(R.id.markerDetailLL);
+        buttonLL = findViewById(R.id.buttonLL);
+        markerNameTextInput = findViewById(R.id.markerNameTextInput);
+        markerCodeTextInput = findViewById(R.id.markerCodeTextInput);
+        markerNotesTextInput = findViewById(R.id.markerNotesTextInput);
+
+        newMarkerFAB = findViewById(R.id.newMarkerFAB);
+        newMarkerFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentMarker = new MapMarkerDataItem();
+                currentMarker.placename = "New marker";
+                currentMarker.code = "Code";
+                editMarker(currentMarker);
+            }
+        });
+
+        dismissButton = findViewById(R.id.dismissButton);
+        saveChangesButton = findViewById(R.id.saveChangesButton);
+
+        dismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markerDetailLL.setVisibility(View.GONE);
+                markerDataRV.setVisibility(View.VISIBLE);
+                listTitleView.setVisibility(View.VISIBLE);
+                newMarkerFAB.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void editMarker(MapMarkerDataItem mapMarkerDataItem) {
+        Log.i(TAG, "editMarker: " + mapMarkerDataItem.getPlacename());
+
+        // Check for new marker
+        if (mapMarkerDataItem.markerID != 0) {
+            markerNameTextInput.setText(mapMarkerDataItem.placename);
+            markerCodeTextInput.setText(mapMarkerDataItem.code);
+            markerNotesTextInput.setText(mapMarkerDataItem.notes);
+        }
+
+        newMarkerFAB.setVisibility(View.GONE);
+        markerDetailLL.setVisibility(View.VISIBLE);
+        markerDataRV.setVisibility(View.GONE);
+        listTitleView.setVisibility(View.GONE);
+        markerTitleView.setText("Editing " + mapMarkerDataItem.placename);
     }
 
     private void setupLayerRV() {
@@ -107,6 +162,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     public void onMarkerClickCalled(int position) {
         Log.i(TAG, "Marker selected: " + position);
+        currentMarker = allMarkers.get(position);
+        editMarker(currentMarker);
     }
 
     @Override
@@ -179,10 +236,14 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         }
         String marker_title, code, type;
         LatLng latLng;
+        String filename;
 
         for (MapMarkerDataItem marker : mapMarkerDataItems) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
+            filename = marker.getFilename();
+
+            int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
 
             marker_title = marker.getPlacename();
             MarkerOptions markerOptions = new MarkerOptions()
@@ -190,7 +251,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                     .title(marker_title)
                     .draggable(false)
                     .snippet(code)
-//                    .icon(BitmapFromVector(getApplicationContext(), resID))
+                    .icon(BitmapFromVector(getApplicationContext(), resID))
                     .visible(true);
             Marker marker1 = mMap.addMarker(markerOptions);
             marker1.setTag(marker.getMarkerID());

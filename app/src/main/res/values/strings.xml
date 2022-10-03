@@ -102,4 +102,5 @@
     <string name="icon_image">Icon image</string>
     <string name="go_marker_list">Marker list</string>
     <string name="go_layer_list">Layer list</string>
+    <string name="new_marker">New marker</string>
 </resources>

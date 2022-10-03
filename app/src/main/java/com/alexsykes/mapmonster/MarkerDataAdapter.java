@@ -37,15 +37,15 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
     public void onBindViewHolder(@NonNull MarkerDataViewHolder holder, int position) {
         holder.getMarkerNameTextView().setText(markerDataItems.get(position).placename);
         holder.marker_id = markerDataItems.get(position).getMarkerID();
+        holder.marker_id = position;
         holder.getMarkerNameTextView().setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                if (context.getClass() == MarkerListActivity.class ) {
+                if (context.getClass() == MarkerListActivity.class) {
                     ((MarkerListActivity) context).onMarkerClickCalled(holder.marker_id);
-                }
-                else if (context.getClass() == LayerListActivity.class ) {
+                } else if (context.getClass() == LayerListActivity.class) {
 //                    ((LayerListActivity) context).onMarkerClickCalled(holder.marker_id);
                 }
             }

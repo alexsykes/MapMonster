@@ -126,7 +126,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             displayIconImages();
         });
         iconNameTextView = findViewById(R.id.iconNameTextView);
-        buttonLinearLayout = findViewById(R.id.buttonLinearLayout);
+        buttonLinearLayout = findViewById(R.id.buttonLL);
         saveChangesButton = findViewById(R.id.saveChangesButton);
         dismissButton = findViewById(R.id.dismissButton);
         buttonLinearLayout.setVisibility(View.GONE);
