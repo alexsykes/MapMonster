@@ -58,6 +58,6 @@ public interface LayerDao {
     @Query("SELECT * FROM layers ORDER BY layername")
     List<SpinnerData> getLayerListForSpinner();
 
-    @Query("SELECT layername FROM layers ORDER BY layername")
+    @Query("SELECT layername FROM layers WHERE isArchived = 0 ORDER BY layername")
     List<String> getLayernamesForSpinner();
 }

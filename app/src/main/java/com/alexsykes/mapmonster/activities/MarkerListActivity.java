@@ -124,9 +124,23 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         layerSpinner.setAdapter(spinnerAdapter);
         spinnerAdapter.addAll(layernamesForSpinner);
         spinnerAdapter.notifyDataSetChanged();
+//        layerSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.i(TAG, "onItemClick: " + position);
+//            }
+//        });
 
         dismissButton = findViewById(R.id.dismissButton);
         saveChangesButton = findViewById(R.id.saveChangesButton);
+
+        saveChangesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int layerID = allLayers.get(layerSpinner.getSelectedItemPosition()).getLayer_id();
+                Log.i(TAG, "onItemClick: " + layerID);
+            }
+        });
 
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
