@@ -46,7 +46,7 @@ public interface LayerDao {
     @Query("SELECT layers.*, icons.iconFilename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE isArchived = 0 ORDER BY layername" )
     List<LayerDataItem> getLayerData();
 
-    @Query("SELECT layers.*, icons.iconFilename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE layerID = :id " )
+    @Query("SELECT layers.*, icons.iconFilename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE layerID = :id ")
     LayerDataItem getLayerDataItem(int id);
 
     @Query("SELECT markers.* FROM markers WHERE layer_id = :position")
@@ -54,4 +54,10 @@ public interface LayerDao {
 
     @Query("UPDATE layers SET icon_id = :icon_id, layername = :layername, code = :code, isVisible = :isVisible  WHERE layerID=:layerID")
     void updateLayerData(int layerID, int icon_id, String layername, String code, boolean isVisible);
+
+    @Query("SELECT * FROM layers ORDER BY layername")
+    List<SpinnerData> getLayerListForSpinner();
+
+    @Query("SELECT layername FROM layers ORDER BY layername")
+    List<String> getLayernamesForSpinner();
 }

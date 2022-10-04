@@ -14,6 +14,8 @@ public class LayerRepository {
     private List<String> visibleLayerList;
     private List<LayerDataItem> layerDataItems;
     private LayerDataItem layerDataItem;
+    private List<SpinnerData> layerListForSpinner;
+    private List<String> layernamesForSpinner;
 
     LayerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -22,6 +24,8 @@ public class LayerRepository {
         layerList = layerDao.getLayerList();
         visibleLayerList = layerDao.getVisibleLayerList();
         layerDataItems = layerDao.getLayerData();
+        layerListForSpinner = layerDao.getLayerListForSpinner();
+        layernamesForSpinner = layerDao.getLayernamesForSpinner();
 //        layerDataItem = layerDao.getLayerDataItem();
     }
 
@@ -77,5 +81,13 @@ public class LayerRepository {
 
     public void deleteAllLayers() {
         layerDao.deleteAllLayers();
+    }
+
+    public List<SpinnerData> getLayerListForSpinner() {
+        return layerListForSpinner;
+    }
+
+    public List<String> getLayernamesForSpinner() {
+        return layernamesForSpinner;
     }
 }

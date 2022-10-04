@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
+import com.alexsykes.mapmonster.data.SpinnerData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +48,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MarkerListActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -57,6 +61,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> allMarkers;
+
+    List<SpinnerData> layerListForSpinner;
+    List<String> layernamesForSpinner;
+    Spinner layerSpinner;
 
     // UIComponents
     RecyclerView markerDataRV;
@@ -110,6 +118,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
+        layerSpinner = findViewById(R.id.layerSpinner);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new ArrayList<>());
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        layerSpinner.setAdapter(spinnerAdapter);
+        spinnerAdapter.addAll(layernamesForSpinner);
+        spinnerAdapter.notifyDataSetChanged();
+
         dismissButton = findViewById(R.id.dismissButton);
         saveChangesButton = findViewById(R.id.saveChangesButton);
 
@@ -126,19 +141,17 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
 
     private void editMarker(MapMarkerDataItem mapMarkerDataItem) {
         Log.i(TAG, "editMarker: " + mapMarkerDataItem.getPlacename());
+        markerTitleView.setText("Editing " + mapMarkerDataItem.placename);
 
-        // Check for new marker
-        if (mapMarkerDataItem.markerID != 0) {
-            markerNameTextInput.setText(mapMarkerDataItem.placename);
-            markerCodeTextInput.setText(mapMarkerDataItem.code);
-            markerNotesTextInput.setText(mapMarkerDataItem.notes);
-        }
+        // Populate UI with data
+        markerNameTextInput.setText(mapMarkerDataItem.placename);
+        markerCodeTextInput.setText(mapMarkerDataItem.code);
+        markerNotesTextInput.setText(mapMarkerDataItem.getNotes());
 
         newMarkerFAB.setVisibility(View.GONE);
         markerDetailLL.setVisibility(View.VISIBLE);
         markerDataRV.setVisibility(View.GONE);
         listTitleView.setVisibility(View.GONE);
-        markerTitleView.setText("Editing " + mapMarkerDataItem.placename);
     }
 
     private void setupLayerRV() {
@@ -158,7 +171,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         allIcons = iconViewModel.getIconList();
         allLayers = layerViewModel.getLayerData();
-        allMarkers = markerViewModel.getMarkerListByLayer();
+        layerListForSpinner = layerViewModel.getLayerListForSpinner();
+        layernamesForSpinner = layerViewModel.getLayernamesForSpinner();
+        allMarkers = markerViewModel.getMarkerList();
     }
 
     public void onMarkerClickCalled(int position) {

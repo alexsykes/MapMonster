@@ -89,6 +89,26 @@
                 android:textColor="@color/purple_700" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/layerSpinnerLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="@dimen/large_margin"
+            android:text="@string/layer"
+            android:textColor="@color/purple_700"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/layerSpinner"
+            android:layout_width="match_parent"
+
+            android:layout_height="48dp"
+            android:background="@color/white"
+            android:entries="@array/planets_array"
+            android:labelFor="@id/markerTitleView"
+            android:spinnerMode="dropdown" />
+
         <LinearLayout
             android:id="@+id/buttonLL"
             android:layout_width="match_parent"

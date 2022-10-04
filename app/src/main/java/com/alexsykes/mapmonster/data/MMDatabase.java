@@ -49,7 +49,7 @@ public abstract class MMDatabase extends RoomDatabase{
                 MarkerDao markerDao = INSTANCE.markerDao();
                 markerDao.deleteAllMarkers();
 
-                MMarker marker = new MMarker(53.5947, -2.5611,"Home", "P1",1,"");
+                MMarker marker = new MMarker(53.5947, -2.5611, "Home", "P1", 1, "16, Avonhead Close, BL6 5QD");
                 markerDao.insertMarker(marker);
                 marker = new MMarker(53.6687, -2.509,"Place 2", "P2",2,"");
                 markerDao.insertMarker(marker);

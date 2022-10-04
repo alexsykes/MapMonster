@@ -91,7 +91,7 @@
     <string name="destroy">Destroy</string>
     <string name="restore_deleted_markers">Restore</string>
     <string name="confirm_restore">Confirm restore</string>
-    <string name="layer">Layer name</string>
+    <string name="layer">Layer</string>
     <string name="layer_id">Layer ID</string>
     <string name="icon">Icon</string>
     <string name="layer_name">Layer name</string>
@@ -103,4 +103,16 @@
     <string name="go_marker_list">Marker list</string>
     <string name="go_layer_list">Layer list</string>
     <string name="new_marker">New marker</string>
+
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
 </resources>
