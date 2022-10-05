@@ -67,6 +67,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     List<MapMarkerDataItem> allMarkers;
 
     List<SpinnerData> layerListForSpinner;
+    ArrayAdapter<String> spinnerAdapter;
     List<String> layernamesForSpinner;
     Spinner layerSpinner;
 
@@ -133,7 +134,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         });
 
         layerSpinner = findViewById(R.id.layerSpinner);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<>());
+        spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<>());
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         layerSpinner.setAdapter(spinnerAdapter);
@@ -237,7 +238,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerCodeTextInput.setText(mapMarkerDataItem.code);
         markerNotesTextInput.setText(mapMarkerDataItem.getNotes());
 
-        // Need to set layer in
+        // Need to set layer in layerSpinner
+        layerSpinner.setSelection(spinnerAdapter.getPosition(mapMarkerDataItem.layername));
 
         final DecimalFormat df = new DecimalFormat("#.#####°");
 
