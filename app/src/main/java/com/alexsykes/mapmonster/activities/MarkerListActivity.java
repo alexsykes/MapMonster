@@ -7,8 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -89,6 +92,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         getData();
         setupUI();
         setupLayerRV();
+
+        currentMarker = new MapMarkerDataItem();
     }
 
     private void setupMap() {
@@ -119,26 +124,35 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         });
 
         layerSpinner = findViewById(R.id.layerSpinner);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new ArrayList<>());
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<>());
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         layerSpinner.setAdapter(spinnerAdapter);
         spinnerAdapter.addAll(layernamesForSpinner);
         spinnerAdapter.notifyDataSetChanged();
-//        layerSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Log.i(TAG, "onItemClick: " + position);
-//            }
-//        });
+        layerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Log.i(TAG, "onItemClick: " + layerListForSpinner.get(position).getLayerID());
+                currentMarker.layer_id = layerListForSpinner.get(position).getLayerID();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         dismissButton = findViewById(R.id.dismissButton);
         saveChangesButton = findViewById(R.id.saveChangesButton);
 
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int layerID = allLayers.get(layerSpinner.getSelectedItemPosition()).getLayer_id();
-                Log.i(TAG, "onItemClick: " + layerID);
+                markerViewModel.saveCurrentMarker(currentMarker);
+                markerDetailLL.setVisibility(View.GONE);
+                markerDataRV.setVisibility(View.VISIBLE);
+                listTitleView.setVisibility(View.VISIBLE);
+                newMarkerFAB.setVisibility(View.VISIBLE);
             }
         });
 
@@ -149,6 +163,55 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 markerDataRV.setVisibility(View.VISIBLE);
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
+            }
+        });
+
+        markerNameTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentMarker.placename = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        markerCodeTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentMarker.code = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        markerNotesTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentMarker.notes = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }

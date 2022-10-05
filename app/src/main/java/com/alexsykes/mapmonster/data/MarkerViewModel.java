@@ -62,5 +62,10 @@ public class MarkerViewModel extends AndroidViewModel {
         return markerRepository.getMarkerListByLayer();
 
     }
+
+    public void saveCurrentMarker(MapMarkerDataItem currentMarker) {
+        markerRepository.saveCurrentMarker(currentMarker);
+    }
 }
+
 

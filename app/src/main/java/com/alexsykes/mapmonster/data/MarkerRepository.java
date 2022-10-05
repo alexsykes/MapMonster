@@ -85,4 +85,15 @@ public class MarkerRepository {
     public List<MapMarkerDataItem> getMarkerListByLayer() {
         return markerDao.getMarkerListByLayer();
     }
+
+    public void saveCurrentMarker(MapMarkerDataItem currentMarker) {
+        int layerID = currentMarker.layer_id;
+        double latitude = currentMarker.latitude;
+
+        if (currentMarker.markerID != 0) {
+            markerDao.saveCurrentMarker(currentMarker.markerID, currentMarker.latitude, currentMarker.longitude, currentMarker.placename, currentMarker.code, currentMarker.layer_id, currentMarker.getNotes());
+        } else {
+            markerDao.insertMarker(new MMarker(currentMarker.latitude, currentMarker.longitude, currentMarker.placename, currentMarker.code, currentMarker.layer_id, currentMarker.getNotes()));
+        }
+    }
 }
