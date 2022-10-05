@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/latTextView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDE7F6"
+    android:padding="@dimen/small_margin"
     tools:context=".activities.MarkerListActivity">
 
     <androidx.fragment.app.FragmentContainerView
@@ -108,6 +110,22 @@
             android:entries="@array/planets_array"
             android:labelFor="@id/markerTitleView"
             android:spinnerMode="dropdown" />
+
+        <TextView
+            android:id="@+id/latLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="@dimen/small_margin"
+            android:textColor="@color/purple_700" />
+
+        <TextView
+            android:id="@+id/lngLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="@dimen/small_margin"
+            android:textColor="@color/purple_700" />
 
         <LinearLayout
             android:id="@+id/buttonLL"

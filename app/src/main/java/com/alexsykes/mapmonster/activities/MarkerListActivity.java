@@ -51,6 +51,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,9 +70,11 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     List<String> layernamesForSpinner;
     Spinner layerSpinner;
 
+    Marker currentLocation;
+
     // UIComponents
     RecyclerView markerDataRV;
-    TextView listTitleView, markerTitleView;
+    TextView listTitleView, markerTitleView, latLabel, lngLabel;
     TextInputEditText markerNameTextInput, markerCodeTextInput, markerNotesTextInput;
     Button dismissButton, saveChangesButton;
     FloatingActionButton newMarkerFAB;
@@ -111,6 +114,8 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerNameTextInput = findViewById(R.id.markerNameTextInput);
         markerCodeTextInput = findViewById(R.id.markerCodeTextInput);
         markerNotesTextInput = findViewById(R.id.markerNotesTextInput);
+        latLabel = findViewById(R.id.latLabel);
+        lngLabel = findViewById(R.id.lngLabel);
 
         newMarkerFAB = findViewById(R.id.newMarkerFAB);
         newMarkerFAB.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +124,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 currentMarker = new MapMarkerDataItem();
                 currentMarker.placename = "New marker";
                 currentMarker.code = "Code";
+                currentMarker.notes = "Add description here…";
+                currentMarker.layer_id = 1;
+                currentMarker.latitude = mMap.getCameraPosition().target.latitude;
+                currentMarker.longitude = mMap.getCameraPosition().target.longitude;
                 editMarker(currentMarker);
             }
         });
@@ -148,6 +157,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentMarker.longitude = currentLocation.getPosition().longitude;
+                currentMarker.latitude = currentLocation.getPosition().latitude;
+
                 markerViewModel.saveCurrentMarker(currentMarker);
                 markerDetailLL.setVisibility(View.GONE);
                 markerDataRV.setVisibility(View.VISIBLE);
@@ -225,10 +237,31 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         markerCodeTextInput.setText(mapMarkerDataItem.code);
         markerNotesTextInput.setText(mapMarkerDataItem.getNotes());
 
+        // Need to set layer in
+
+        final DecimalFormat df = new DecimalFormat("#.#####°");
+
+        latLabel.setText(df.format(currentMarker.latitude));
+        lngLabel.setText(df.format(currentMarker.longitude));
+
         newMarkerFAB.setVisibility(View.GONE);
         markerDetailLL.setVisibility(View.VISIBLE);
         markerDataRV.setVisibility(View.GONE);
         listTitleView.setVisibility(View.GONE);
+
+        // redraw map with marker
+        mMap.clear();
+        CameraPosition cameraPosition = mMap.getCameraPosition();
+        LatLng mapCentre = cameraPosition.target;
+        LatLng position = new LatLng(currentMarker.getLatitude(), currentMarker.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .draggable(true)
+                .position(position)
+                .title(mapMarkerDataItem.placename);
+
+        currentLocation = mMap.addMarker(markerOptions);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
     }
 
     private void setupLayerRV() {
@@ -265,6 +298,49 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            final DecimalFormat df = new DecimalFormat("#.#####");
+            String latStr, lngStr;
+
+            @Override
+            public void onMarkerDrag(@NonNull Marker marker) {
+////                Log.i(TAG, "onMarkerDrag: ");
+//                currentLocation = marker.getPosition();
+//                latStr = df.format(currentLocation.latitude);
+//                lngStr = df.format(currentLocation.longitude);
+//                markerLatTextView.setText(latStr);
+//                markerLngTextView.setText(lngStr);
+            }
+
+            @Override
+            public void onMarkerDragEnd(@NonNull Marker marker) {
+//                Log.i(TAG, "onMarkerDragEnd: ");
+                currentLocation = marker;
+            }
+
+            @Override
+            public void onMarkerDragStart(@NonNull Marker marker) {
+//                currentLocation = marker.getPosition();
+////                Log.i(TAG, "onMarkerDragStart: " + marker.getTag());
+//                latStr = df.format(currentLocation.latitude);
+//
+//                int markerId = (Integer) marker.getTag();
+//                MMarker currentMarker = markerViewModel.getMarker(markerId);
+//                latStr = df.format(currentLocation.latitude);
+//                lngStr = df.format(currentLocation.longitude);
+//                markerInfoPanel.setVisibility(View.VISIBLE);
+//                layerPanelLinearLayout.setVisibility(View.GONE);
+//                addMarkerButton.setVisibility(View.GONE);
+//
+//                markerIdTextView.setText(new StringBuilder().append(getString(R.string.marker_id)).append(currentMarker.getMarker_id()).toString());
+//                markerLatTextView.setText(latStr);
+//                markerLngTextView.setText(lngStr);
+//
+//                markerCodeEditText.setText(currentMarker.getCode());
+//                markerNameEditText.setText(currentMarker.getPlacename());
+//                markerNotesEditText.setText(currentMarker.getNotes());
+            }
+        });
         addMarkersToMap(allMarkers);
     }
 
