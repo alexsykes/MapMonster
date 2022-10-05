@@ -55,6 +55,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
 
     private GoogleMap mMap;
+    SupportMapFragment mapFragment;
 
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 0;
@@ -88,10 +89,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
-        mapFragment.getMapAsync(this);
+//        mapFragment.getMapAsync(this);
         setupUIComponents();
     }
 
@@ -122,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         super.onResume();
         Log.i(TAG, "onResume: ");
         getData();
+//        addMarkersToMap();
+        mapFragment.getMapAsync(this);
         getSavedCameraPosition();
     }
 
