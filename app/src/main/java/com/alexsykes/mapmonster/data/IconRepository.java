@@ -5,7 +5,7 @@ import android.app.Application;
 import java.util.List;
 
 public class IconRepository {
-    private IconDao iconDao;
+    private final IconDao iconDao;
 
     public IconRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);

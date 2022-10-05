@@ -8,9 +8,9 @@ import androidx.lifecycle.AndroidViewModel;
 import java.util.List;
 
 public class IconViewModel extends AndroidViewModel {
-    private IconRepository iconRepository;
+    private final IconRepository iconRepository;
 
-    private List<Icon> iconList;
+    private final List<Icon> iconList;
 
     public IconViewModel(@NonNull Application application) {
         super(application);

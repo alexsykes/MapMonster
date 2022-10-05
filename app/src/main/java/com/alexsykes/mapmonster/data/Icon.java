@@ -20,7 +20,7 @@ public class Icon {
 
     // String is icon filename with lower case, underscore and ".xml"
     public Icon(String iconFilename) {
-        this.iconFilename = iconFilename.replace(".xml", "");;
+        this.iconFilename = iconFilename.replace(".xml", "");
         name = iconFilename.replace(".xml", "");
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
         name = name.replace("_", " ");
