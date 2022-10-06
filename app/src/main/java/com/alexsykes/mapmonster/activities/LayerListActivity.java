@@ -12,7 +12,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -76,7 +74,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     LinearLayout buttonLinearLayout, layerDetailLinearList;
     RecyclerView layerDataRV, iconImageRV; // markerListRV
     TextView iconNameTextView, listTitleView;
-    SwitchCompat visibilitySwitch;
+//    SwitchCompat visibilitySwitch;
     TextInputEditText layerNameTextInput, layerCodeTextInput;
     Button dismissButton, saveChangesButton;
     FloatingActionButton newLayerFAB;
@@ -187,13 +185,13 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
-        visibilitySwitch = findViewById(R.id.visibilitySwitch);
-        visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                saveChangesButton.setEnabled(true);
-            }
-        });
+//        visibilitySwitch = findViewById(R.id.visibilitySwitch);
+//        visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                saveChangesButton.setEnabled(true);
+//            }
+//        });
 
 
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
@@ -215,6 +213,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         layerDataRV.setLayoutManager(llm);
         layerDataRV.setHasFixedSize(true);
+        allLayers = layerViewModel.getLayerData();
         final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
         layerDataRV.setAdapter(layerDataAdapter);
     }
@@ -426,7 +425,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             iconNameTextView.setText("Map marker");
             layerNameTextInput.setText("New Layer");
             layerCodeTextInput.setText("XX");
-            visibilitySwitch.setChecked(true);
+//            visibilitySwitch.setChecked(true);
             currentIcon = iconViewModel.getIconByFilename("map_marker");
         } else {
             layerNameTextInput.setText(currentLayerDataItem.layername);
@@ -435,7 +434,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             currentIcon = iconViewModel.getIconByFilename(currentLayerDataItem.iconFilename);
             iconImageButton.setImageResource(resID);
             layerCodeTextInput.setText(currentLayerDataItem.code);
-            visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
+//            visibilitySwitch.setChecked(currentLayerDataItem.isVisible);
         }
 
         saveChangesButton.setEnabled(false);
@@ -443,13 +442,13 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             // Get values and update currentLayerDataItem
             currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
             currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
-            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
+//            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
             currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
 //              Update database
             saveLayerDataItem(currentLayerDataItem);
-
-            allLayers = layerViewModel.getLayerData();
+//
+//            allLayers = layerViewModel.getLayerData();
             setupLayerRV();
             showButtons(false);
             toggleEditView(false);
@@ -488,5 +487,6 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         Log.i(TAG, "visibilityToggle: " + layer_id);
         layerViewModel.toggle(layer_id);
         addVisibleMarkersToMap();
+        setupLayerRV();
     }
 }
