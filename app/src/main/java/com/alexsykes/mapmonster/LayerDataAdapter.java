@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +26,11 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         Context context = holder.imageView.getContext();
         LayerDataItem layerDataItem = layerDataItems.get(position);
         holder.getLayerNameTextView().setText(layerDataItem.layername);
+        holder.isVisible = layerDataItem.isVisible;
         int resID = context.getResources().getIdentifier(layerDataItem.iconFilename, "drawable", context.getPackageName());
         holder.imageView.setImageResource(resID);
         holder.layer_id = layerDataItems.get(position).getLayer_id();
-        if (layerDataItem.isVisible) {
+        if (holder.isVisible) {
             holder.layerToggleImage.setImageResource(holder.eye_open_id);
         } else {
             holder.layerToggleImage.setImageResource(holder.eye_closed_id);
@@ -45,13 +47,15 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         holder.layerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((LayerListActivity) context).visibilityToggle(holder.layer_id);
-                int currentImageID = holder.layerToggleImage.getId();
-                if (currentImageID == holder.eye_closed_id) {
-                    holder.layerToggleImage.setImageResource(holder.eye_open_id);
-                } else {
+                if (holder.isVisible) {
                     holder.layerToggleImage.setImageResource(holder.eye_closed_id);
+                    Log.i(TAG, "open eye");
+                } else {
+                    holder.layerToggleImage.setImageResource(holder.eye_open_id);
+                    Log.i(TAG, "close eye");
                 }
+                holder.isVisible = !holder.isVisible;
+                ((LayerListActivity) context).visibilityToggle(holder.layer_id);
             }
         });
     }
@@ -73,6 +77,8 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         private final ImageView imageView, layerToggleImage;
         private int layer_id;
         private int eye_open_id, eye_closed_id;
+        private boolean isVisible;
+
 
         public LayerDataViewHolder(@NonNull View itemView) {
             super(itemView);
