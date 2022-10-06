@@ -38,6 +38,7 @@ import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
+import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -59,6 +60,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
     //  Data
     private LayerViewModel layerViewModel;
+    List<MapMarkerDataItem> allVisibleMarkers;
     private IconViewModel iconViewModel;
 
     Icon currentIcon;
@@ -67,6 +69,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     List<LayerDataItem> allLayers;
     LiveData<List<Layer>> layerLiveData;
     int[] iconIds;
+    private MarkerViewModel markerViewModel;
     LayerDataItem currentLayerDataItem;
 
     // UIComponents
@@ -114,6 +117,44 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        mMap.clear();
+        allVisibleMarkers = markerViewModel.getVisibleMarkerDataList();
+        addVisibleMarkersToMap();
+    }
+
+    private void addVisibleMarkersToMap() {
+        List<MapMarkerDataItem> mapMarkerDataItems = markerViewModel.getVisibleMarkerDataList();
+
+        mMap.clear();
+        if (mapMarkerDataItems.size() == 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No saved markers",
+                    Toast.LENGTH_LONG);
+
+            toast.show();
+            return;
+        }
+        String marker_title, code, filename;
+        LatLng latLng;
+
+        for (MapMarkerDataItem marker : mapMarkerDataItems) {
+            latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+            code = marker.getCode();
+            filename = marker.filename;
+
+            int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
+            marker_title = marker.getPlacename();
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(marker_title)
+                    .draggable(false)
+                    .snippet(code)
+                    .icon(BitmapFromVector(getApplicationContext(), resID))
+                    .visible(true);
+            Marker marker1 = mMap.addMarker(markerOptions);
+            marker1.setTag(marker.getMarkerID());
+        }
+        updateCamera(mapMarkerDataItems);
     }
 
     private void setupUI() {
@@ -302,6 +343,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         allIcons = iconViewModel.getIconList();
         allLayers = layerViewModel.getLayerData();
         layerLiveData = layerViewModel.getAllLayers();
@@ -350,7 +392,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             toast.show();
             return;
         }
-        String marker_title, code, type;
+        String marker_title, code;
         LatLng latLng;
 
         for (MapMarkerDataItem marker : mapMarkerDataItems) {
@@ -380,6 +422,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
 
         dismissButton.setOnClickListener(v -> { showButtons(false);
             toggleEditView(false);
+            addVisibleMarkersToMap();
         });
 
         // New layer - set initial values
@@ -402,21 +445,22 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
         saveChangesButton.setEnabled(false);
-            saveChangesButton.setOnClickListener(v -> {
-                // Get values and update currentLayerDataItem
-                currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
-                currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
-                currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-                currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+        saveChangesButton.setOnClickListener(v -> {
+            // Get values and update currentLayerDataItem
+            currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
+            currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
+            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
+            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
 //              Update database
-                saveLayerDataItem(currentLayerDataItem);
+            saveLayerDataItem(currentLayerDataItem);
 
-                allLayers = layerViewModel.getLayerData();
-                setupLayerRV();
-                showButtons(false);
-                toggleEditView(false);
-            });
+            allLayers = layerViewModel.getLayerData();
+            setupLayerRV();
+            showButtons(false);
+            toggleEditView(false);
+            addVisibleMarkersToMap();
+        });
 
     }
 
