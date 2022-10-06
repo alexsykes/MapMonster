@@ -18,7 +18,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerListAdapter.ViewHolder> {
-    private List<MMarker> markers;
+    private final List<MMarker> markers;
     public static final String TAG = "Info";
 
     public ChildMarkerListAdapter(List<MMarker> markers) {
@@ -72,8 +72,11 @@ public class ChildMarkerListAdapter extends RecyclerView.Adapter<ChildMarkerList
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView childMarkerNameTextView, codeTextView, latTextView, lngTextView;
-        private LinearLayout detailContainer;
+        private final TextView childMarkerNameTextView;
+        private final TextView codeTextView;
+        private final TextView latTextView;
+        private final TextView lngTextView;
+        private final LinearLayout detailContainer;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

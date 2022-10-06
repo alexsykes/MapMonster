@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class MarkerRepository {
-    private MarkerDao markerDao;
-    private LiveData<List<MMarker>> allMarkers;
-    private List<Integer> markerCountByLayer;
-    private List<MapMarkerDataItem> markerList;
+    private final MarkerDao markerDao;
+    private final LiveData<List<MMarker>> allMarkers;
+    private final List<Integer> markerCountByLayer;
+    private final List<MapMarkerDataItem> markerList;
     private List<MMarker> visibleMarkerList;
     private Map<String, List<MMarker>> markerMap;
     private ArrayList<String> layerNames;

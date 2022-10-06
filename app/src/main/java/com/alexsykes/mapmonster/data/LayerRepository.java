@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Set;
 
 public class LayerRepository {
-    private LayerDao layerDao;
-    private LiveData<List<Layer>> allLabels;
-    private List<Layer> layerList;
-    private List<String> visibleLayerList;
-    private List<LayerDataItem> layerDataItems;
+    private final LayerDao layerDao;
+    private final LiveData<List<Layer>> allLabels;
+    private final List<Layer> layerList;
+    private final List<String> visibleLayerList;
+    private final List<LayerDataItem> layerDataItems;
     private LayerDataItem layerDataItem;
-    private List<SpinnerData> layerListForSpinner;
-    private List<String> layernamesForSpinner;
+    private final List<SpinnerData> layerListForSpinner;
+    private final List<String> layernamesForSpinner;
 
     LayerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -31,7 +31,8 @@ public class LayerRepository {
 
     LiveData<List<Layer>> getAllLayers() { return allLabels; }
     public List<Layer> getLayerList() { return layerList; }
-    List<String> getVisibleLayerList() { return visibleLayerList; };
+    List<String> getVisibleLayerList() { return visibleLayerList; }
+
     List<LayerDataItem> getLayerData() { return layerDao.getLayerData(); }
     LayerDataItem getLayerDataItem(int position) { return layerDao.getLayerDataItem(position); }
     List<MapMarkerDataItem> getMapMarkerItems(int position) {
@@ -89,5 +90,9 @@ public class LayerRepository {
 
     public List<String> getLayernamesForSpinner() {
         return layernamesForSpinner;
+    }
+
+    public void toggle(int layer_id) {
+        layerDao.toggle(layer_id);
     }
 }

@@ -33,7 +33,7 @@ import java.util.List;
 
 public class MarkerDetailFragment extends DialogFragment {
     private static  LatLng latLng;
-    private static String TAG = "Info";
+    private static final String TAG = "Info";
     //    private TextInputLayout markerNameEditText, markerCodeEditText;
     private EditText markerNameTextEdit, markerCodeTextEdit, markerNotesTextEdit;
     Button saveButton, cancelButton;
@@ -43,7 +43,7 @@ public class MarkerDetailFragment extends DialogFragment {
     List<Layer> layerList;
 
     public MarkerDetailFragment(LatLng latLng) {
-        this.latLng = latLng;
+        MarkerDetailFragment.latLng = latLng;
         Log.i(TAG, "MarkerDetailFragment: ");
         Bundle args = new Bundle();
         args.putString("title", "New marker");
@@ -55,7 +55,7 @@ public class MarkerDetailFragment extends DialogFragment {
         layerList =  layerDao.getLayerList();
         Log.i(TAG, "MarkerDetailFragment: ");
 
-    };
+    }
 
     public static MarkerDetailFragment newInstance(String title){
         Log.i(TAG, "newInstance: ");

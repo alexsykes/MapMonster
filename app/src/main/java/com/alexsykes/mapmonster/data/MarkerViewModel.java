@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MarkerViewModel extends AndroidViewModel {
-    private MarkerRepository markerRepository;
+    private final MarkerRepository markerRepository;
 
     private final LiveData<List<MMarker>> allMarkers;
     private final List<Integer> markerCountByLayer;
@@ -66,6 +66,7 @@ public class MarkerViewModel extends AndroidViewModel {
     public void saveCurrentMarker(MapMarkerDataItem currentMarker) {
         markerRepository.saveCurrentMarker(currentMarker);
     }
+
 }
 
 

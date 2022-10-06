@@ -174,7 +174,7 @@ public class MapEditActivity extends AppCompatActivity implements OnMapReadyCall
                 layerPanelLinearLayout.setVisibility(View.GONE);
                 addMarkerButton.setVisibility(View.GONE);
 
-                markerIdTextView.setText(new StringBuilder().append(getString(R.string.marker_id)).append(currentMarker.getMarker_id()).toString());
+                markerIdTextView.setText(getString(R.string.marker_id) + currentMarker.getMarker_id());
                 markerLatTextView.setText(latStr);
                 markerLngTextView.setText(lngStr);
 

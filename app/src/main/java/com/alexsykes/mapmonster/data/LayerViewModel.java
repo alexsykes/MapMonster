@@ -10,14 +10,14 @@ import java.util.List;
 import java.util.Set;
 
 public class LayerViewModel extends AndroidViewModel {
-    private LayerRepository layerRepository;
+    private final LayerRepository layerRepository;
     private final LiveData<List<Layer>> allLayers;
     private final List<Layer> layerList;
     private final List<String> visibleLayerList;
     private final List<LayerDataItem> layerDataItems;
     private  LayerDataItem layerDataItem;
-    private LiveData<List<Layer>> liveLayerList;
-    private List<String> layernamesForSpinner;
+    private final LiveData<List<Layer>> liveLayerList;
+    private final List<String> layernamesForSpinner;
 
     public LayerViewModel(@NonNull Application application) {
         super(application);
@@ -100,4 +100,7 @@ public class LayerViewModel extends AndroidViewModel {
     }
 
 
+    public void toggle(int layer_id) {
+        layerRepository.toggle(layer_id);
+    }
 }

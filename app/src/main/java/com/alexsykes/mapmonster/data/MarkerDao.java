@@ -39,7 +39,7 @@ public interface MarkerDao {
 
     @MapInfo(keyColumn = "layername", valueColumn = "placename")
     @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.layer_id WHERE markers.isArchived = 0 ORDER BY layername, placename")
-    public Map<String, List<MMarker>> getMarkersByLayer();
+    Map<String, List<MMarker>> getMarkersByLayer();
 
     @Query("SELECT * FROM markers WHERE markerID = :tag")
     MMarker getMarker(int tag);
