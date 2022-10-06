@@ -100,4 +100,7 @@ public class LayerViewModel extends AndroidViewModel {
     }
 
 
+    public void toggle(int layer_id) {
+        layerRepository.toggle(layer_id);
+    }
 }

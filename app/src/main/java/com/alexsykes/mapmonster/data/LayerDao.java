@@ -60,4 +60,7 @@ public interface LayerDao {
 
     @Query("SELECT layername FROM layers WHERE isArchived = 0 ORDER BY layername")
     List<String> getLayernamesForSpinner();
+
+    @Query("UPDATE layers SET isVisible = NOT isVisible WHERE layerID = :layer_id ")
+    void toggle(int layer_id);
 }

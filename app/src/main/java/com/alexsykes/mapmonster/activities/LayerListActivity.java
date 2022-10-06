@@ -483,4 +483,10 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
             iconImageRV.setVisibility(View.GONE);
         }
     }
+
+    public void visibilityToggle(int layer_id) {
+        Log.i(TAG, "visibilityToggle: " + layer_id);
+        layerViewModel.toggle(layer_id);
+        addVisibleMarkersToMap();
+    }
 }

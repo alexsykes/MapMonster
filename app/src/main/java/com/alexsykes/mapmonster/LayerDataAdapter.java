@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,19 +20,40 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
     List<LayerDataItem> layerDataItems;
     public static final String TAG = "Info";
 
-    public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
-        private final TextView layerNameTextView;
-        private int layer_id;
-
-        public LayerDataViewHolder(@NonNull View itemView) {
-            super(itemView);
-            layerNameTextView = itemView.findViewById(R.id.layerNameTextView);
-
+    @Override
+    public void onBindViewHolder(@NonNull LayerDataViewHolder holder, int position) {
+        Context context = holder.imageView.getContext();
+        LayerDataItem layerDataItem = layerDataItems.get(position);
+        holder.getLayerNameTextView().setText(layerDataItem.layername);
+        int resID = context.getResources().getIdentifier(layerDataItem.iconFilename, "drawable", context.getPackageName());
+        holder.imageView.setImageResource(resID);
+        holder.layer_id = layerDataItems.get(position).getLayer_id();
+        if (layerDataItem.isVisible) {
+            holder.layerToggleImage.setImageResource(holder.eye_open_id);
+        } else {
+            holder.layerToggleImage.setImageResource(holder.eye_closed_id);
         }
+        holder.getLayerNameTextView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+//                int position = holder.getAdapterPosition();
+                ((LayerListActivity) context).onLayerClickCalled(holder.layer_id);
+            }
+        });
 
-        public TextView getLayerNameTextView() {
-            return layerNameTextView;
-        }
+        holder.layerToggleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LayerListActivity) context).visibilityToggle(holder.layer_id);
+                int currentImageID = holder.layerToggleImage.getId();
+                if (currentImageID == holder.eye_closed_id) {
+                    holder.layerToggleImage.setImageResource(holder.eye_open_id);
+                } else {
+                    holder.layerToggleImage.setImageResource(holder.eye_closed_id);
+                }
+            }
+        });
     }
 
     public LayerDataAdapter(List<LayerDataItem> allLayers) {
@@ -46,18 +68,25 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         return new LayerDataViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull LayerDataViewHolder holder, int position) {
-        holder.getLayerNameTextView().setText(layerDataItems.get(position).layername);
-        holder.layer_id = layerDataItems.get(position).getLayer_id();
-        holder.getLayerNameTextView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-//                int position = holder.getAdapterPosition();
-                ((LayerListActivity) context).onLayerClickCalled(holder.layer_id);
-            }
-        });
+    public static class LayerDataViewHolder extends RecyclerView.ViewHolder {
+        private final TextView layerNameTextView;
+        private final ImageView imageView, layerToggleImage;
+        private int layer_id;
+        private int eye_open_id, eye_closed_id;
+
+        public LayerDataViewHolder(@NonNull View itemView) {
+            super(itemView);
+            layerNameTextView = itemView.findViewById(R.id.layerNameTextView);
+            layerToggleImage = itemView.findViewById(R.id.layerToggleImage);
+            imageView = itemView.findViewById(R.id.imageView);
+
+            eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
+            eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
+        }
+
+        public TextView getLayerNameTextView() {
+            return layerNameTextView;
+        }
     }
 
     @Override

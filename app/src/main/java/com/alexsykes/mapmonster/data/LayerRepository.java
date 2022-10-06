@@ -91,4 +91,8 @@ public class LayerRepository {
     public List<String> getLayernamesForSpinner() {
         return layernamesForSpinner;
     }
+
+    public void toggle(int layer_id) {
+        layerDao.toggle(layer_id);
+    }
 }
