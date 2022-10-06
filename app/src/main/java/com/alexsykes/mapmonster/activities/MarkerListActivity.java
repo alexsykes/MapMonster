@@ -300,6 +300,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(true);
+
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             final DecimalFormat df = new DecimalFormat("#.#####");
             String latStr, lngStr;
