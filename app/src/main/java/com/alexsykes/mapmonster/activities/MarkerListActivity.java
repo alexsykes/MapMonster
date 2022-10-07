@@ -65,14 +65,12 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     private IconViewModel iconViewModel;
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
-    List<MapMarkerDataItem> allMarkers;
+    List<MapMarkerDataItem> visibleMarkers;
 
     List<SpinnerData> layerListForSpinner;
     ArrayAdapter<String> spinnerAdapter;
     List<String> layernamesForSpinner;
     Spinner layerSpinner;
-
-    Marker currentLocation;
 
     // UIComponents
     RecyclerView markerDataRV;
@@ -87,6 +85,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
     private MapMarkerDataItem currentMarker;
+    Marker currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,8 +215,9 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     }
 
     private void editMarker(MapMarkerDataItem mapMarkerDataItem) {
-        Log.i(TAG, "editMarker: " + mapMarkerDataItem.getPlacename());
-        markerTitleView.setText("Editing " + mapMarkerDataItem.placename);
+        currentMarker = mapMarkerDataItem;
+        Log.i(TAG, "editMarker: " + currentMarker.getPlacename());
+        markerTitleView.setText("Editing " + currentMarker.placename);
 
         // Populate UI with data
         markerNameTextInput.setText(mapMarkerDataItem.placename);
@@ -245,8 +245,6 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
                 return false;
             }
         });
-        CameraPosition cameraPosition = mMap.getCameraPosition();
-        LatLng mapCentre = cameraPosition.target;
         LatLng position = new LatLng(currentMarker.getLatitude(), currentMarker.getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions()
@@ -255,7 +253,9 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
                 .title(mapMarkerDataItem.placename);
 
         currentLocation = mMap.addMarker(markerOptions);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
+//        mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
     }
 
     // Setup methods
@@ -268,7 +268,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         allLayers = layerViewModel.getLayerData();
         layerListForSpinner = layerViewModel.getLayerListForSpinner();
         layernamesForSpinner = layerViewModel.getLayernamesForSpinner();
-        allMarkers = markerViewModel.getMarkerList();
+        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
     }
 
     private void setupMap() {
@@ -338,9 +338,9 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
 
-                setupMarkerRV();
+                updateMarkerRV();
                 addMarkersToMap();
-                updateCamera(allMarkers);
+                updateCamera(visibleMarkers);
             }
         });
 
@@ -351,9 +351,9 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
                 markerDataRV.setVisibility(View.VISIBLE);
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
-                setupMarkerRV();
+                updateMarkerRV();
                 addMarkersToMap();
-                updateCamera(allMarkers);
+                updateCamera(visibleMarkers);
             }
         });
 
@@ -408,10 +408,10 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     }
 
     private void addMarkersToMap() {
-        allMarkers = markerViewModel.getMarkerList();
+        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
         mMap.clear();
         mMap.setOnMarkerClickListener(this);
-        if (allMarkers.size() == 0) {
+        if (visibleMarkers.size() == 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "No saved markers",
                     Toast.LENGTH_LONG);
@@ -423,7 +423,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         LatLng latLng;
         String filename;
 
-        for (MapMarkerDataItem marker : allMarkers) {
+        for (MapMarkerDataItem marker : visibleMarkers) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             filename = marker.getFilename();
@@ -450,7 +450,12 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         markerDataRV.setLayoutManager(llm);
         markerDataRV.setHasFixedSize(true);
         markerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(allMarkers);
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(visibleMarkers);
+        markerDataRV.setAdapter(markerDataAdapter);
+    }
+
+    private void updateMarkerRV() {
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(visibleMarkers);
         markerDataRV.setAdapter(markerDataAdapter);
     }
 
@@ -464,7 +469,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
 
     public void onMarkerClickCalled(int position) {
         Log.i(TAG, "Marker selected: " + position);
-        currentMarker = allMarkers.get(position);
+        currentMarker = visibleMarkers.get(position);
         editMarker(currentMarker);
     }
 }
