@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.LayerListActivity;
 import com.alexsykes.mapmonster.activities.MarkerListActivity;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 
@@ -43,11 +42,7 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                if (context.getClass() == MarkerListActivity.class) {
                     ((MarkerListActivity) context).onMarkerClickCalled(holder.marker_id);
-                } else if (context.getClass() == LayerListActivity.class) {
-//                    ((LayerListActivity) context).onMarkerClickCalled(holder.marker_id);
-                }
             }
         });
 
