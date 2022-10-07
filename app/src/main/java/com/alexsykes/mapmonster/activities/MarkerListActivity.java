@@ -95,7 +95,6 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         getData();
         setupUI();
         setupMarkerRV();
-
         currentMarker = new MapMarkerDataItem();
     }
 
