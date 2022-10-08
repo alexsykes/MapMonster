@@ -25,8 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.opencsv.*;
+
 public class SettingsActivity extends AppCompatActivity {
     public static final String TAG = "Info";
+    CSVWriter csvWriter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
