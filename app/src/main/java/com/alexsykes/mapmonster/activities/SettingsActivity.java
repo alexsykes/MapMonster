@@ -2,6 +2,9 @@ package com.alexsykes.mapmonster.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -41,15 +44,54 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    // Navigation
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.email_menu_item:
+                emailData();
+                return true;
+
+            case R.id.export_menu_item:
+                exportData();
+                return true;
+            default:
+        }
+        return false;
+    }
+
+    private void exportData() {
+        String data = getExportData();
+    }
+
+    private String getExportData() {
+        String data = "";
+
+        return data;
+    }
+
+    private void emailData() {
+        String data = getExportData();
+
+    }
+
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private List<Layer> layerList;
         private LayerViewModel layerViewModel;
         private MarkerViewModel markerViewModel;
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-            MultiSelectListPreference layer_visibility = findPreference("layer_visibility");
+//            MultiSelectListPreference layer_visibility = findPreference("layer_visibility");
             SwitchPreference destroy_switch = findPreference("destroy_switch");
             CheckBoxPreference destroy_confirm = findPreference("destroy_confirm");
             SwitchPreference restore_switch = findPreference("restore_switch");
@@ -103,40 +145,40 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
-            layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+//            layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
             markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
 
             // Get lists of layers and visibleLayers
-            layerList = layerViewModel.getLayerList();
-            List<String> visibleLayerList = layerViewModel.getVisibleLayerList();
+//            layerList = layerViewModel.getLayerList();
+//            List<String> visibleLayerList = layerViewModel.getVisibleLayerList();
 
-            String[] options = new String[layerList.size()];
+//            String[] options = new String[layerList.size()];
+//
+//            for (int i = 0; i < layerList.size(); i++){
+//                options[i] = layerList.get(i).getLayername();
+//            }
 
-            for (int i = 0; i < layerList.size(); i++){
-                options[i] = layerList.get(i).getLayername();
-            }
-
-            Set<String> values = new HashSet<String>(visibleLayerList);
-            layer_visibility.setEntries(options);
-            layer_visibility.setEntryValues(options);
-            layer_visibility.setValues(values);
+//            Set<String> values = new HashSet<String>(visibleLayerList);
+//            layer_visibility.setEntries(options);
+//            layer_visibility.setEntryValues(options);
+//            layer_visibility.setValues(values);
 
             // Set listener for changes
-            layer_visibility.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    // newValue is A HashSet containing selected values
-                    Log.i(TAG, "onPreferenceChange: " + newValue);
-                    layerViewModel.updateLayerVisibility((Set<String>) newValue);
-                    layer_visibility.setValues((Set<String>) newValue);
-                    return false; // Saves in prefs if set to true
-                }
-            });
+//            layer_visibility.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//                @Override
+//                public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                    // newValue is A HashSet containing selected values
+//                    Log.i(TAG, "onPreferenceChange: " + newValue);
+//                    layerViewModel.updateLayerVisibility((Set<String>) newValue);
+//                    layer_visibility.setValues((Set<String>) newValue);
+//                    return false; // Saves in prefs if set to true
+//                }
+//            });
         }
 
         private void destroyData() {
-            markerViewModel.deleteAll();
-            layerViewModel.deleteAll();
+            markerViewModel.archiveAll();
+            layerViewModel.archiveAll();
         }
 
         private void restoreData() {

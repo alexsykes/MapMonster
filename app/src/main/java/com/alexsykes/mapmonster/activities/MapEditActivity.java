@@ -193,13 +193,13 @@ public class MapEditActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.map_edit_menu, menu);
+        inflater.inflate(R.menu.settings_menu, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.layer_list_item:
+            case R.id.email_menu_item:
                 goLayerList();
                 return true;
 
@@ -210,7 +210,7 @@ public class MapEditActivity extends AppCompatActivity implements OnMapReadyCall
                 toggleLayerPanel();
                 return true;
 
-            case R.id.marker_list_menu_item:
+            case R.id.export_menu_item:
                 goMarkerList();
                 return true;
             default:
