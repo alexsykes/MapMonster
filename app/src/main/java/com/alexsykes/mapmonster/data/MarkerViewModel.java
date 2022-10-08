@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
+import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -66,7 +67,9 @@ public class MarkerViewModel extends AndroidViewModel {
     public void saveCurrentMarker(MapMarkerDataItem currentMarker) {
         markerRepository.saveCurrentMarker(currentMarker);
     }
-
+    public Cursor getMarkerDataForExport() {
+        return markerRepository.getMarkerDataForExport();
+    }
 }
 
 

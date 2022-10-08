@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
+import android.database.Cursor;
 
 import androidx.lifecycle.LiveData;
 
@@ -95,5 +96,9 @@ public class MarkerRepository {
         } else {
             markerDao.insertMarker(new MMarker(currentMarker.latitude, currentMarker.longitude, currentMarker.placename, currentMarker.code, currentMarker.layer_id, currentMarker.getNotes()));
         }
+    }
+
+    public Cursor getMarkerDataForExport() {
+        return markerDao.getMarkerDataForExport();
     }
 }

@@ -1,10 +1,18 @@
 package com.alexsykes.mapmonster.activities;
 
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -17,19 +25,31 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
 import com.alexsykes.mapmonster.R;
+import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.opencsv.*;
 
+
+// https://developer.android.com/reference/android/os/Environment
 public class SettingsActivity extends AppCompatActivity {
     public static final String TAG = "Info";
     CSVWriter csvWriter;
+    Cursor markerDataForExport;
+    MarkerViewModel markerViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +65,11 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        MMDatabase db = MMDatabase.getDatabase(this);
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+//        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        markerDataForExport = markerViewModel.getMarkerDataForExport();
+
     }
 
     @Override
@@ -71,18 +96,49 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void exportData() {
-        String data = getExportData();
-    }
+        Cursor exportData = getExportData();
 
-    private String getExportData() {
-        String data = "";
+        File path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS);
+        File file = new File(path, "Txt.txt");
+        try {
+            CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
 
-        return data;
+            csvWrite.writeNext(exportData.getColumnNames());
+            while (exportData.moveToNext()) {
+                String arrStr[] = new String[exportData.getColumnCount()];
+                for (int i = 0; i < exportData.getColumnCount() - 1; i++)
+                    arrStr[i] = exportData.getString(i);
+                csvWrite.writeNext(arrStr);
+            }
+            csvWrite.close();
+            exportData.close();
+            // Tell the media scanner about the new file so that it is
+            // immediately available to the user.
+//            MediaScannerConnection.scanFile(this,
+//                    new String[] { file.toString() }, null,
+//                    new MediaScannerConnection.OnScanCompletedListener() {
+//                        public void onScanCompleted(String path, Uri uri) {
+//                            Log.i("ExternalStorage", "Scanned " + path + ":");
+//                            Log.i("ExternalStorage", "-> uri=" + uri);
+//                        }
+//                    });
+
+            Log.i(TAG, "Success");
+        } catch (Exception sqlEx) {
+            Log.e(TAG, sqlEx.getMessage(), sqlEx);
+        }
     }
 
     private void emailData() {
-        String data = getExportData();
+        Cursor exportData = getExportData();
 
+    }
+
+    private Cursor getExportData() {
+        MMDatabase db = MMDatabase.getDatabase(this);
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        return markerViewModel.getMarkerDataForExport();
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -151,32 +207,6 @@ public class SettingsActivity extends AppCompatActivity {
 //            layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
             markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
 
-            // Get lists of layers and visibleLayers
-//            layerList = layerViewModel.getLayerList();
-//            List<String> visibleLayerList = layerViewModel.getVisibleLayerList();
-
-//            String[] options = new String[layerList.size()];
-//
-//            for (int i = 0; i < layerList.size(); i++){
-//                options[i] = layerList.get(i).getLayername();
-//            }
-
-//            Set<String> values = new HashSet<String>(visibleLayerList);
-//            layer_visibility.setEntries(options);
-//            layer_visibility.setEntryValues(options);
-//            layer_visibility.setValues(values);
-
-            // Set listener for changes
-//            layer_visibility.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//                @Override
-//                public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                    // newValue is A HashSet containing selected values
-//                    Log.i(TAG, "onPreferenceChange: " + newValue);
-//                    layerViewModel.updateLayerVisibility((Set<String>) newValue);
-//                    layer_visibility.setValues((Set<String>) newValue);
-//                    return false; // Saves in prefs if set to true
-//                }
-//            });
         }
 
         private void destroyData() {
