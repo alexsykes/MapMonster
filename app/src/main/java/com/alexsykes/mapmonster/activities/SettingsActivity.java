@@ -32,11 +32,13 @@ import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,10 +49,13 @@ import com.opencsv.*;
 // https://developer.android.com/reference/android/os/Environment
 public class SettingsActivity extends AppCompatActivity {
     public static final String TAG = "Info";
+    public static final int PICKFILE_RESULT_CODE = 1;
     CSVWriter csvWriter;
     Cursor markerDataForExport;
     MarkerViewModel markerViewModel;
 
+    private Uri fileUri;
+    private String filePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,11 +93,35 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
 
             case R.id.export_menu_item:
-                exportData();
+                fileDemo();
+//                exportData();
                 return true;
             default:
         }
         return false;
+    }
+
+    private void fileDemo() {
+
+        Intent chooseFile = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        chooseFile.setType("text/csv");
+//        chooseFile = Intent.createChooser(chooseFile,"Choose a file");
+        startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (requestCode == -1) {
+                    fileUri = data.getData();
+                    filePath = fileUri.getPath();
+//                    tvItemPath.setText(filePath);
+                }
+
+                break;
+        }
     }
 
     private void exportData() {
@@ -100,29 +129,19 @@ public class SettingsActivity extends AppCompatActivity {
 
         File path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOCUMENTS);
-        File file = new File(path, "Txt.txt");
+        File file = new File(path, "Waypoints.csv");
         try {
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
 
             csvWrite.writeNext(exportData.getColumnNames());
             while (exportData.moveToNext()) {
                 String arrStr[] = new String[exportData.getColumnCount()];
-                for (int i = 0; i < exportData.getColumnCount() - 1; i++)
+                for (int i = 0; i < exportData.getColumnCount(); i++)
                     arrStr[i] = exportData.getString(i);
                 csvWrite.writeNext(arrStr);
             }
             csvWrite.close();
             exportData.close();
-            // Tell the media scanner about the new file so that it is
-            // immediately available to the user.
-//            MediaScannerConnection.scanFile(this,
-//                    new String[] { file.toString() }, null,
-//                    new MediaScannerConnection.OnScanCompletedListener() {
-//                        public void onScanCompleted(String path, Uri uri) {
-//                            Log.i("ExternalStorage", "Scanned " + path + ":");
-//                            Log.i("ExternalStorage", "-> uri=" + uri);
-//                        }
-//                    });
 
             Log.i(TAG, "Success");
         } catch (Exception sqlEx) {
@@ -133,6 +152,26 @@ public class SettingsActivity extends AppCompatActivity {
     private void emailData() {
         Cursor exportData = getExportData();
 
+
+            String DatabaseName = "mm_database";
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+            FileChannel source=null;
+            FileChannel destination=null;
+            String currentDBPath = "/data/"+ "com.alexsykes.mapmonster" +"/databases/"+DatabaseName ;
+            String backupDBPath =  "Documents/back.sql";
+            File currentDB = new File(data, currentDBPath);
+            File backupDB = new File(sd, backupDBPath);
+            try {
+                source = new FileInputStream(currentDB).getChannel();
+                destination = new FileOutputStream(backupDB).getChannel();
+                destination.transferFrom(source, 0, source.size());
+                source.close();
+                destination.close();
+                Toast.makeText(this, "Your Database is Exported !!", Toast.LENGTH_LONG).show();
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
     }
 
     private Cursor getExportData() {
