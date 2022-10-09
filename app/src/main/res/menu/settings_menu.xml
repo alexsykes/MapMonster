@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/email_menu_item"
+        android:icon="@drawable/email_outline"
+        android:title="@string/markers"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/export_menu_item"
+        android:icon="@drawable/export"
+        android:title="@string/markers"
+        app:showAsAction="ifRoom" />
+</menu>

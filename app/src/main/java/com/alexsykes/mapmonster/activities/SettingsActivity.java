@@ -3,11 +3,9 @@ package com.alexsykes.mapmonster.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,13 +17,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.CheckBoxPreference;
-import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
 import com.alexsykes.mapmonster.R;
-import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
@@ -36,12 +32,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.channels.FileChannel;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.opencsv.*;
 
@@ -89,11 +81,12 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.email_menu_item:
-                emailData();
+                dbExport();
                 return true;
 
             case R.id.export_menu_item:
-                fileDemo();
+               fileDemo();
+               dbExport();
 //                exportData();
                 return true;
             default:
@@ -102,24 +95,47 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void fileDemo() {
-
-        Intent chooseFile = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        chooseFile.setType("text/csv");
-//        chooseFile = Intent.createChooser(chooseFile,"Choose a file");
-        startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.setType("text/csv");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_TITLE, "data.csv");
+        startActivityForResult(intent, PICKFILE_RESULT_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
-                if (requestCode == -1) {
-                    fileUri = data.getData();
-                    filePath = fileUri.getPath();
-//                    tvItemPath.setText(filePath);
+                if (resultCode == -1) {
+                    fileUri = data.getData();  // long form including content://com.android.externalstorage.documents/document/primary%3ADocuments%2Fdata%20(2).csv
+                    filePath = fileUri.getPath();  // String - /document/primary:Documents/data (2).csv
+
+                    Log.i(TAG, "fileUri: "  + fileUri);
+                    Log.i(TAG, "filePath: "  + filePath);
                 }
 
+                File outfile = new File(filePath);
+                try {
+                    Cursor exportData = getExportData();
+                    FileWriter fileWriter = new FileWriter(filePath);
+                    CSVWriter csvWrite = new CSVWriter(fileWriter);
+
+                    csvWrite.writeNext(exportData.getColumnNames());
+                    while (exportData.moveToNext()) {
+                        String arrStr[] = new String[exportData.getColumnCount()];
+                        for (int i = 0; i < exportData.getColumnCount(); i++)
+                            arrStr[i] = exportData.getString(i);
+                        csvWrite.writeNext(arrStr);
+                    }
+                    csvWrite.close();
+                    exportData.close();
+
+                    Log.i(TAG, "Success");
+                } catch (Exception sqlEx) {
+                    Log.e(TAG, sqlEx.getMessage(), sqlEx);
+                }
                 break;
         }
     }
@@ -149,19 +165,19 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void emailData() {
-        Cursor exportData = getExportData();
+    private void dbExport() {
+//        Cursor exportData = getExportData();
 
 
             String DatabaseName = "mm_database";
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
+            File externalStorageDirectory = Environment.getExternalStorageDirectory();
+            File dataDirectory = Environment.getDataDirectory();
             FileChannel source=null;
             FileChannel destination=null;
-            String currentDBPath = "/data/"+ "com.alexsykes.mapmonster" +"/databases/"+DatabaseName ;
-            String backupDBPath =  "Documents/back.sql";
-            File currentDB = new File(data, currentDBPath);
-            File backupDB = new File(sd, backupDBPath);
+            String currentDBPath = "/data/"+ getPackageName() +"/databases/"+DatabaseName ;
+            String backupDBPath =  "Documents/back.db";
+            File currentDB = new File(dataDirectory, currentDBPath);
+            File backupDB = new File(externalStorageDirectory, backupDBPath);
             try {
                 source = new FileInputStream(currentDB).getChannel();
                 destination = new FileOutputStream(backupDB).getChannel();
