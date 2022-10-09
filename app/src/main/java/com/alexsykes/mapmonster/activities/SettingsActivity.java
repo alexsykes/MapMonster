@@ -1,13 +1,18 @@
 package com.alexsykes.mapmonster.activities;
 
 
+
+import static java.net.Proxy.Type.HTTP;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -37,6 +42,7 @@ import com.opencsv.*;
 public class SettingsActivity extends AppCompatActivity {
     public static final String TAG = "Info";
     public static final int PICKFILE_RESULT_CODE = 1;
+    public static final int EMAIL_RESULT_CODE = 2;
     CSVWriter csvWriter;
     Cursor markerDataForExport;
     MarkerViewModel markerViewModel;
@@ -88,6 +94,23 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void csvEmail() {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+// The intent does not have a URI, so declare the "text/plain" MIME type
+//        emailIntent.setType(HTTP.PLAIN_TEXT_TYPE);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"jan@example.com"}); // recipients
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Markers from MapMonster");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Please find current marker list attached");
+//        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://path/to/email/attachment"));
+// You can also attach multiple items by passing an ArrayList of Uris
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            finish();
+            Log.i("Finished sending email...", "");
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(SettingsActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void csvExport() {
@@ -125,6 +148,9 @@ public class SettingsActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                break;
+            case EMAIL_RESULT_CODE:
+                Log.i(TAG, "onActivityResult: ");
                 break;
         }
     }
