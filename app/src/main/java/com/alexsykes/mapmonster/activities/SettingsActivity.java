@@ -2,12 +2,11 @@ package com.alexsykes.mapmonster.activities;
 
 
 
-import static java.net.Proxy.Type.HTTP;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +28,8 @@ import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -86,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
 
             case R.id.export_menu_item:
-               csvExport();
+                csvExport();
                 return true;
             default:
         }
@@ -94,12 +95,19 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void csvEmail() {
+//        File exportDir = new File(Environment.getExternalStoragePublicDirectory("Documents/Scoremonster"), "");
+        File exportDir = getFilesDir();
+        String filename = "Markers.csv";
+        writeToInternal(exportDir, filename);
+
+
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 // The intent does not have a URI, so declare the "text/plain" MIME type
-//        emailIntent.setType(HTTP.PLAIN_TEXT_TYPE);
+        emailIntent.setType("text/plain");
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
-//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"jan@example.com"}); // recipients
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"jan@example.com"}); // recipients
+        emailIntent.putExtra(Intent.EXTRA_BCC, new String[]{"alex@alexsykes.net"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Markers from MapMonster");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Please find current marker list attached");
 //        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://path/to/email/attachment"));
@@ -107,10 +115,32 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
-            Log.i("Finished sending email...", "");
+            Log.i(TAG,"Finished sending email...");
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(SettingsActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void writeToInternal(File exportDir, String filename) {
+        Cursor exportData = markerViewModel.getMarkerDataForExport();
+        try {
+            exportDir = new File(getFilesDir(), filename);
+            exportDir.createNewFile();
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(exportDir));
+
+            // Get current data
+            while (exportData.moveToNext()) {
+                String arrStr[] = new String[exportData.getColumnCount()];
+                for (int i = 0; i < exportData.getColumnCount(); i++)
+                    arrStr[i] = exportData.getString(i);
+                csvWriter.writeNext(arrStr);
+            }
+
+            csvWriter.close();
+        } catch (IOException e) {
+            Log.e("Child", e.getMessage(), e);
+        }
+
     }
 
     private void csvExport() {
@@ -119,6 +149,7 @@ public class SettingsActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.putExtra(Intent.EXTRA_TITLE, "data.csv");
         startActivityForResult(intent, PICKFILE_RESULT_CODE);
+        finish();
     }
 
     @Override
