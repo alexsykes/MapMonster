@@ -103,6 +103,8 @@
     <string name="go_marker_list">Marker list</string>
     <string name="go_layer_list">Layer list</string>
     <string name="new_marker">New marker</string>
+    <string name="save_markers">Save markers</string>
+    <string name="load_markers">Import markers</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>

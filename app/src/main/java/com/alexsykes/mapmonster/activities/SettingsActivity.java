@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.opencsv.*;
@@ -44,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String TAG = "Info";
     public static final int PICKFILE_RESULT_CODE = 1;
     public static final int EMAIL_RESULT_CODE = 2;
+    public static final int GETFILE_RESULT_CODE = 3;
     CSVWriter csvWriter;
     Cursor markerDataForExport;
     MarkerViewModel markerViewModel;
@@ -83,11 +86,15 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.email_menu_item:
-                csvEmail();
+//                csvEmail();
                 return true;
 
             case R.id.export_menu_item:
                 csvExport();
+                return true;
+                
+            case R.id.import_menu_item:
+                importMarkers();
                 return true;
             default:
         }
@@ -98,9 +105,9 @@ public class SettingsActivity extends AppCompatActivity {
 //        File exportDir = new File(Environment.getExternalStoragePublicDirectory("Documents/Scoremonster"), "");
         File exportDir = getFilesDir();
         String filename = "Markers.csv";
-        writeToInternal(exportDir, filename);
+        File exportFile = writeToInternal(exportDir, filename);
 
-
+        String path = getFilesDir().getAbsolutePath() + "/" + filename;
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 // The intent does not have a URI, so declare the "text/plain" MIME type
         emailIntent.setType("text/plain");
@@ -110,18 +117,19 @@ public class SettingsActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_BCC, new String[]{"alex@alexsykes.net"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Markers from MapMonster");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Please find current marker list attached");
-//        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://path/to/email/attachment"));
+//        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADocuments%2Fdata.csv"));
+//        emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        emailIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse(path));
 // You can also attach multiple items by passing an ArrayList of Uris
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
-            Log.i(TAG,"Finished sending email...");
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(SettingsActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void writeToInternal(File exportDir, String filename) {
+    private File writeToInternal(File exportDir, String filename) {
         Cursor exportData = markerViewModel.getMarkerDataForExport();
         try {
             exportDir = new File(getFilesDir(), filename);
@@ -140,16 +148,30 @@ public class SettingsActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e("Child", e.getMessage(), e);
         }
-
+        return exportDir;
     }
 
     private void csvExport() {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.setType("text/csv");
+        intent.setType("text/comma-separated-values");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.putExtra(Intent.EXTRA_TITLE, "data.csv");
         startActivityForResult(intent, PICKFILE_RESULT_CODE);
-        finish();
+//        finish();
+    }
+
+
+    private void importMarkers() {
+        Log.i(TAG, "importMarkers: ");
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/comma-separated-values");
+
+        // Optionally, specify a URI for the file that should appear in the
+        // system file picker when it loads.
+//        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+
+        startActivityForResult(intent, GETFILE_RESULT_CODE);
     }
 
     @Override
@@ -180,9 +202,13 @@ public class SettingsActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
                 break;
+
             case EMAIL_RESULT_CODE:
                 Log.i(TAG, "onActivityResult: ");
                 break;
+
+            case GETFILE_RESULT_CODE:
+                Log.i(TAG, "GETFILE_RESULT_CODE: " + resultCode);
         }
     }
 
@@ -191,6 +217,7 @@ public class SettingsActivity extends AppCompatActivity {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         return markerViewModel.getMarkerDataForExport();
     }
+
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private List<Layer> layerList;
