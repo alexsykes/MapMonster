@@ -31,6 +31,7 @@ import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -209,12 +210,15 @@ public class SettingsActivity extends AppCompatActivity {
 //                    importCSV(new File(data.getData().getPath()));
 
 
-                    InputStream inputStream = null;
+
                     try {
-                        inputStream = getContentResolver().openInputStream(data.getData());
+                    InputStream  inputStream = getContentResolver().openInputStream(data.getData());
+                        Log.i(TAG, "onActivityResult: " + inputStream);
                         Reader reader = new InputStreamReader(inputStream);
-//                        CSVReader csvReader1 = new CSVReader(reader);
-                    } catch (FileNotFoundException e) {
+                        CSVReader csvReader1 = new CSVReader(reader);
+
+
+                    } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
 
