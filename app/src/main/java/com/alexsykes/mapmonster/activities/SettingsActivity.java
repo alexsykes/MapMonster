@@ -2,6 +2,7 @@ package com.alexsykes.mapmonster.activities;
 
 
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -30,11 +31,17 @@ import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
+import java.nio.CharBuffer;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -48,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int EMAIL_RESULT_CODE = 2;
     public static final int GETFILE_RESULT_CODE = 3;
     CSVWriter csvWriter;
+    CSVReader csvReader;
     Cursor markerDataForExport;
     MarkerViewModel markerViewModel;
 
@@ -71,7 +79,6 @@ public class SettingsActivity extends AppCompatActivity {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
 //        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDataForExport = markerViewModel.getMarkerDataForExport();
-
     }
 
     @Override
@@ -111,14 +118,10 @@ public class SettingsActivity extends AppCompatActivity {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 // The intent does not have a URI, so declare the "text/plain" MIME type
         emailIntent.setType("text/plain");
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"jan@example.com"}); // recipients
         emailIntent.putExtra(Intent.EXTRA_BCC, new String[]{"alex@alexsykes.net"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Markers from MapMonster");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Please find current marker list attached");
-//        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADocuments%2Fdata.csv"));
-//        emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
         emailIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse(path));
 // You can also attach multiple items by passing an ArrayList of Uris
         try {
@@ -162,22 +165,15 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private void importMarkers() {
-        Log.i(TAG, "importMarkers: ");
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/comma-separated-values");
-
-        // Optionally, specify a URI for the file that should appear in the
-        // system file picker when it loads.
-//        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-
-        startActivityForResult(intent, GETFILE_RESULT_CODE);
+        startActivityForResult(Intent.createChooser(intent, "Open CSV"), GETFILE_RESULT_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == -1) {
@@ -209,6 +205,31 @@ public class SettingsActivity extends AppCompatActivity {
 
             case GETFILE_RESULT_CODE:
                 Log.i(TAG, "GETFILE_RESULT_CODE: " + resultCode);
+                if (resultCode == -1) {
+//                    importCSV(new File(data.getData().getPath()));
+
+
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = getContentResolver().openInputStream(data.getData());
+                        Reader reader = new InputStreamReader(inputStream);
+//                        CSVReader csvReader1 = new CSVReader(reader);
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+        }
+    }
+
+    private void importCSV(File file) {
+        try {
+            ContentValues cv = new ContentValues();
+            // reading CSV and writing table
+            CSVReader dataRead = new CSVReader(new FileReader(file));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
