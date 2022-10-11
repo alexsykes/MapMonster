@@ -64,7 +64,7 @@ public interface MarkerDao {
     @Query("UPDATE markers SET latitude=:latitude, longitude=:longitude, placename=:placename, code=:code, layer_id =:layer_id, notes=:notes WHERE markerID = :markerID")
     void saveCurrentMarker(int markerID, double latitude, double longitude, String placename, String code, int layer_id, String notes);
 
-    @Query("SELECT markerID, placename, code, notes, latitude, longitude FROM markers")
+    @Query("SELECT markerID, placename, code, notes, latitude, longitude, layer_id FROM markers")
     Cursor getMarkerDataForExport();
 
 }

@@ -28,6 +28,7 @@ import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MMDatabase;
+import com.alexsykes.mapmonster.data.MMarker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.io.File;
@@ -44,8 +45,10 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.maps.model.Marker;
 import com.opencsv.*;
 
 
@@ -207,18 +210,32 @@ public class SettingsActivity extends AppCompatActivity {
             case GETFILE_RESULT_CODE:
                 Log.i(TAG, "GETFILE_RESULT_CODE: " + resultCode);
                 if (resultCode == -1) {
-//                    importCSV(new File(data.getData().getPath()));
-
-
-
                     try {
                     InputStream  inputStream = getContentResolver().openInputStream(data.getData());
                         Log.i(TAG, "onActivityResult: " + inputStream);
-                        Reader reader = new InputStreamReader(inputStream);
-                        CSVReader csvReader1 = new CSVReader(reader);
+
+                        CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
+
+                        // read line by line
+                        String[] record = null;
+
+                        while ((record = reader.readNext()) != null) {
+//                            MMarker marker = new Marker(record[0]); // double latitude, double longitude, String placename, String code, int layer_id, String notes
+//                            markers.add(marker);
+                            Log.i(TAG, "onActivityResult: " + record[1]);
+                            String placename = record[1];
+                            String code = record[2];
+                            String notes = record[3];
+                            double latitude = Double.parseDouble(record[4]);
+                            double longitude = Double.parseDouble(record[5]);
+                            int layer_id = Integer.parseInt(record[6]);
+                            MMarker marker = new MMarker(latitude, longitude, placename, code, layer_id, notes);
+                            markerViewModel.insert(marker);
+                        }
 
 
-                    } catch (IOException e) {
+                        reader.close();
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 
