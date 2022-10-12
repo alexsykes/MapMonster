@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/email_menu_item"
+        android:icon="@drawable/email_outline"
+        android:title="@string/markers"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/import_menu_item"
+        android:icon="@drawable/resource_import"
+        android:title="@string/load_markers"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/export_menu_item"
+        android:icon="@drawable/resource_export"
+        android:title="@string/save_markers"
+        app:showAsAction="ifRoom|withText" />
+</menu>

@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
+import android.database.Cursor;
 
 import androidx.lifecycle.LiveData;
 
@@ -66,7 +67,6 @@ public class LayerRepository {
         layerDao.archiveAllLayers();
     }
 
-
     public void updateLayer(LayerDataItem currentLayerDataItem) {
         layerDao.updateLayerData(currentLayerDataItem.layerID, currentLayerDataItem.icon_id, currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.isVisible);
     }
@@ -94,5 +94,9 @@ public class LayerRepository {
 
     public void toggle(int layer_id) {
         layerDao.toggle(layer_id);
+    }
+
+    public Cursor getLayerDataForExport() {
+        return layerDao.getLayerDataForExport();
     }
 }

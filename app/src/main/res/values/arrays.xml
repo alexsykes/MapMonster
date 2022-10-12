@@ -12,11 +12,17 @@
         <item>satellite</item>
     </string-array>
 
-<!--    <integer-array name="view_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </integer-array>-->
+    <string-array name="export_values">
+        <item>CSV</item>
+        <item>KML</item>
+        <item>SQL</item>
+    </string-array>
+
+    <string-array name="export_items">
+        <item>CSV</item>
+        <item>KML</item>
+        <item>SQL</item>
+    </string-array>
 
     <string-array name="layer_values">
         <item>Home</item>

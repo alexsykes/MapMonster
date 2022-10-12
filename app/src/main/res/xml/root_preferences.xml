@@ -1,4 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/general_preferences">
     <PreferenceCategory android:title="General">
 
@@ -14,15 +15,30 @@
             android:defaultValue="false"
             android:key="zoomControlsEnabled"
             android:title="Show zoom controls" />
-        <MultiSelectListPreference
-            android:key="layer_visibility"
-            android:title="Visible layers" />
         <ListPreference
             android:defaultValue="normal"
             android:entries="@array/view_entries"
             android:entryValues="@array/view_values"
             android:key="map_view_type"
-            android:title="Map view" />
+            android:title="Map view"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:background="#A84242"
+        android:title="Export data">
+        <EditTextPreference
+            android:key="email_address"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Email address"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/export_items"
+            android:entryValues="@array/export_items"
+            android:key="export_format"
+            android:title="Export format"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory
         android:background="#A84242"

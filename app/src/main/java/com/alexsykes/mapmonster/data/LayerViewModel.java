@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
+import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -102,5 +103,9 @@ public class LayerViewModel extends AndroidViewModel {
 
     public void toggle(int layer_id) {
         layerRepository.toggle(layer_id);
+    }
+
+    public Cursor getLayerDataForExport() {
+        return  layerRepository.getLayerDataForExport();
     }
 }

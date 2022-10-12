@@ -139,14 +139,14 @@
                     android:minHeight="48dp" />
             </LinearLayout>
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/visibilitySwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="@dimen/small_margin"
-                android:text="@string/show_on_map"
-                android:textColor="@color/purple_700" />
+            <!--            <androidx.appcompat.widget.SwitchCompat-->
+            <!--                android:id="@+id/visibilitySwitch"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:background="@color/white"-->
+            <!--                android:padding="@dimen/small_margin"-->
+            <!--                android:text="@string/show_on_map"-->
+            <!--                android:textColor="@color/purple_700" />-->
 
             <LinearLayout
                 android:id="@+id/buttonLL"

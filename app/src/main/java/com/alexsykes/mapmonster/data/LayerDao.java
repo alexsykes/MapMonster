@@ -1,5 +1,7 @@
 package com.alexsykes.mapmonster.data;
 
+import android.database.Cursor;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -63,4 +65,7 @@ public interface LayerDao {
 
     @Query("UPDATE layers SET isVisible = NOT isVisible WHERE layerID = :layer_id ")
     void toggle(int layer_id);
+
+    @Query("SELECT layerID, icon_id, layername, code, isVisible, isArchived FROM layers ORDER BY layerID")
+    Cursor getLayerDataForExport();
 }

@@ -55,7 +55,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarkerListActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MarkerListActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,
+        OnMapReadyCallback {
     private static final String TAG = "Info";
 
     //  Data
@@ -64,14 +65,12 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     private IconViewModel iconViewModel;
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
-    List<MapMarkerDataItem> allMarkers;
+    List<MapMarkerDataItem> visibleMarkers;
 
     List<SpinnerData> layerListForSpinner;
     ArrayAdapter<String> spinnerAdapter;
     List<String> layernamesForSpinner;
     Spinner layerSpinner;
-
-    Marker currentLocation;
 
     // UIComponents
     RecyclerView markerDataRV;
@@ -80,13 +79,13 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
     Button dismissButton, saveChangesButton;
     FloatingActionButton newMarkerFAB;
     LinearLayout markerDetailLL, buttonLL;
-    RecyclerView layerDataRV;
 
     // General
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
     private MapMarkerDataItem currentMarker;
+    Marker currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +94,180 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         setupMap();
         getData();
         setupUI();
-        setupLayerRV();
-
+        setupMarkerRV();
         currentMarker = new MapMarkerDataItem();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        CameraPosition cameraPosition = getSavedCameraPosition();
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.setOnMarkerClickListener(this);
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(true);
+
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            final DecimalFormat df = new DecimalFormat("#.#####");
+            String latStr, lngStr;
+
+            @Override
+            public void onMarkerDrag(@NonNull Marker marker) {
+////                Log.i(TAG, "onMarkerDrag: ");
+//                currentLocation = marker.getPosition();
+//                latStr = df.format(currentLocation.latitude);
+//                lngStr = df.format(currentLocation.longitude);
+//                markerLatTextView.setText(latStr);
+//                markerLngTextView.setText(lngStr);
+            }
+
+            @Override
+            public void onMarkerDragEnd(@NonNull Marker marker) {
+//                Log.i(TAG, "onMarkerDragEnd: ");
+                currentLocation = marker;
+            }
+
+            @Override
+            public void onMarkerDragStart(@NonNull Marker marker) {
+//                currentLocation = marker.getPosition();
+////                Log.i(TAG, "onMarkerDragStart: " + marker.getTag());
+//                latStr = df.format(currentLocation.latitude);
+//
+//                int markerId = (Integer) marker.getTag();
+//                MMarker currentMarker = markerViewModel.getMarker(markerId);
+//                latStr = df.format(currentLocation.latitude);
+//                lngStr = df.format(currentLocation.longitude);
+//                markerInfoPanel.setVisibility(View.VISIBLE);
+//                layerPanelLinearLayout.setVisibility(View.GONE);
+//                addMarkerButton.setVisibility(View.GONE);
+//
+//                markerIdTextView.setText(new StringBuilder().append(getString(R.string.marker_id)).append(currentMarker.getMarker_id()).toString());
+//                markerLatTextView.setText(latStr);
+//                markerLngTextView.setText(lngStr);
+//
+//                markerCodeEditText.setText(currentMarker.getCode());
+//                markerNameEditText.setText(currentMarker.getPlacename());
+//                markerNotesEditText.setText(currentMarker.getNotes());
+            }
+        });
+        addMarkersToMap();
+    }
+
+    //  Utility methods
+    private CameraPosition getSavedCameraPosition() {
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // "initial longitude" is only used on first startup
+        double longitude = preferences.getFloat("longitude", (float) 0);
+        double latitude = preferences.getFloat("latitude", (float) 0);
+        float zoom = preferences.getFloat("zoom", 8);
+        LatLng startPosition = new LatLng(latitude, longitude);
+
+        return new CameraPosition.Builder()
+                .target(startPosition)      // Sets the center of the map to Mountain View
+                .zoom(zoom)
+                .build();
+    }
+    private void saveCameraPosition() {
+        editor = preferences.edit();
+        CameraPosition mMyCam = mMap.getCameraPosition();
+        double longitude = mMyCam.target.longitude;
+        double latitude = mMyCam.target.latitude;
+        float zoom = mMyCam.zoom;
+
+        editor.putFloat("longitude", (float) longitude);
+        editor.putFloat("latitude", (float) latitude);
+        editor.putFloat("zoom", zoom);
+        editor.apply();
+    }
+    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
+        LatLng latLng;
+        if (!mapMarkerDataItems.isEmpty()) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            for (MapMarkerDataItem marker : mapMarkerDataItems) {
+                latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
+                builder.include(latLng);
+            }
+            LatLngBounds bounds =
+                    builder.build();
+
+            if (mapMarkerDataItems.size() > 1) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 16));
+            }
+        }
+    }
+
+    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void editMarker(MapMarkerDataItem mapMarkerDataItem) {
+        currentMarker = mapMarkerDataItem;
+        Log.i(TAG, "editMarker: " + currentMarker.getPlacename());
+        markerTitleView.setText("Editing " + currentMarker.placename);
+
+        // Populate UI with data
+        markerNameTextInput.setText(mapMarkerDataItem.placename);
+        markerCodeTextInput.setText(mapMarkerDataItem.code);
+        markerNotesTextInput.setText(mapMarkerDataItem.getNotes());
+
+        // Need to set layer in layerSpinner
+        layerSpinner.setSelection(spinnerAdapter.getPosition(mapMarkerDataItem.layername));
+
+        final DecimalFormat df = new DecimalFormat("#.#####°");
+
+        latLabel.setText(df.format(currentMarker.latitude));
+        lngLabel.setText(df.format(currentMarker.longitude));
+
+        newMarkerFAB.setVisibility(View.GONE);
+        markerDetailLL.setVisibility(View.VISIBLE);
+        markerDataRV.setVisibility(View.GONE);
+        listTitleView.setVisibility(View.GONE);
+
+        // redraw map with marker
+        mMap.clear();
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                return false;
+            }
+        });
+        LatLng position = new LatLng(currentMarker.getLatitude(), currentMarker.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .draggable(true)
+                .position(position)
+                .title(mapMarkerDataItem.placename);
+
+        currentLocation = mMap.addMarker(markerOptions);
+//        mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+    }
+
+    // Setup methods
+    private void getData() {
+        MMDatabase db = MMDatabase.getDatabase(this);
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
+        allIcons = iconViewModel.getIconList();
+        allLayers = layerViewModel.getLayerData();
+        layerListForSpinner = layerViewModel.getLayerListForSpinner();
+        layernamesForSpinner = layerViewModel.getLayernamesForSpinner();
+        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
     }
 
     private void setupMap() {
@@ -166,6 +336,10 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 markerDataRV.setVisibility(View.VISIBLE);
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
+
+                updateMarkerRV();
+                addMarkersToMap();
+                updateCamera(visibleMarkers);
             }
         });
 
@@ -176,6 +350,9 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                 markerDataRV.setVisibility(View.VISIBLE);
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
+                updateMarkerRV();
+                addMarkersToMap();
+                updateCamera(visibleMarkers);
             }
         });
 
@@ -229,175 +406,11 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
-    private void editMarker(MapMarkerDataItem mapMarkerDataItem) {
-        Log.i(TAG, "editMarker: " + mapMarkerDataItem.getPlacename());
-        markerTitleView.setText("Editing " + mapMarkerDataItem.placename);
-
-        // Populate UI with data
-        markerNameTextInput.setText(mapMarkerDataItem.placename);
-        markerCodeTextInput.setText(mapMarkerDataItem.code);
-        markerNotesTextInput.setText(mapMarkerDataItem.getNotes());
-
-        // Need to set layer in layerSpinner
-        layerSpinner.setSelection(spinnerAdapter.getPosition(mapMarkerDataItem.layername));
-
-        final DecimalFormat df = new DecimalFormat("#.#####°");
-
-        latLabel.setText(df.format(currentMarker.latitude));
-        lngLabel.setText(df.format(currentMarker.longitude));
-
-        newMarkerFAB.setVisibility(View.GONE);
-        markerDetailLL.setVisibility(View.VISIBLE);
-        markerDataRV.setVisibility(View.GONE);
-        listTitleView.setVisibility(View.GONE);
-
-        // redraw map with marker
+    private void addMarkersToMap() {
+        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
         mMap.clear();
-        CameraPosition cameraPosition = mMap.getCameraPosition();
-        LatLng mapCentre = cameraPosition.target;
-        LatLng position = new LatLng(currentMarker.getLatitude(), currentMarker.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions()
-                .draggable(true)
-                .position(position)
-                .title(mapMarkerDataItem.placename);
-
-        currentLocation = mMap.addMarker(markerOptions);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
-    }
-
-    private void setupLayerRV() {
-        markerDataRV = findViewById(R.id.markerDataRecyclerView);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        markerDataRV.setLayoutManager(llm);
-//        markerDataRV.setLayoutManager(new GridLayoutManager(this, 2));
-        markerDataRV.setHasFixedSize(true);
-        markerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(allMarkers);
-        markerDataRV.setAdapter(markerDataAdapter);
-    }
-    private void getData() {
-        MMDatabase db = MMDatabase.getDatabase(this);
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
-        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
-        allIcons = iconViewModel.getIconList();
-        allLayers = layerViewModel.getLayerData();
-        layerListForSpinner = layerViewModel.getLayerListForSpinner();
-        layernamesForSpinner = layerViewModel.getLayernamesForSpinner();
-        allMarkers = markerViewModel.getMarkerList();
-    }
-
-    public void onMarkerClickCalled(int position) {
-        Log.i(TAG, "Marker selected: " + position);
-        currentMarker = allMarkers.get(position);
-        editMarker(currentMarker);
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        CameraPosition cameraPosition = getSavedCameraPosition();
-        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            final DecimalFormat df = new DecimalFormat("#.#####");
-            String latStr, lngStr;
-
-            @Override
-            public void onMarkerDrag(@NonNull Marker marker) {
-////                Log.i(TAG, "onMarkerDrag: ");
-//                currentLocation = marker.getPosition();
-//                latStr = df.format(currentLocation.latitude);
-//                lngStr = df.format(currentLocation.longitude);
-//                markerLatTextView.setText(latStr);
-//                markerLngTextView.setText(lngStr);
-            }
-
-            @Override
-            public void onMarkerDragEnd(@NonNull Marker marker) {
-//                Log.i(TAG, "onMarkerDragEnd: ");
-                currentLocation = marker;
-            }
-
-            @Override
-            public void onMarkerDragStart(@NonNull Marker marker) {
-//                currentLocation = marker.getPosition();
-////                Log.i(TAG, "onMarkerDragStart: " + marker.getTag());
-//                latStr = df.format(currentLocation.latitude);
-//
-//                int markerId = (Integer) marker.getTag();
-//                MMarker currentMarker = markerViewModel.getMarker(markerId);
-//                latStr = df.format(currentLocation.latitude);
-//                lngStr = df.format(currentLocation.longitude);
-//                markerInfoPanel.setVisibility(View.VISIBLE);
-//                layerPanelLinearLayout.setVisibility(View.GONE);
-//                addMarkerButton.setVisibility(View.GONE);
-//
-//                markerIdTextView.setText(new StringBuilder().append(getString(R.string.marker_id)).append(currentMarker.getMarker_id()).toString());
-//                markerLatTextView.setText(latStr);
-//                markerLngTextView.setText(lngStr);
-//
-//                markerCodeEditText.setText(currentMarker.getCode());
-//                markerNameEditText.setText(currentMarker.getPlacename());
-//                markerNotesEditText.setText(currentMarker.getNotes());
-            }
-        });
-        addMarkersToMap(allMarkers);
-    }
-
-    //  Utility methods
-    private CameraPosition getSavedCameraPosition() {
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        // "initial longitude" is only used on first startup
-        double longitude = preferences.getFloat("longitude", (float) 0);
-        double latitude = preferences.getFloat("latitude", (float) 0);
-        float zoom = preferences.getFloat("zoom", 8);
-        LatLng startPosition = new LatLng(latitude, longitude);
-
-        return new CameraPosition.Builder()
-                .target(startPosition)      // Sets the center of the map to Mountain View
-                .zoom(zoom)
-                .build();
-    }
-
-    private void saveCameraPosition() {
-        editor = preferences.edit();
-        CameraPosition mMyCam = mMap.getCameraPosition();
-        double longitude = mMyCam.target.longitude;
-        double latitude = mMyCam.target.latitude;
-        float zoom = mMyCam.zoom;
-
-        editor.putFloat("longitude", (float) longitude);
-        editor.putFloat("latitude", (float) latitude);
-        editor.putFloat("zoom", zoom);
-        editor.apply();
-    }
-
-    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
-        LatLng latLng;
-        if (!mapMarkerDataItems.isEmpty()) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            int padding = 100;
-            for (MapMarkerDataItem marker : mapMarkerDataItems) {
-                latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-                builder.include(latLng);
-            }
-            LatLngBounds bounds =
-                    builder.build();
-
-            if (mapMarkerDataItems.size() > 1) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            } else {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 16));
-            }
-        }
-    }
-
-    private void addMarkersToMap(List<MapMarkerDataItem> mapMarkerDataItems) {
-        mMap.clear();
-        if (mapMarkerDataItems.size() == 0) {
+        mMap.setOnMarkerClickListener(this);
+        if (visibleMarkers.size() == 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "No saved markers",
                     Toast.LENGTH_LONG);
@@ -409,7 +422,7 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
         LatLng latLng;
         String filename;
 
-        for (MapMarkerDataItem marker : mapMarkerDataItems) {
+        for (MapMarkerDataItem marker : visibleMarkers) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             filename = marker.getFilename();
@@ -425,18 +438,37 @@ public class MarkerListActivity extends AppCompatActivity implements OnMapReadyC
                     .icon(BitmapFromVector(getApplicationContext(), resID))
                     .visible(true);
             Marker marker1 = mMap.addMarker(markerOptions);
-            marker1.setTag(marker.getMarkerID());
+            marker1.setTag(marker);
+
         }
     }
 
-    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+    private void setupMarkerRV() {
+        markerDataRV = findViewById(R.id.markerDataRecyclerView);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        markerDataRV.setLayoutManager(llm);
+        markerDataRV.setHasFixedSize(true);
+        markerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(visibleMarkers);
+        markerDataRV.setAdapter(markerDataAdapter);
+    }
 
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
-        Canvas canvas = new Canvas(bitmap);
+    private void updateMarkerRV() {
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(visibleMarkers);
+        markerDataRV.setAdapter(markerDataAdapter);
+    }
 
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    @Override
+    public boolean onMarkerClick(@NonNull Marker marker) {
+        currentMarker = (MapMarkerDataItem) marker.getTag();
+        Log.i(TAG, "onMarkerClick: " + marker.getTag());
+        editMarker(currentMarker);
+        return false;
+    }
+
+    public void onMarkerClickCalled(int position) {
+        Log.i(TAG, "Marker selected: " + position);
+        currentMarker = visibleMarkers.get(position);
+        editMarker(currentMarker);
     }
 }
