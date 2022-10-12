@@ -49,10 +49,13 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int PICKFILE_RESULT_CODE = 1;
     public static final int EMAIL_RESULT_CODE = 2;
     public static final int GETFILE_RESULT_CODE = 3;
+    private static final String[] END_OF_MARKERS = new String[] {"End of markers"};
+    private static final String[] END_OF_FILE = new String[] {"End of file"};
     CSVWriter csvWriter;
     CSVReader csvReader;
     Cursor markerDataForExport;
     MarkerViewModel markerViewModel;
+    LayerViewModel layerViewModel;
 
     private Uri fileUri;
     private String filePath;
@@ -72,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-//        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDataForExport = markerViewModel.getMarkerDataForExport();
     }
 
@@ -158,12 +161,6 @@ public class SettingsActivity extends AppCompatActivity {
 //        finish();
     }
 
-    private void importMarkers() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/comma-separated-values");
-        startActivityForResult(Intent.createChooser(intent, "Open CSV"), GETFILE_RESULT_CODE);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,6 +193,9 @@ public class SettingsActivity extends AppCompatActivity {
             String[] record = null;
 
             while ((record = reader.readNext()) != null) {
+                if (record.length == 1) {
+                    break;
+                }
                 String placename = record[1];
                 String code = record[2];
                 String notes = record[3];
@@ -204,6 +204,21 @@ public class SettingsActivity extends AppCompatActivity {
                 int layer_id = Integer.parseInt(record[6]);
                 MMarker marker = new MMarker(latitude, longitude, placename, code, layer_id, notes);
                 markerViewModel.insert(marker);
+            }
+
+
+            while ((record = reader.readNext()) != null) {
+                if (record.length == 1) {
+                    break;
+                }
+                int layer_id = Integer.parseInt(record[0]);
+                int icon_id = Integer.parseInt(record[1]);
+                String layername = record[2];
+                String code = record[3];
+                boolean isVisible = Boolean.getBoolean(record[4]);
+                boolean isArchived = Boolean.getBoolean(record[5]);
+                Layer layer = new Layer(layer_id, icon_id, layername, code, isVisible, isArchived);
+                layerViewModel.insert(layer);
             }
             reader.close();
         } catch (Exception e) {
@@ -214,18 +229,31 @@ public class SettingsActivity extends AppCompatActivity {
     private void writeCSVFile(Intent data) {
         fileUri = data.getData();
         filePath = fileUri.getPath();
+        Cursor markersForExport = getMarkersForExport();
+        Cursor layersForExport = getLayersForExport();
 
         try {
             OutputStream os = getContentResolver().openOutputStream(data.getData());
             Writer writer = new OutputStreamWriter(os);
             csvWriter = new CSVWriter(writer);
-            Cursor exportData = getMarkersForExport();
-            while (exportData.moveToNext()) {
-                String arrStr[] = new String[exportData.getColumnCount()];
-                for (int i = 0; i < exportData.getColumnCount(); i++)
-                    arrStr[i] = exportData.getString(i);
+            while (markersForExport.moveToNext()) {
+                String arrStr[] = new String[markersForExport.getColumnCount()];
+                for (int i = 0; i < markersForExport.getColumnCount(); i++)
+                    arrStr[i] = markersForExport.getString(i);
                 csvWriter.writeNext(arrStr);
             }
+
+            csvWriter.writeNext(END_OF_MARKERS);
+
+            while (layersForExport.moveToNext()) {
+                String arrStr[] = new String[layersForExport.getColumnCount()];
+                for (int i = 0; i < layersForExport.getColumnCount(); i++)
+                    arrStr[i] = layersForExport.getString(i);
+                csvWriter.writeNext(arrStr);
+            }
+
+
+            csvWriter.writeNext(END_OF_FILE);
 
             csvWriter.close();
         } catch (IOException e) {
@@ -237,6 +265,19 @@ public class SettingsActivity extends AppCompatActivity {
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         return markerViewModel.getMarkerDataForExport();
+    }
+
+    private Cursor getLayersForExport() {
+        MMDatabase db = MMDatabase.getDatabase(this);
+        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
+        return layerViewModel.getLayerDataForExport();
+    }
+
+    private void importMarkers() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/comma-separated-values");
+        startActivityForResult(Intent.createChooser(intent, "Open CSV"), GETFILE_RESULT_CODE);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

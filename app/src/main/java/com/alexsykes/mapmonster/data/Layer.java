@@ -16,6 +16,15 @@ public class Layer {
     private String layername, code;
     private boolean isVisible, isArchived;
 
+    public Layer(int layer_id, int icon_id, String layername, String code, boolean isVisible, boolean isArchived) {
+        this.layer_id = layer_id;
+        this.icon_id = icon_id;
+        this.layername = layername;
+        this.code = code;
+        this.isVisible = isVisible;
+        this.isArchived = isArchived;
+    }
+
     public int getIcon_id() {
         return icon_id;
     }
@@ -48,6 +57,7 @@ public class Layer {
         isVisible = true;
         isArchived = false;
     }
+    @Ignore
     public Layer(String layername, String code, int icon_id, boolean isVisible) {
         this.layername = layername;
         this.code = code;
