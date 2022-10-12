@@ -158,7 +158,6 @@ public class SettingsActivity extends AppCompatActivity {
 //        finish();
     }
 
-
     private void importMarkers() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -183,36 +182,32 @@ public class SettingsActivity extends AppCompatActivity {
             case GETFILE_RESULT_CODE:
                 Log.i(TAG, "GETFILE_RESULT_CODE: " + resultCode);
                 if (resultCode == -1) {
-                    try {
-                    InputStream  inputStream = getContentResolver().openInputStream(data.getData());
-                        Log.i(TAG, "onActivityResult: " + inputStream);
-
-                        CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
-
-                        // read line by line
-                        String[] record = null;
-
-                        while ((record = reader.readNext()) != null) {
-//                            MMarker marker = new Marker(record[0]); // double latitude, double longitude, String placename, String code, int layer_id, String notes
-//                            markers.add(marker);
-                            Log.i(TAG, "onActivityResult: " + record[1]);
-                            String placename = record[1];
-                            String code = record[2];
-                            String notes = record[3];
-                            double latitude = Double.parseDouble(record[4]);
-                            double longitude = Double.parseDouble(record[5]);
-                            int layer_id = Integer.parseInt(record[6]);
-                            MMarker marker = new MMarker(latitude, longitude, placename, code, layer_id, notes);
-                            markerViewModel.insert(marker);
-                        }
-
-
-                        reader.close();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-
+                    readCSVFile(data);
                 }
+        }
+    }
+
+    private void readCSVFile(Intent data) {
+        try {
+            InputStream  inputStream = getContentResolver().openInputStream(data.getData());
+            CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
+
+            // read line by line
+            String[] record = null;
+
+            while ((record = reader.readNext()) != null) {
+                String placename = record[1];
+                String code = record[2];
+                String notes = record[3];
+                double latitude = Double.parseDouble(record[4]);
+                double longitude = Double.parseDouble(record[5]);
+                int layer_id = Integer.parseInt(record[6]);
+                MMarker marker = new MMarker(latitude, longitude, placename, code, layer_id, notes);
+                markerViewModel.insert(marker);
+            }
+            reader.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -238,23 +233,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void importCSV(File file) {
-        try {
-            ContentValues cv = new ContentValues();
-            // reading CSV and writing table
-            CSVReader dataRead = new CSVReader(new FileReader(file));
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private Cursor getMarkersForExport() {
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         return markerViewModel.getMarkerDataForExport();
     }
-
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private List<Layer> layerList;
