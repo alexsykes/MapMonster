@@ -117,7 +117,7 @@ public class SettingsActivity extends AppCompatActivity {
                         break;
                 }
                 return true;
-                
+
             case R.id.import_menu_item:
                 importMarkers();
                 return true;
@@ -254,6 +254,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void writeKMLFile(Intent data) {
+        String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<kml xmlns=\"http://www.opengis.net/kml/2.2\">";
         fileUri = data.getData();
         filePath = fileUri.getPath();
         Cursor markersForExport = getMarkersForExport();
@@ -263,8 +265,25 @@ public class SettingsActivity extends AppCompatActivity {
             Writer writer = new OutputStreamWriter(os);
 
             writer.flush();
-            writer.write("Hello ");
-            writer.append("Matey. How are you \ntoday?");
+            writer.write(header);
+            writer.write("\n<Document>");
+
+            while (markersForExport.moveToNext()) {
+                String name = markersForExport.getString(1);
+                String description = markersForExport.getString(3);
+                String latitude = markersForExport.getString(5);
+                String longitude = markersForExport.getString(4);
+
+                writer.write("\n<Placemark>");
+                writer.write("\n\t<name>" + name + "</name>");
+                writer.write("\n\t<description>" + description + "</description>");
+                writer.write("\n\t<Point>");
+                writer.write("\n\t\t<coordinates>" + latitude + "," + longitude + "</coordinates>");
+                writer.write("\n\t</Point>");
+                writer.write("\n</Placemark>");
+            }
+            writer.write("\n</Document>");
+            writer.write("\n</kml>");
             writer.close();
 
         } catch (IOException e) {
