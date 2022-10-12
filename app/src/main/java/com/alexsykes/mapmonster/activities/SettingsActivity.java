@@ -4,9 +4,11 @@ package com.alexsykes.mapmonster.activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int PICKFILE_RESULT_CODE = 1;
     public static final int EMAIL_RESULT_CODE = 2;
     public static final int GETFILE_RESULT_CODE = 3;
+    public static final int KML_RESULT_CODE = 4;
     private static final String[] END_OF_MARKERS = new String[] {"End of markers"};
     private static final String[] END_OF_FILE = new String[] {"End of file"};
     CSVWriter csvWriter;
@@ -56,6 +59,8 @@ public class SettingsActivity extends AppCompatActivity {
     Cursor markerDataForExport;
     MarkerViewModel markerViewModel;
     LayerViewModel layerViewModel;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     private Uri fileUri;
     private String filePath;
@@ -77,6 +82,8 @@ public class SettingsActivity extends AppCompatActivity {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         markerDataForExport = markerViewModel.getMarkerDataForExport();
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -95,7 +102,20 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
 
             case R.id.export_menu_item:
-                csvExport();
+                String file_format = preferences.getString("export_format", "CSV");
+                switch (file_format) {
+                    case "CSV" :
+                        csvExport();
+                        break;
+
+
+                    case "KML" :
+                        kmlExport();
+                        break;
+
+                    default:
+                        break;
+                }
                 return true;
                 
             case R.id.import_menu_item:
@@ -104,6 +124,23 @@ public class SettingsActivity extends AppCompatActivity {
             default:
         }
         return false;
+    }
+
+    private void csvExport() {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.setType("text/comma-separated-values");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_TITLE, "data.csv");
+        startActivityForResult(intent, PICKFILE_RESULT_CODE);
+//        finish();
+    }
+
+    private void kmlExport() {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.setType("application/vnd.google-earth.kml+xml");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_TITLE, "data.kml");
+        startActivityForResult(intent, KML_RESULT_CODE);
     }
 
     private void csvEmail() {
@@ -152,16 +189,6 @@ public class SettingsActivity extends AppCompatActivity {
         return exportDir;
     }
 
-    private void csvExport() {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.setType("text/comma-separated-values");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(Intent.EXTRA_TITLE, "data.csv");
-        startActivityForResult(intent, PICKFILE_RESULT_CODE);
-//        finish();
-    }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,6 +208,67 @@ public class SettingsActivity extends AppCompatActivity {
                 if (resultCode == -1) {
                     readCSVFile(data);
                 }
+
+            case KML_RESULT_CODE:
+                Log.i(TAG, "KML_RESULT_CODE: " + resultCode);
+                if (resultCode == -1) {
+                    writeKMLFile(data);
+                }
+
+        }
+    }
+
+    private void writeCSVFile(Intent data) {
+        fileUri = data.getData();
+        filePath = fileUri.getPath();
+        Cursor markersForExport = getMarkersForExport();
+        Cursor layersForExport = getLayersForExport();
+
+        try {
+            OutputStream os = getContentResolver().openOutputStream(data.getData());
+            Writer writer = new OutputStreamWriter(os);
+            csvWriter = new CSVWriter(writer);
+            while (markersForExport.moveToNext()) {
+                String arrStr[] = new String[markersForExport.getColumnCount()];
+                for (int i = 0; i < markersForExport.getColumnCount(); i++)
+                    arrStr[i] = markersForExport.getString(i);
+                csvWriter.writeNext(arrStr);
+            }
+
+            csvWriter.writeNext(END_OF_MARKERS);
+
+            while (layersForExport.moveToNext()) {
+                String arrStr[] = new String[layersForExport.getColumnCount()];
+                for (int i = 0; i < layersForExport.getColumnCount(); i++)
+                    arrStr[i] = layersForExport.getString(i);
+                csvWriter.writeNext(arrStr);
+            }
+
+
+            csvWriter.writeNext(END_OF_FILE);
+
+            csvWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void writeKMLFile(Intent data) {
+        fileUri = data.getData();
+        filePath = fileUri.getPath();
+        Cursor markersForExport = getMarkersForExport();
+
+        try {
+            OutputStream os = getContentResolver().openOutputStream(data.getData());
+            Writer writer = new OutputStreamWriter(os);
+
+            writer.flush();
+            writer.write("Hello ");
+            writer.append("Matey. How are you \ntoday?");
+            writer.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -222,41 +310,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
             reader.close();
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void writeCSVFile(Intent data) {
-        fileUri = data.getData();
-        filePath = fileUri.getPath();
-        Cursor markersForExport = getMarkersForExport();
-        Cursor layersForExport = getLayersForExport();
-
-        try {
-            OutputStream os = getContentResolver().openOutputStream(data.getData());
-            Writer writer = new OutputStreamWriter(os);
-            csvWriter = new CSVWriter(writer);
-            while (markersForExport.moveToNext()) {
-                String arrStr[] = new String[markersForExport.getColumnCount()];
-                for (int i = 0; i < markersForExport.getColumnCount(); i++)
-                    arrStr[i] = markersForExport.getString(i);
-                csvWriter.writeNext(arrStr);
-            }
-
-            csvWriter.writeNext(END_OF_MARKERS);
-
-            while (layersForExport.moveToNext()) {
-                String arrStr[] = new String[layersForExport.getColumnCount()];
-                for (int i = 0; i < layersForExport.getColumnCount(); i++)
-                    arrStr[i] = layersForExport.getString(i);
-                csvWriter.writeNext(arrStr);
-            }
-
-
-            csvWriter.writeNext(END_OF_FILE);
-
-            csvWriter.close();
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
