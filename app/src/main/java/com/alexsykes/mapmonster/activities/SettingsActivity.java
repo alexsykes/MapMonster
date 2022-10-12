@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,8 +30,6 @@ import com.alexsykes.mapmonster.data.MMarker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,14 +37,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
-import java.nio.CharBuffer;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.gms.maps.model.Marker;
 import com.opencsv.*;
 
 
@@ -181,25 +172,7 @@ public class SettingsActivity extends AppCompatActivity {
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == -1) {
-                    fileUri = data.getData();
-                    filePath = fileUri.getPath();
-                }
-
-                try {
-                    OutputStream os = getContentResolver().openOutputStream(data.getData());
-                    Writer writer = new OutputStreamWriter(os);
-                    csvWriter = new CSVWriter(writer);
-                    Cursor exportData = getMarkersForExport();
-                    while (exportData.moveToNext()) {
-                        String arrStr[] = new String[exportData.getColumnCount()];
-                        for (int i = 0; i < exportData.getColumnCount(); i++)
-                            arrStr[i] = exportData.getString(i);
-                        csvWriter.writeNext(arrStr);
-                    }
-
-                    csvWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    writeCSVFile(data);
                 }
                 break;
 
@@ -240,6 +213,28 @@ public class SettingsActivity extends AppCompatActivity {
                     }
 
                 }
+        }
+    }
+
+    private void writeCSVFile(Intent data) {
+        fileUri = data.getData();
+        filePath = fileUri.getPath();
+
+        try {
+            OutputStream os = getContentResolver().openOutputStream(data.getData());
+            Writer writer = new OutputStreamWriter(os);
+            csvWriter = new CSVWriter(writer);
+            Cursor exportData = getMarkersForExport();
+            while (exportData.moveToNext()) {
+                String arrStr[] = new String[exportData.getColumnCount()];
+                for (int i = 0; i < exportData.getColumnCount(); i++)
+                    arrStr[i] = exportData.getString(i);
+                csvWriter.writeNext(arrStr);
+            }
+
+            csvWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

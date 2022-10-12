@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDE7F6"
-    android:padding="@dimen/small_margin"
     tools:context=".activities.MarkerListActivity">
 
     <androidx.fragment.app.FragmentContainerView
@@ -178,9 +177,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/markerDataRecyclerView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/small_margin"
         android:background="@color/white"
         android:padding="@dimen/small_margin"
+        android:elevation="@dimen/small_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/listTitleView"
         app:layout_constraintStart_toStartOf="@+id/listTitleView"
         app:layout_constraintTop_toBottomOf="@id/listTitleView" />
