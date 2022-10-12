@@ -90,6 +90,7 @@
                     android:hint="@string/layer_name"
                     android:inputType="text|textCapSentences"
                     android:maxLines="1"
+                    android:selectAllOnFocus="true"
                     android:textColor="@color/purple_700" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -106,6 +107,7 @@
                     android:hint="@string/layer_code"
                     android:inputType="textCapCharacters"
                     android:maxLines="1"
+                    android:selectAllOnFocus="true"
                     android:textColor="@color/purple_700" />
             </com.google.android.material.textfield.TextInputLayout>
 
