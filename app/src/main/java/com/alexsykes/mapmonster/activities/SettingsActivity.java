@@ -350,7 +350,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         private void destroyData() {
             markerViewModel.archiveAll();
-            layerViewModel.archiveAll();
+//            layerViewModel.archiveAll();
         }
 
         private void restoreData() {

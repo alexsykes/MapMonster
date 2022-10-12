@@ -17,7 +17,6 @@ public class MarkerViewModel extends AndroidViewModel {
     private final LiveData<List<MMarker>> allMarkers;
     private final List<Integer> markerCountByLayer;
     private final List<MapMarkerDataItem>  markerList;
-   // private final List<MMarker>  visibleMarkerList;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);

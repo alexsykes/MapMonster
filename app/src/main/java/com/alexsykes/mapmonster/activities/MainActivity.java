@@ -278,45 +278,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
 
     /**
-     * Gets the current location of the device, and positions the map's camera.
-     */
-//    private void getDeviceLocation() {
-//        /*
-//         * Get the best and most recent location of the device, which may be null in rare
-//         * cases when a location is not available.
-//         */
-//
-//        fusedLocationProviderClient = new FusedLocationProviderClient(getApplicationContext());
-//        try {
-//            if (locationPermissionGranted) {
-//                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-//                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Location> task) {
-//                        if (task.isSuccessful()) {
-//                            // Set the map's camera position to the current location of the device.
-//                            lastKnownLocation = task.getResult();
-//                            if (lastKnownLocation != null) {
-//                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-//                                        new LatLng(lastKnownLocation.getLatitude(),
-//                                                lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-//
-//                                editor.putFloat("lastKnownLat", (float) lastKnownLocation.getLatitude());
-//                                editor.putFloat("lastKnownLng", (float) lastKnownLocation.getLongitude());
-//                                editor.apply();
-//                            }
-//                        } else {
-//
-//                        }
-//                    }
-//                });
-//            }
-//        } catch (SecurityException e) {
-//            Log.e("Exception: %s", e.getMessage(), e);
-//        }
-//    }
-
-    /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
     @SuppressLint("MissingPermission")
@@ -389,17 +350,21 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
     private void updateCamera() {
+        LatLng latLng = new LatLng(0,0);
         if (!markerList.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
-            LatLng latLng;
             for (MapMarkerDataItem marker : markerList) {
                 latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
                 builder.include(latLng);
             }
-            LatLngBounds bounds =
-                    builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            if(markerList.size() > 1) {
+                LatLngBounds bounds =
+                        builder.build();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+            }
         }
     }
     CameraPosition getSavedCameraPosition() {
