@@ -105,6 +105,7 @@
     <string name="new_marker">New marker</string>
     <string name="save_markers">Save markers</string>
     <string name="load_markers">Import markers</string>
+    <string name="email_markers">Email markers</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>

@@ -1,13 +1,11 @@
 package com.alexsykes.mapmonster.activities;
-
-
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -18,12 +16,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
+import com.alexsykes.mapmonster.BuildConfig;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerViewModel;
@@ -44,7 +44,6 @@ import java.io.Writer;
 import java.util.List;
 
 import com.opencsv.*;
-
 
 // https://developer.android.com/reference/android/os/Environment
 public class SettingsActivity extends AppCompatActivity {
@@ -100,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.email_menu_item:
-//                csvEmail();
+                csvEmail();
                 return true;
 
             case R.id.export_menu_item:
@@ -166,11 +165,13 @@ public class SettingsActivity extends AppCompatActivity {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 // The intent does not have a URI, so declare the "text/plain" MIME type
         emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"jan@example.com"}); // recipients
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"jan@example.com", "alexjeddah@icloud.com"}); // recipients
         emailIntent.putExtra(Intent.EXTRA_BCC, new String[]{"alex@alexsykes.net"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Markers from MapMonster");
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Please find current marker list attached");
+
         emailIntent.putExtra(Intent.EXTRA_STREAM,Uri.parse(path));
+
 // You can also attach multiple items by passing an ArrayList of Uris
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));

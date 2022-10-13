@@ -5,9 +5,9 @@
     <item
         android:id="@+id/email_menu_item"
         android:icon="@drawable/email_outline"
-        android:title="@string/markers"
-        android:visible="false"
-        app:showAsAction="ifRoom" />
+        android:title="@string/email_markers"
+        android:visible="true"
+        app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/import_menu_item"
