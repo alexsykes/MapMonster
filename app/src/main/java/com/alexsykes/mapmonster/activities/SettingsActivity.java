@@ -221,18 +221,24 @@ public class SettingsActivity extends AppCompatActivity {
                 if (resultCode == -1) {
                     readCSVFile(data);
                 }
+                break;
 
             case KML_RESULT_CODE:
                 Log.i(TAG, "KML_RESULT_CODE: " + resultCode);
                 if (resultCode == -1) {
                     writeKMLFile(data);
                 }
+                break;
 
             case GPX_RESULT_CODE:
                 Log.i(TAG, "GPX_RESULT_CODE: " + resultCode);
                 if (resultCode == -1) {
                     writeGPXFile(data);
                 }
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -274,9 +280,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 outputStream.write("\n</wpt>".getBytes());
             }
-
             outputStream.write("</gpx>".getBytes());
-
 
             outputStream.close();
         } catch (IOException e) {
@@ -310,7 +314,6 @@ public class SettingsActivity extends AppCompatActivity {
                 csvWriter.writeNext(arrStr);
             }
 
-
             csvWriter.writeNext(END_OF_FILE);
 
             csvWriter.close();
@@ -337,19 +340,20 @@ public class SettingsActivity extends AppCompatActivity {
             while (markersForExport.moveToNext()) {
                 String name = markersForExport.getString(1);
                 String description = markersForExport.getString(3);
-                String latitude = markersForExport.getString(5);
-                String longitude = markersForExport.getString(4);
+                String latitude = markersForExport.getString(4);
+                String longitude = markersForExport.getString(5);
 
                 writer.write("\n<Placemark>");
                 writer.write("\n\t<name>" + name + "</name>");
                 writer.write("\n\t<description>" + description + "</description>");
                 writer.write("\n\t<Point>");
-                writer.write("\n\t\t<coordinates>" + latitude + "," + longitude + "</coordinates>");
+                writer.write("\n\t\t<coordinates>" + longitude + "," + latitude + "</coordinates>");
                 writer.write("\n\t</Point>");
                 writer.write("\n</Placemark>");
             }
             writer.write("\n</Document>");
             writer.write("\n</kml>");
+            writer.flush();
             writer.close();
 
         } catch (IOException e) {
