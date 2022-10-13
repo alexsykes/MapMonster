@@ -32,6 +32,7 @@ import com.alexsykes.mapmonster.data.MMarker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -52,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static final int EMAIL_RESULT_CODE = 2;
     public static final int GETFILE_RESULT_CODE = 3;
     public static final int KML_RESULT_CODE = 4;
+    private static final int GPX_RESULT_CODE = 5;
     private static final String[] END_OF_MARKERS = new String[] {"End of markers"};
     private static final String[] END_OF_FILE = new String[] {"End of file"};
     CSVWriter csvWriter;
@@ -108,9 +110,12 @@ public class SettingsActivity extends AppCompatActivity {
                         csvExport();
                         break;
 
-
                     case "KML" :
                         kmlExport();
+                        break;
+
+                    case "GPX" :
+                        gpxExport();
                         break;
 
                     default:
@@ -124,6 +129,14 @@ public class SettingsActivity extends AppCompatActivity {
             default:
         }
         return false;
+    }
+
+    private void gpxExport() {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.setType("application/gpx+xml");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_TITLE, "data.gpx");
+        startActivityForResult(intent, GPX_RESULT_CODE);
     }
 
     private void csvExport() {
@@ -215,6 +228,59 @@ public class SettingsActivity extends AppCompatActivity {
                     writeKMLFile(data);
                 }
 
+            case GPX_RESULT_CODE:
+                Log.i(TAG, "GPX_RESULT_CODE: " + resultCode);
+                if (resultCode == -1) {
+                    writeGPXFile(data);
+                }
+        }
+    }
+
+    private void writeGPXFile(Intent data) {
+        fileUri = data.getData();
+        filePath = fileUri.getPath();
+        Cursor markersForExport = getMarkersForExport();
+
+        Uri uri = data.getData();
+        try {
+            String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n" +
+                    "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" " +
+                    "\nxmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\" " +
+                    "\nxmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" " +
+                    "\ncreator=\"Oregon 400t\" version=\"1.1\" " +
+                    "\nxmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
+                    "\nxsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 " +
+                    "\nhttp://www.topografix.com/GPX/1/1/gpx.xsd \nhttp://www.garmin.com/xmlschemas/GpxExtensions/v3 \nhttp://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd " +
+                    "\nhttp://www.garmin.com/xmlschemas/TrackPointExtension/v1 " +
+                    "\nhttp://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd\">";
+            OutputStream outputStream = getContentResolver().openOutputStream(uri);
+
+
+
+            outputStream.write(header.getBytes());
+
+            while (markersForExport.moveToNext()) {
+                String name = markersForExport.getString(1);
+                String description = markersForExport.getString(3);
+                String latitude = markersForExport.getString(4);
+                String longitude = markersForExport.getString(5);
+
+                String curline = "\n<wpt lat=\"" + latitude + "\" lon=\"" + longitude + "\">";
+                String nameLine = "\n\t<name>" + name + "</name>";
+                String descLine = "\n\t<desc>" + description + "</desc>";
+
+                String wptLine = curline + nameLine + descLine;
+                outputStream.write(wptLine.getBytes());
+
+                outputStream.write("\n</wpt>".getBytes());
+            }
+
+            outputStream.write("</gpx>".getBytes());
+
+
+            outputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
