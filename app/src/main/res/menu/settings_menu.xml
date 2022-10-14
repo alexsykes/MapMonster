@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/email_menu_item"
-        android:icon="@drawable/email_outline"
-        android:title="@string/email_markers"
-        android:visible="true"
-        app:showAsAction="ifRoom|withText" />
+<!--    <item-->
+<!--        android:id="@+id/email_menu_item"-->
+<!--        android:icon="@drawable/email_outline"-->
+<!--        android:title="@string/email_markers"-->
+<!--        android:visible="true"-->
+<!--        app:showAsAction="ifRoom|withText" />-->
 
     <item
         android:id="@+id/import_menu_item"

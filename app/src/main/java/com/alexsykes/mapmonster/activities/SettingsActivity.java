@@ -98,9 +98,9 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.email_menu_item:
-                csvEmail();
-                return true;
+//            case R.id.email_menu_item:
+//                csvEmail();
+//                return true;
 
             case R.id.export_menu_item:
                 String file_format = preferences.getString("export_format", "CSV");

@@ -35,7 +35,7 @@
         <activity
             android:name=".activities.MarkerListActivity"
             android:exported="false"
-            android:parentActivityName=".activities.MapEditActivity">
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -48,10 +48,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".activities.MapEditActivity"
-            android:exported="false"
-            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
