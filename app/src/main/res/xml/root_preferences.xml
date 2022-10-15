@@ -33,7 +33,7 @@
             android:title="Email address"
             app:useSimpleSummaryProvider="true" />
         <ListPreference
-            android:defaultValue="1"
+            android:defaultValue="CSV"
             android:entries="@array/export_items"
             android:entryValues="@array/export_items"
             android:key="export_format"
