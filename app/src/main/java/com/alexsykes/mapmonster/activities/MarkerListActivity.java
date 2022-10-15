@@ -256,6 +256,12 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
+        saveCameraPosition();
+    }
 
     // Setup methods
     private void getData() {
@@ -339,7 +345,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
 
                 updateMarkerRV();
                 addMarkersToMap();
-                updateCamera(visibleMarkers);
+//                updateCamera(visibleMarkers);
             }
         });
 
@@ -352,7 +358,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
                 newMarkerFAB.setVisibility(View.VISIBLE);
                 updateMarkerRV();
                 addMarkersToMap();
-                updateCamera(visibleMarkers);
+//                updateCamera(visibleMarkers);
             }
         });
 
@@ -462,12 +468,14 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     public boolean onMarkerClick(@NonNull Marker marker) {
         currentMarker = (MapMarkerDataItem) marker.getTag();
         Log.i(TAG, "onMarkerClick: " + marker.getTag());
+        saveCameraPosition();
         editMarker(currentMarker);
         return false;
     }
 
     public void onMarkerClickCalled(int position) {
         Log.i(TAG, "Marker selected: " + position);
+        saveCameraPosition();
         currentMarker = visibleMarkers.get(position);
         editMarker(currentMarker);
     }

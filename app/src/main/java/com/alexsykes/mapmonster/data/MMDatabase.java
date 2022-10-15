@@ -153,6 +153,14 @@ public abstract class MMDatabase extends RoomDatabase{
                 iconDao.insertIcon(icon);
                 icon = new Icon("warning_24.xml");
                 iconDao.insertIcon(icon);
+                icon = new Icon("map_marker_red.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("map_marker_blue.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("map_marker_green.xml");
+                iconDao.insertIcon(icon);
+                icon = new Icon("map_marker_white.xml");
+                iconDao.insertIcon(icon);
             });
         }
     };
