@@ -395,9 +395,8 @@ public class SettingsActivity extends AppCompatActivity {
                 int icon_id = Integer.parseInt(record[1]);
                 String layername = record[2];
                 String code = record[3];
-                boolean isVisible = Boolean.getBoolean(record[4]);
-                boolean isArchived = Boolean.getBoolean(record[5]);
-                Layer layer = new Layer(layer_id, icon_id, layername, code, isVisible, isArchived);
+
+                Layer layer = new Layer(layer_id, icon_id, layername, code, true, false);
                 layerViewModel.insert(layer);
             }
             reader.close();
