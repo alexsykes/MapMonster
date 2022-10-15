@@ -371,6 +371,7 @@ public class SettingsActivity extends AppCompatActivity {
             String[] record = null;
 
             while ((record = reader.readNext()) != null) {
+                // Check for short line - indicates end of markers
                 if (record.length == 1) {
                     break;
                 }
@@ -386,6 +387,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
             while ((record = reader.readNext()) != null) {
+                // Check for short line - indicates end of layers
                 if (record.length == 1) {
                     break;
                 }
