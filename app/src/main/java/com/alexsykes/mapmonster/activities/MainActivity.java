@@ -90,18 +90,14 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         assert mapFragment != null;
 //        mapFragment.getMapAsync(this);
         setupUIComponents();
-        getDatabase();
     }
 
-    private void getDatabase() {
+    private void getData() {
         // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
-    }
-
-    private void getData() {
         markerList = markerViewModel.getMarkerList();
 
         markerList = markerViewModel.getVisibleMarkerDataList();
