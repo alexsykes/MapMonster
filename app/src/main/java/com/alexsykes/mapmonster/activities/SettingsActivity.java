@@ -375,14 +375,14 @@ public class SettingsActivity extends AppCompatActivity {
     private void readCSVFile(Intent data) {
         try {
             InputStream  inputStream = getContentResolver().openInputStream(data.getData());
-            CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
+            csvReader = new CSVReader(new InputStreamReader(inputStream));
 
             // read line by line
             String[] record = null;
 //          Skip header row
-            reader.readNext();
+            csvReader.readNext();
 
-            while ((record = reader.readNext()) != null) {
+            while ((record = csvReader.readNext()) != null) {
                 // Check for short line - indicates end of markers
                 if (record.length == 1) {
                     break;
@@ -398,9 +398,9 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
 //          Skip header row
-            reader.readNext();
+            csvReader.readNext();
 
-            while ((record = reader.readNext()) != null) {
+            while ((record = csvReader.readNext()) != null) {
                 // Check for short line - indicates end of layers
                 if (record.length == 1) {
                     break;
@@ -413,7 +413,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Layer layer = new Layer(layer_id, icon_id, layername, code, true, false);
                 layerViewModel.insert(layer);
             }
-            reader.close();
+            csvReader.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

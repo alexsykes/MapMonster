@@ -106,6 +106,9 @@
     <string name="save_markers">Save markers</string>
     <string name="load_markers">Import markers</string>
     <string name="email_markers">Email markers</string>
+    <string name="confirm_delete">Confirm delete</string>
+    <string name="confirm_delete_message">Ask for confirmation before deleting any data</string>
+    <string name="no_confirm_delete_message">No warning before data deletion</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>
