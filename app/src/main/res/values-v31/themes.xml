@@ -1,7 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.MapMonster" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
 
+    <style name="Theme.MapMonster" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:windowSplashScreenBackground">@color/black</item>
+
+<!--        <item name="android:windowSplashScreenBrandingImage">@drawable/eye_outline</item>-->
 
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
