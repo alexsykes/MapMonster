@@ -109,6 +109,8 @@
     <string name="confirm_delete">Confirm delete</string>
     <string name="confirm_delete_message">Ask for confirmation before deleting any data</string>
     <string name="no_confirm_delete_message">No warning before data deletion</string>
+    <string name="toggle_marker_visibility">Toggle marker visibility</string>
+    <string name="marker_icon">Marker icon</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>

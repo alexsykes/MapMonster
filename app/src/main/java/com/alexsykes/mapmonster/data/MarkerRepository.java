@@ -101,4 +101,12 @@ public class MarkerRepository {
     public Cursor getMarkerDataForExport() {
         return markerDao.getMarkerDataForExport();
     }
+
+    public void toggle(int marker_id) {
+        markerDao.toggle(marker_id);
+    }
+
+    public List<MapMarkerDataItem> getActiveMarkers() {
+        return markerDao.getActiveMarkers();
+    }
 }

@@ -66,6 +66,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> visibleMarkers;
+    List<MapMarkerDataItem> activeMarkers;
 
     List<SpinnerData> layerListForSpinner;
     ArrayAdapter<String> spinnerAdapter;
@@ -450,17 +451,19 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     }
 
     private void setupMarkerRV() {
+        activeMarkers = markerViewModel.getActiveMarkers();
         markerDataRV = findViewById(R.id.markerDataRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         markerDataRV.setLayoutManager(llm);
         markerDataRV.setHasFixedSize(true);
         markerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(visibleMarkers);
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(activeMarkers);
         markerDataRV.setAdapter(markerDataAdapter);
     }
 
     private void updateMarkerRV() {
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(visibleMarkers);
+        activeMarkers = markerViewModel.getActiveMarkers();
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(activeMarkers);
         markerDataRV.setAdapter(markerDataAdapter);
     }
 
@@ -478,5 +481,14 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         saveCameraPosition();
         currentMarker = visibleMarkers.get(position);
         editMarker(currentMarker);
+    }
+
+    public void visibilityToggle(int marker_id) {
+        Log.i(TAG, "visibilityToggle: " + marker_id);
+        markerViewModel.toggle(marker_id);
+
+        updateMarkerRV();
+        addMarkersToMap();
+//        setupLayerRV();
     }
 }

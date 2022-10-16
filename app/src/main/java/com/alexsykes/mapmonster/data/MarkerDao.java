@@ -55,7 +55,7 @@ public interface MarkerDao {
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
     List<MapMarkerDataItem> getMarkerData();
 
-    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 AND layers.isVisible ORDER BY placename")
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isVisible AND layers.isVisible ORDER BY placename")
     List<MapMarkerDataItem> getVisibleMarkerDataList();
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY layers.layername, placename")
@@ -67,6 +67,12 @@ public interface MarkerDao {
     @Query("SELECT markerID, placename, code, notes, latitude, longitude, layer_id FROM markers")
     Cursor getMarkerDataForExport();
 
+    @Query("UPDATE markers SET isVisible = NOT isVisible WHERE markerID = :marker_id ")
+    void toggle(int marker_id);
+
+
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY layername, placename")
+    List<MapMarkerDataItem> getActiveMarkers();
 }
 
 

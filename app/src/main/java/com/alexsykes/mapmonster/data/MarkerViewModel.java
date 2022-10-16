@@ -69,6 +69,14 @@ public class MarkerViewModel extends AndroidViewModel {
     public Cursor getMarkerDataForExport() {
         return markerRepository.getMarkerDataForExport();
     }
+
+    public void toggle(int marker_id) {
+        markerRepository.toggle(marker_id);
+    }
+
+    public List<MapMarkerDataItem> getActiveMarkers() {
+        return markerRepository.getActiveMarkers();
+    }
 }
 
 
