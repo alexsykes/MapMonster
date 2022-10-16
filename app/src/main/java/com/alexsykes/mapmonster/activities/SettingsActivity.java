@@ -299,6 +299,12 @@ public class SettingsActivity extends AppCompatActivity {
             OutputStream os = getContentResolver().openOutputStream(data.getData());
             Writer writer = new OutputStreamWriter(os);
             csvWriter = new CSVWriter(writer);
+
+
+//             markerID, placename, code, notes, latitude, longitude, layer_id
+            String[] markerHeaderRecord = {"markerID", "placename", "code", "notes","latitude","longitude","layer_id"};
+            csvWriter.writeNext(markerHeaderRecord);
+
             while (markersForExport.moveToNext()) {
                 String arrStr[] = new String[markersForExport.getColumnCount()];
                 for (int i = 0; i < markersForExport.getColumnCount(); i++)
@@ -307,6 +313,10 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             csvWriter.writeNext(END_OF_MARKERS);
+
+//             layerID, icon_id, layername, code, isVisible, isArchived
+            String[] layerHeaderRecord = {"layerID", "icon_id", "layername", "code","isVisible","isArchived"};
+            csvWriter.writeNext(layerHeaderRecord);
 
             while (layersForExport.moveToNext()) {
                 String arrStr[] = new String[layersForExport.getColumnCount()];
@@ -369,6 +379,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             // read line by line
             String[] record = null;
+//          Skip header row
+            reader.readNext();
 
             while ((record = reader.readNext()) != null) {
                 // Check for short line - indicates end of markers
@@ -385,6 +397,8 @@ public class SettingsActivity extends AppCompatActivity {
                 markerViewModel.insert(marker);
             }
 
+//          Skip header row
+            reader.readNext();
 
             while ((record = reader.readNext()) != null) {
                 // Check for short line - indicates end of layers

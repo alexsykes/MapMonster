@@ -47,7 +47,7 @@ public abstract class MMDatabase extends RoomDatabase{
 
             databaseWriteExecutor.execute(() -> {
                 MarkerDao markerDao = INSTANCE.markerDao();
-//                markerDao.deleteAllMarkers();
+                markerDao.deleteAllMarkers();
 //
 //                MMarker marker = new MMarker(53.5947, -2.5611, "Home", "P1", 1, "16, Avonhead Close, BL6 5QD");
 //                markerDao.insertMarker(marker);
