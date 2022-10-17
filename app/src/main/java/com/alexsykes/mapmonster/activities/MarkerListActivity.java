@@ -67,6 +67,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> visibleMarkers;
     List<MapMarkerDataItem> activeMarkers;
+    List<MapMarkerDataItem> markersFromVisibleLayers;
 
     List<SpinnerData> layerListForSpinner;
     ArrayAdapter<String> spinnerAdapter;
@@ -275,6 +276,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         layerListForSpinner = layerViewModel.getLayerListForSpinner();
         layernamesForSpinner = layerViewModel.getLayernamesForSpinner();
         visibleMarkers = markerViewModel.getVisibleMarkerDataList();
+        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
     }
 
     private void setupMap() {
@@ -414,12 +416,12 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     }
 
     private void addMarkersToMap() {
-        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
+        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
         mMap.clear();
         mMap.setOnMarkerClickListener(this);
-        if (visibleMarkers.size() == 0) {
+        if (markersFromVisibleLayers.size() == 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
-                    "No saved markers",
+                    "No visible markers",
                     Toast.LENGTH_LONG);
 
             toast.show();
@@ -428,11 +430,13 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         String marker_title, code, type;
         LatLng latLng;
         String filename;
+        boolean isVisible;
 
-        for (MapMarkerDataItem marker : visibleMarkers) {
+        for (MapMarkerDataItem marker : markersFromVisibleLayers) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             filename = marker.getFilename();
+            isVisible = marker.isVisible;
 
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
 
@@ -443,27 +447,26 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
                     .draggable(false)
                     .snippet(code)
                     .icon(BitmapFromVector(getApplicationContext(), resID))
-                    .visible(true);
+                    .visible(isVisible);
             Marker marker1 = mMap.addMarker(markerOptions);
             marker1.setTag(marker);
-
         }
     }
 
     private void setupMarkerRV() {
-        activeMarkers = markerViewModel.getActiveMarkers();
+        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
         markerDataRV = findViewById(R.id.markerDataRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         markerDataRV.setLayoutManager(llm);
         markerDataRV.setHasFixedSize(true);
         markerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(activeMarkers);
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
         markerDataRV.setAdapter(markerDataAdapter);
     }
 
     private void updateMarkerRV() {
-        activeMarkers = markerViewModel.getActiveMarkers();
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(activeMarkers);
+        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
+        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
         markerDataRV.setAdapter(markerDataAdapter);
     }
 
@@ -476,10 +479,10 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         return false;
     }
 
-    public void onMarkerClickCalled(int position) {
-        Log.i(TAG, "Marker selected: " + position);
+    public void onMarkerClickCalled(int markerID) {
+        Log.i(TAG, "Marker selected: " + markerID);
         saveCameraPosition();
-        currentMarker = visibleMarkers.get(position);
+        currentMarker = markerViewModel.getMMarker(markerID);
         editMarker(currentMarker);
     }
 

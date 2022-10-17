@@ -109,4 +109,12 @@ public class MarkerRepository {
     public List<MapMarkerDataItem> getActiveMarkers() {
         return markerDao.getActiveMarkers();
     }
+
+    public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
+        return markerDao.getMarkersFromVisibleLayers();
+    }
+
+    public MapMarkerDataItem getMMarker(int markerID) {
+        return markerDao.getMMarker(markerID);
+    }
 }

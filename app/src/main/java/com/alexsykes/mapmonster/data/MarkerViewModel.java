@@ -77,6 +77,14 @@ public class MarkerViewModel extends AndroidViewModel {
     public List<MapMarkerDataItem> getActiveMarkers() {
         return markerRepository.getActiveMarkers();
     }
+
+    public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
+        return markerRepository.getMarkersFromVisibleLayers();
+    }
+
+    public MapMarkerDataItem getMMarker(int markerID) {
+        return markerRepository.getMMarker(markerID);
+    }
 }
 
 
