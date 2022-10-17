@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
+import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.util.List;
 
@@ -26,7 +29,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
     @Override
     public MarkerEditViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.marker_detail_item, parent, false);
+                .inflate(R.layout.marker_detail_item, parent, false);
         return new MarkerListAdapter.MarkerEditViewHolder(view);
     }
 
@@ -45,6 +48,13 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         holder.imageView.setImageResource(resID);
         holder.marker_id = allMarkers.get(position).getLayer_id();
 
+        holder.markerArchivedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: " + markerID);
+            }
+        });
+
         if (currentMarker.isVisible) {
             holder.markerToggleImage.setImageResource(holder.eye_open_id);
         } else {
@@ -54,7 +64,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         if (currentMarker.isArchived) {
             holder.markerArchivedImage.setImageResource(holder.archive);
         } else {
-//            holder.markerArchivedImage.setImageResource(holder.eye_closed_id);
+            holder.markerArchivedImage.setImageResource(holder.trash);
         }
     }
 
@@ -70,10 +80,9 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         private  int marker_id;
         private int eye_open_id, eye_closed_id, trash, archive;
 
-
         public MarkerEditViewHolder(@NonNull View itemView) {
             super(itemView);
-             markerID_textView = itemView.findViewById(R.id.markerID_textView);
+            markerID_textView = itemView.findViewById(R.id.markerID_textView);
             markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
             markerToggleImage = itemView.findViewById(R.id.markerToggleImage);
             markerCodeTextView = itemView.findViewById(R.id.markerCodeTextView);
@@ -82,7 +91,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             imageView = itemView.findViewById(R.id.imageView);
             eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
             eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
-            trash = itemView.getContext().getResources().getIdentifier("trash", "drawable", itemView.getContext().getPackageName());
+            trash = itemView.getContext().getResources().getIdentifier("trash_can", "drawable", itemView.getContext().getPackageName());
             archive = itemView.getContext().getResources().getIdentifier("archive", "drawable", itemView.getContext().getPackageName());
         }
     }
