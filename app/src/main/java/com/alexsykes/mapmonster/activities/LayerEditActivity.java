@@ -53,7 +53,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
-public class LayerListActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "Info";
 
     //  Data

@@ -55,7 +55,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarkerListActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,
+public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback {
     private static final String TAG = "Info";
 

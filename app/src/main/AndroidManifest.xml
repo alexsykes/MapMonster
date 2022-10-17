@@ -33,7 +33,7 @@
         </provider>
 
         <activity
-            android:name=".activities.MarkerListActivity"
+            android:name=".activities.MarkerEditActivity"
             android:exported="false"
             android:label="@string/visible_markers"
             android:parentActivityName=".activities.MainActivity">
@@ -42,7 +42,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.LayerListActivity"
+            android:name=".activities.LayerEditActivity"
             android:exported="false"
             android:label="@string/visible_layers"
             android:parentActivityName=".activities.MainActivity">

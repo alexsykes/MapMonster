@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.MarkerListActivity;
+import com.alexsykes.mapmonster.activities.MarkerEditActivity;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 
 import java.util.List;
@@ -45,14 +45,14 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                ((MarkerListActivity) context).onMarkerClickCalled(holder.marker_id);
+                ((MarkerEditActivity) context).onMarkerClickCalled(holder.marker_id);
             }
         });
 
         holder.markerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MarkerListActivity) context).visibilityToggle(holder.marker_id);
+                ((MarkerEditActivity) context).visibilityToggle(holder.marker_id);
             }
         });
     }
