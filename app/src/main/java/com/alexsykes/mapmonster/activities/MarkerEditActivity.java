@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,6 +11,9 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -93,7 +97,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marker_list);
+        setContentView(R.layout.activity_marker_edit);
         setupMap();
         getData();
         setupUI();
@@ -101,6 +105,31 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         currentMarker = new MapMarkerDataItem();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.marker_list_menu, menu);
+        return true;
+    }
+
+    // Navigation
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.marker_list_menuitem :
+                goMarkerList();
+                return true;
+
+            default:
+        }
+        return false;
+    }
+
+    private void goMarkerList() {
+        Intent intent = new Intent(MarkerEditActivity.this, MarkerListActivity.class);
+        startActivity(intent);
+    }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;

@@ -113,6 +113,8 @@
     <string name="marker_icon">Marker icon</string>
     <string name="visible_markers">Visible Markers</string>
     <string name="visible_layers">Visible Layers</string>
+    <string name="list_markers">Marker list</string>
+    <string name="marker_edit">Marker List</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>
