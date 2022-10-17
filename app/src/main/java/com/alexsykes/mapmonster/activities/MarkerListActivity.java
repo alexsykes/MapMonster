@@ -73,6 +73,7 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
     ArrayAdapter<String> spinnerAdapter;
     List<String> layernamesForSpinner;
     Spinner layerSpinner;
+    private boolean compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
 
     // UIComponents
     RecyclerView markerDataRV;
@@ -106,10 +107,30 @@ public class MarkerListActivity extends AppCompatActivity implements GoogleMap.O
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         mMap.setOnMarkerClickListener(this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String maptype = preferences.getString("map_view_type","NORMAL");
 
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.getUiSettings().setCompassEnabled(true);
+        zoomControlsEnabled = preferences.getBoolean("zoomControlsEnabled", true);
+        mapToolbarEnabled = preferences.getBoolean("mapToolbarEnabled", true);
+        compassEnabled = preferences.getBoolean("compassEnabled", true);
+
+        switch (maptype) {
+            case "satellite":
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case "terrain":
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            default:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+
+        mMap.setMinZoomPreference(4);
+        mMap.setMaxZoomPreference(20);
+        mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
+        mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
+        mMap.getUiSettings().setCompassEnabled(compassEnabled);
+
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             final DecimalFormat df = new DecimalFormat("#.#####");

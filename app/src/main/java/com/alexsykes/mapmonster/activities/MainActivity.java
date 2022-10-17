@@ -327,7 +327,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
 
-
     // Utility methods
     private void setupUIComponents() {
         preferences = this.getPreferences(Context.MODE_PRIVATE);

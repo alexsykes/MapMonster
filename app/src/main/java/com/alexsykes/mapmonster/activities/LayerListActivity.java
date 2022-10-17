@@ -62,6 +62,7 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     private IconViewModel iconViewModel;
 
     Icon currentIcon;
+    private boolean compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
 
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
@@ -112,6 +113,29 @@ public class LayerListActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String maptype = preferences.getString("map_view_type","NORMAL");
+
+        zoomControlsEnabled = preferences.getBoolean("zoomControlsEnabled", true);
+        mapToolbarEnabled = preferences.getBoolean("mapToolbarEnabled", true);
+        compassEnabled = preferences.getBoolean("compassEnabled", true);
+
+        switch (maptype) {
+            case "satellite":
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case "terrain":
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            default:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+//        mMap.setOnMapLoadedCallback(this);
+        mMap.setMinZoomPreference(4);
+        mMap.setMaxZoomPreference(20);
+        mMap.getUiSettings().setZoomControlsEnabled(zoomControlsEnabled);
+        mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
+        mMap.getUiSettings().setCompassEnabled(compassEnabled);
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         addVisibleMarkersToMap();
