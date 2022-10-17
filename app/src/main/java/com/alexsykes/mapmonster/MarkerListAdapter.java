@@ -38,6 +38,8 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         String markerID = String.valueOf(currentMarker.markerID);
         holder.markerID_textView.setText(markerID);
         holder.markerNameTextView.setText(currentMarker.placename);
+        holder.markerCodeTextView.setText(currentMarker.code);
+        holder.markerListNotesTextView.setText(currentMarker.notes);
 
         int resID = context.getResources().getIdentifier(currentMarker.filename, "drawable", context.getPackageName());
         holder.imageView.setImageResource(resID);
@@ -48,6 +50,12 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         } else {
             holder.markerToggleImage.setImageResource(holder.eye_closed_id);
         }
+
+        if (currentMarker.isArchived) {
+            holder.markerArchivedImage.setImageResource(holder.archive);
+        } else {
+//            holder.markerArchivedImage.setImageResource(holder.eye_closed_id);
+        }
     }
 
     @Override
@@ -57,10 +65,10 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
 
     public class MarkerEditViewHolder extends RecyclerView.ViewHolder {
         final TextView markerID_textView;
-        private final TextView markerNameTextView;
-        private final ImageView imageView, markerToggleImage;
+        private final TextView markerNameTextView, markerCodeTextView, markerListNotesTextView;
+        private final ImageView imageView, markerToggleImage, markerArchivedImage;
         private  int marker_id;
-        private int eye_open_id, eye_closed_id;
+        private int eye_open_id, eye_closed_id, trash, archive;
 
 
         public MarkerEditViewHolder(@NonNull View itemView) {
@@ -68,9 +76,14 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
              markerID_textView = itemView.findViewById(R.id.markerID_textView);
             markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
             markerToggleImage = itemView.findViewById(R.id.markerToggleImage);
+            markerCodeTextView = itemView.findViewById(R.id.markerCodeTextView);
+            markerListNotesTextView = itemView.findViewById(R.id.markerListNotesTextView);
+            markerArchivedImage = itemView.findViewById(R.id.markerArchivedImage);
             imageView = itemView.findViewById(R.id.imageView);
             eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
             eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
+            trash = itemView.getContext().getResources().getIdentifier("trash", "drawable", itemView.getContext().getPackageName());
+            archive = itemView.getContext().getResources().getIdentifier("archive", "drawable", itemView.getContext().getPackageName());
         }
     }
 }
