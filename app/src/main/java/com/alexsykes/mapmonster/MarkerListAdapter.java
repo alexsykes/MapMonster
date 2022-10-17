@@ -1,47 +1,89 @@
 package com.alexsykes.mapmonster;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.data.MMarker;
+import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 
-public class MarkerListAdapter extends ListAdapter<MMarker, MarkerViewHolder> {
+import java.util.List;
 
-    AdapterView.OnItemClickListener listener;
+public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.MarkerEditViewHolder> {
+    List<MapMarkerDataItem> allMarkers;
+    public static final String TAG = "Info";
 
-    public MarkerListAdapter(@NonNull DiffUtil.ItemCallback<MMarker> diffCallback) {
-        super(diffCallback);
+    public MarkerListAdapter(List<MapMarkerDataItem> markerList) {
+        allMarkers = markerList;
+    }
+
+    @NonNull
+    @Override
+    public MarkerEditViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.marker_detail_item, parent, false);
+        return new MarkerListAdapter.MarkerEditViewHolder(view);
     }
 
     @Override
-    public MarkerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return MarkerViewHolder.create(parent);
-    }
+    public void onBindViewHolder(@NonNull MarkerEditViewHolder holder, int position) {
+        Context context = holder.imageView.getContext();
+        MapMarkerDataItem currentMarker = allMarkers.get(position);
 
-    @Override
-    public void onBindViewHolder(@NonNull MarkerViewHolder holder, int position) {
-        MMarker current= getItem(position);
-        // String placename = current.getPlacename();
-        holder.bind(current);
-    }
+        String markerID = String.valueOf(currentMarker.markerID);
+        holder.markerID_textView.setText(markerID);
+        holder.markerNameTextView.setText(currentMarker.placename);
+        holder.markerCodeTextView.setText(currentMarker.code);
+        holder.markerListNotesTextView.setText(currentMarker.notes);
 
-    public interface OnItemClickListener {
-        void onItemClick(MMarker marker);
-    }
+        int resID = context.getResources().getIdentifier(currentMarker.filename, "drawable", context.getPackageName());
+        holder.imageView.setImageResource(resID);
+        holder.marker_id = allMarkers.get(position).getLayer_id();
 
-    public static class MarkerDiff extends DiffUtil.ItemCallback<MMarker> {
-        @Override
-        public boolean areItemsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
-            return oldItem == newItem;
+        if (currentMarker.isVisible) {
+            holder.markerToggleImage.setImageResource(holder.eye_open_id);
+        } else {
+            holder.markerToggleImage.setImageResource(holder.eye_closed_id);
         }
 
-        @Override
-        public boolean areContentsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
-            return oldItem.getPlacename().equals(newItem.getPlacename());
+        if (currentMarker.isArchived) {
+            holder.markerArchivedImage.setImageResource(holder.archive);
+        } else {
+//            holder.markerArchivedImage.setImageResource(holder.eye_closed_id);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return allMarkers.size();
+    }
+
+    public class MarkerEditViewHolder extends RecyclerView.ViewHolder {
+        final TextView markerID_textView;
+        private final TextView markerNameTextView, markerCodeTextView, markerListNotesTextView;
+        private final ImageView imageView, markerToggleImage, markerArchivedImage;
+        private  int marker_id;
+        private int eye_open_id, eye_closed_id, trash, archive;
+
+
+        public MarkerEditViewHolder(@NonNull View itemView) {
+            super(itemView);
+             markerID_textView = itemView.findViewById(R.id.markerID_textView);
+            markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
+            markerToggleImage = itemView.findViewById(R.id.markerToggleImage);
+            markerCodeTextView = itemView.findViewById(R.id.markerCodeTextView);
+            markerListNotesTextView = itemView.findViewById(R.id.markerListNotesTextView);
+            markerArchivedImage = itemView.findViewById(R.id.markerArchivedImage);
+            imageView = itemView.findViewById(R.id.imageView);
+            eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
+            eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
+            trash = itemView.getContext().getResources().getIdentifier("trash", "drawable", itemView.getContext().getPackageName());
+            archive = itemView.getContext().getResources().getIdentifier("archive", "drawable", itemView.getContext().getPackageName());
         }
     }
 }

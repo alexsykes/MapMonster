@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -78,6 +80,24 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
+
+        // Set up an OnPreDrawListener to the root view.
+        final View content = findViewById(android.R.id.content);
+        content.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        // Check if the initial data is ready.
+                        if (mapFragment.isAdded()) {
+                            // The content is ready; start drawing.
+                            content.getViewTreeObserver().removeOnPreDrawListener(this);
+                            return true;
+                        } else {
+                            // The content is not ready; suspend.
+                            return false;
+                        }
+                    }
+                });
 
         // get saved values and editor from prefs
         // defaults = this.getPreferences(Context.MODE_PRIVATE);
@@ -214,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onMapLoaded: ");
 //        loadMarkerList();
         addMarkersToMap();
-        updateCamera();
+//        updateCamera();
     }
 
     // Navigation
@@ -243,11 +263,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     // Navigation
     private void goLayerList() {
-        Intent intent = new Intent(MainActivity.this, LayerListActivity.class);
+        Intent intent = new Intent(MainActivity.this, LayerEditActivity.class);
         startActivity(intent);
     }
     private void goMarkerList() {
-        Intent intent = new Intent(MainActivity.this,MarkerListActivity.class);
+        Intent intent = new Intent(MainActivity.this, MarkerEditActivity.class);
         startActivity(intent);
     }
     private void goSettings() {
@@ -306,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
 
     // Utility methods
     private void setupUIComponents() {

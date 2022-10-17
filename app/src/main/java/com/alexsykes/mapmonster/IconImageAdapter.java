@@ -6,12 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.LayerListActivity;
+import com.alexsykes.mapmonster.activities.LayerEditActivity;
 
 public class IconImageAdapter extends RecyclerView.Adapter<IconImageAdapter.IconImageViewHolder> {
     int[] iconIds;
@@ -40,7 +39,7 @@ public class IconImageAdapter extends RecyclerView.Adapter<IconImageAdapter.Icon
             public void onClick(View v) {
                 Log.i("Info", "onClick: " + holder.resid);
                 Context context = v.getContext();
-                ((LayerListActivity) context).onIconClicked(holder.resid);
+                ((LayerEditActivity) context).onIconClicked(holder.resid);
             }
         });
 

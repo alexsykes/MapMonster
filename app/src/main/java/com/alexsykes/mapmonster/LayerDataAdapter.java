@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.LayerListActivity;
+import com.alexsykes.mapmonster.activities.LayerEditActivity;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
             public void onClick(View v) {
                 Context context = v.getContext();
 //                int position = holder.getAdapterPosition();
-                ((LayerListActivity) context).onLayerClickCalled(holder.layer_id);
+                ((LayerEditActivity) context).onLayerClickCalled(holder.layer_id);
             }
         });
 
@@ -54,7 +54,7 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
 //                    Log.i(TAG, "close eye");
 //                }
 //                holder.isVisible = !holder.isVisible;
-                ((LayerListActivity) context).visibilityToggle(holder.layer_id);
+                ((LayerEditActivity) context).visibilityToggle(holder.layer_id);
             }
         });
     }

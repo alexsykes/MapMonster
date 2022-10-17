@@ -14,14 +14,14 @@ import java.util.Map;
 public class MarkerViewModel extends AndroidViewModel {
     private final MarkerRepository markerRepository;
 
-    private final LiveData<List<MMarker>> allMarkers;
+//    private final LiveData<List<MMarker>> allMarkers;
     private final List<Integer> markerCountByLayer;
     private final List<MapMarkerDataItem>  markerList;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);
         markerRepository = new MarkerRepository(application);
-        allMarkers = markerRepository.getAllMarkers();
+//        allMarkers = markerRepository.getAllMarkers();
         markerCountByLayer = markerRepository.getAllMarkersByLayer();
         markerList = markerRepository.getMarkerList();
        // visibleMarkerList = markerRepository.getVisibleMarkerList();
@@ -37,7 +37,7 @@ public class MarkerViewModel extends AndroidViewModel {
     }
 
     // Accessors
-    public LiveData<List<MMarker>> getAllMarkers() { return  allMarkers; }
+//    public LiveData<List<MMarker>> getAllMarkers() { return  allMarkers; }
     public List<Integer> getAllMarkersByLayer() { return  markerCountByLayer; }
     public List<MapMarkerDataItem> getMarkerList() { return markerRepository.getMarkerList(); }
     public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) { return markerRepository.getVisibleMarkerList(visibleLayerList); }
@@ -68,6 +68,26 @@ public class MarkerViewModel extends AndroidViewModel {
     }
     public Cursor getMarkerDataForExport() {
         return markerRepository.getMarkerDataForExport();
+    }
+
+    public void toggle(int marker_id) {
+        markerRepository.toggle(marker_id);
+    }
+
+    public List<MapMarkerDataItem> getActiveMarkers() {
+        return markerRepository.getActiveMarkers();
+    }
+
+    public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
+        return markerRepository.getMarkersFromVisibleLayers();
+    }
+
+    public MapMarkerDataItem getMMarker(int markerID) {
+        return markerRepository.getMMarker(markerID);
+    }
+
+    public List<MapMarkerDataItem> getAllMarkers() {
+        return markerRepository.getAllMarkers();
     }
 }
 

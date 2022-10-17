@@ -21,26 +21,42 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MapMonster"
         tools:targetApi="31">
+
         <activity
             android:name=".activities.MarkerListActivity"
             android:exported="false"
-            android:parentActivityName=".activities.MapEditActivity">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activities.LayerListActivity"
+            android:label="@string/marker_edit"
+            android:parentActivityName=".activities.MarkerListActivity"
+            />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.alexsykes.mapmonster.fileprovider"
             android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".activities.MarkerEditActivity"
+            android:exported="false"
+            android:label="@string/visible_markers"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.MapEditActivity"
+            android:name=".activities.LayerEditActivity"
             android:exported="false"
-            android:parentActivityName=".activities.MainActivity" />
+            android:label="@string/visible_layers"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
@@ -61,6 +77,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

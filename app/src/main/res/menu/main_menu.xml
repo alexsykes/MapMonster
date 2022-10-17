@@ -21,5 +21,6 @@
         android:id="@+id/help_menu_item"
         android:icon="@drawable/help_48"
         android:title="@string/help"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

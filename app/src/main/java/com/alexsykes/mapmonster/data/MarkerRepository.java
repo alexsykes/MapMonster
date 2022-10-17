@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class MarkerRepository {
     private final MarkerDao markerDao;
-    private final LiveData<List<MMarker>> allMarkers;
+//    private final LiveData<List<MMarker>> allMarkers;
     private final List<Integer> markerCountByLayer;
     private final List<MapMarkerDataItem> markerList;
     private List<MMarker> visibleMarkerList;
@@ -22,15 +22,15 @@ public class MarkerRepository {
         MMDatabase db = MMDatabase.getDatabase(application);
 
         markerDao = db.markerDao();
-        allMarkers = markerDao.allMarkers();
+//        allMarkers = markerDao.allMarkers();
         markerList = markerDao.getMarkerData();
         markerCountByLayer = markerDao.markerCountByLayer();
         markerMap = markerDao.getMarkersByLayer();
     }
 
-    LiveData<List<MMarker>> getAllMarkers() {
-        return allMarkers;
-    }
+//    LiveData<List<MMarker>> getAllMarkers() {
+//        return allMarkers;
+//    }
     List<Integer> getAllMarkersByLayer() {
         return markerCountByLayer;
     }
@@ -100,5 +100,25 @@ public class MarkerRepository {
 
     public Cursor getMarkerDataForExport() {
         return markerDao.getMarkerDataForExport();
+    }
+
+    public void toggle(int marker_id) {
+        markerDao.toggle(marker_id);
+    }
+
+    public List<MapMarkerDataItem> getActiveMarkers() {
+        return markerDao.getActiveMarkers();
+    }
+
+    public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
+        return markerDao.getMarkersFromVisibleLayers();
+    }
+
+    public MapMarkerDataItem getMMarker(int markerID) {
+        return markerDao.getMMarker(markerID);
+    }
+
+    public List<MapMarkerDataItem> getAllMarkers() {
+        return markerDao.getAllMarkers();
     }
 }

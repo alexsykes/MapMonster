@@ -26,14 +26,14 @@
     <PreferenceCategory
         android:background="#A84242"
         android:title="Export data">
-        <EditTextPreference
-            android:key="email_address"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="Email address"
-            app:useSimpleSummaryProvider="true" />
+<!--        <EditTextPreference-->
+<!--            android:key="email_address"-->
+<!--            android:selectAllOnFocus="true"-->
+<!--            android:singleLine="true"-->
+<!--            android:title="Email address"-->
+<!--            app:useSimpleSummaryProvider="true" />-->
         <ListPreference
-            android:defaultValue="1"
+            android:defaultValue="CSV"
             android:entries="@array/export_items"
             android:entryValues="@array/export_items"
             android:key="export_format"
@@ -44,6 +44,13 @@
         android:background="#A84242"
         android:title="Nuclear options">
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="confirm_delete"
+            android:title="@string/confirm_delete"
+            app:defaultValue="true"
+            app:summaryOn="@string/confirm_delete_message"
+            android:summary="@string/no_confirm_delete_message"/>
         <SwitchPreference
             android:defaultValue="false"
             android:key="destroy_switch"
