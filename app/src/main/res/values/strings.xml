@@ -111,6 +111,8 @@
     <string name="no_confirm_delete_message">No warning before data deletion</string>
     <string name="toggle_marker_visibility">Toggle marker visibility</string>
     <string name="marker_icon">Marker icon</string>
+    <string name="visible_markers">Visible Markers</string>
+    <string name="visible_layers">Visible Layers</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>
