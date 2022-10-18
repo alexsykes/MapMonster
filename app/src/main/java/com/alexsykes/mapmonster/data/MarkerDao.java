@@ -97,6 +97,12 @@ public interface MarkerDao {
     @Query("UPDATE markers SET isArchived = 0")
     void unarchiveAll();
 
+    @Query("UPDATE markers SET isSelected = 0")
+    void deselectAll();
+
     @Query("UPDATE markers SET isSelected = :isSelected WHERE markerID = :markerID")
     void setSelected(int markerID, boolean isSelected);
+
+    @Query("UPDATE markers SET isSelected = 1")
+    void selectAll();
 }

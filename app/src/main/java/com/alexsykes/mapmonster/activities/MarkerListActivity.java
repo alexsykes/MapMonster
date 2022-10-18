@@ -92,17 +92,18 @@ public class MarkerListActivity extends AppCompatActivity {
 
     private void archiveSelected() {
         Log.i(TAG, "archiveSelected: " + theSelected);
-        markerViewModel.archiveSelected(theSelected);
+        markerViewModel.archiveSelected();
         selectNone();
     }
 
     private void selectNone() {
-        theSelected.clear();
+        markerViewModel.deselectAll();
         loadMarkerRV();
     }
 
     private void selectAll() {
-        
+        markerViewModel.selectAll();
+        loadMarkerRV();
     }
 
     private void setupUI() {

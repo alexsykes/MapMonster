@@ -128,7 +128,7 @@ public class MarkerRepository {
         markerDao.setVisibility(marker_id, isVisible);
     }
 
-    public void archiveSelected(ArrayList<Integer> theSelected) {
+    public void archiveSelected() {
         markerDao.archiveSelected();
     }
 
@@ -142,5 +142,13 @@ public class MarkerRepository {
 
     public void setSelected(int markerID, boolean isSelected) {
         markerDao.setSelected(markerID, isSelected);
+    }
+
+    public void deselectAll() {
+        markerDao.deselectAll();
+    }
+
+    public void selectAll() {
+        markerDao.selectAll();
     }
 }
