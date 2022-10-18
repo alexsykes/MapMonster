@@ -69,6 +69,23 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             }
         });
 
+        holder.markerToggleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Log.i(TAG, "onClick: " + holder.marker_id);
+                // Toggle image
+
+                Context context = v.getContext();
+                holder.isVisible = !holder.isVisible;
+                if (holder.isVisible) {
+                    holder.markerToggleImage.setImageResource(holder.eye_open_id);
+                } else {
+                    holder.markerToggleImage.setImageResource(holder.eye_closed_id);
+                }
+                ((MarkerListActivity) context).onVisibleImageCalled(currentMarker.markerID, holder.isVisible);
+            }
+        });
+
         if (holder.isVisible) {
             holder.markerToggleImage.setImageResource(holder.eye_open_id);
         } else {

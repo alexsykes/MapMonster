@@ -123,4 +123,8 @@ public class MarkerRepository {
     public void archive(int marker_id, boolean isArchived) {
         markerDao.archive(marker_id, isArchived);
     }
+
+    public void setVisibility(int marker_id, boolean isVisible) {
+        markerDao.setVisibility(marker_id, isVisible);
+    }
 }

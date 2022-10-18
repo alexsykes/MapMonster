@@ -85,4 +85,8 @@ public class MarkerListActivity extends AppCompatActivity {
         final MarkerListAdapter markerListAdapter = new MarkerListAdapter(allMarkers);
         recyclerView.setAdapter(markerListAdapter);
     }
+
+    public void onVisibleImageCalled(int markerID, boolean isVisible) {
+        markerViewModel.setVisibility(markerID, isVisible);
+    }
 }

@@ -84,6 +84,9 @@ public interface MarkerDao {
 
     @Query("UPDATE markers SET isArchived = :isArchived WHERE markerID = :marker_id")
     void archive(int marker_id, boolean isArchived);
+
+    @Query("UPDATE markers SET isVisible = :isVisible WHERE markerID = :marker_id")
+    void setVisibility(int marker_id, boolean isVisible);
 }
 
 

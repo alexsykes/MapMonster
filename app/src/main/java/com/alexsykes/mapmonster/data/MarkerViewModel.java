@@ -92,6 +92,10 @@ public class MarkerViewModel extends AndroidViewModel {
     public void archive(int marker_id, boolean isArchived) {
         markerRepository.archive(marker_id, isArchived);
     }
+
+    public void setVisibility(int marker_id, boolean isVisible) {
+        markerRepository.setVisibility(marker_id, isVisible);
+    }
 }
 
 
