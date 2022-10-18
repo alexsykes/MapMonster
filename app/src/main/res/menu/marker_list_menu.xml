@@ -3,8 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/marker_list_menuitem"
-        android:icon="@drawable/list_48"
-        android:title="@string/list_markers"
-        app:showAsAction="always" />
+        android:id="@+id/selectAll"
+        android:title="@android:string/selectAll"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/selectNone"
+        android:title="@string/deselect_all"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/archiveSelected"
+        android:title="@string/archive_selected"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/emptyTrash"
+        android:title="@string/empty_trash"
+        app:showAsAction="ifRoom|withText" />
 </menu>

@@ -7,6 +7,17 @@
     android:layout_height="wrap_content"
     android:minHeight="40sp">
 
+    <CheckBox
+        android:id="@+id/selectCheckBox"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/selectCheckBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
     <TextView
         android:id="@+id/markerID_textView"
         android:layout_width="40dp"
@@ -16,7 +27,7 @@
         android:textColor="@color/purple_700"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/selectCheckBox"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 

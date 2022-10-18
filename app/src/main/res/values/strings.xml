@@ -116,6 +116,10 @@
     <string name="list_markers">Marker list</string>
     <string name="marker_edit">Marker List</string>
     <string name="marker_archived">Archived</string>
+    <string name="id">ID</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="archive_selected">Archive selected</string>
+    <string name="empty_trash">Empty trash</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>

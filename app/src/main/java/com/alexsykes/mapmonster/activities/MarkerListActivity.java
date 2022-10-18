@@ -1,12 +1,19 @@
 package com.alexsykes.mapmonster.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
@@ -18,6 +25,7 @@ import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MarkerListActivity extends AppCompatActivity {
@@ -29,6 +37,7 @@ public class MarkerListActivity extends AppCompatActivity {
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> allMarkers;
     public static final String TAG = "Info";
+    ArrayList<Integer> theSelected;
 
     RecyclerView recyclerView;
 
@@ -38,6 +47,50 @@ public class MarkerListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_marker_list);
         getData();
         setupUI();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.marker_list_menu, menu);
+        return true;
+    }    // Navigation
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.selectAll:
+                selectAll();
+                return true;
+
+            case R.id.selectNone:
+                selectNone();
+                return true;
+
+            case R.id.archiveSelected:
+                archiveSelected();
+                return true;
+
+            case R.id.emptyTrash:
+                deleteSelection();
+                return true;
+            default:
+        }
+        return false;
+    }
+
+    private void deleteSelection() {
+    }
+
+    private void archiveSelected() {
+        
+    }
+
+    private void selectNone() {
+        
+    }
+
+    private void selectAll() {
+        
     }
 
     private void setupUI() {
@@ -71,6 +124,7 @@ public class MarkerListActivity extends AppCompatActivity {
         allLayers = layerViewModel.getLayerData();
 
         allMarkers = markerViewModel.getAllMarkers();
+        theSelected = new ArrayList<Integer>();
     }
 
     public void onArchiveImageCalled(int marker_id, boolean isArchived) {
@@ -88,5 +142,15 @@ public class MarkerListActivity extends AppCompatActivity {
 
     public void onVisibleImageCalled(int markerID, boolean isVisible) {
         markerViewModel.setVisibility(markerID, isVisible);
+    }
+
+    public void onSelectedChanged(int markerID, boolean isChecked) {
+        Log.i(TAG, "onSelectedChanged: " + markerID + isChecked);
+        if(isChecked) {
+            theSelected.add(markerID);
+        } else  {
+                theSelected.remove(theSelected.indexOf(markerID));
+            }
+        Log.i(TAG, "theSelected: " + theSelected);
     }
 }

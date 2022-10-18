@@ -109,7 +109,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.marker_list_menu, menu);
+        inflater.inflate(R.menu.marker_edit_menu, menu);
         return true;
     }
 

@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,22 +54,31 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         holder.imageView.setImageResource(resID);
         holder.marker_id = allMarkers.get(position).getMarkerID();
 
-        holder.markerArchivedImage.setOnClickListener(new View.OnClickListener() {
+        holder.selectCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-//                Log.i(TAG, "onClick: " + holder.marker_id);
-                // Toggle image
-
-                Context context = v.getContext();
-                holder.isArchived = !holder.isArchived;
-                if (holder.isArchived) {
-                    holder.markerArchivedImage.setImageResource(holder.archive);
-                } else {
-                    holder.markerArchivedImage.setImageResource(holder.trash);
-                }
-                ((MarkerListActivity) context).onArchiveImageCalled(currentMarker.markerID, holder.isArchived);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Context context = buttonView.getContext();
+//                int marker_id = holder.marker_id;
+                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked);
             }
         });
+
+//        holder.markerArchivedImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Log.i(TAG, "onClick: " + holder.marker_id);
+//                // Toggle image
+//
+//                Context context = v.getContext();
+//                holder.isArchived = !holder.isArchived;
+//                if (holder.isArchived) {
+//                    holder.markerArchivedImage.setImageResource(holder.archive);
+//                } else {
+//                    holder.markerArchivedImage.setImageResource(holder.trash);
+//                }
+//                ((MarkerListActivity) context).onArchiveImageCalled(currentMarker.markerID, holder.isArchived);
+//            }
+//        });
 
         holder.markerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,9 +104,9 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         }
 
         if (holder.isArchived) {
-            holder.markerArchivedImage.setImageResource(holder.archive);
-        } else {
             holder.markerArchivedImage.setImageResource(holder.trash);
+        } else {
+            holder.markerArchivedImage.setImageResource(0);
         }
     }
 
@@ -111,6 +122,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         private  int marker_id;
         private boolean isVisible, isArchived;
         private int eye_open_id, eye_closed_id, trash, archive;
+        private CheckBox selectCheckBox;
 
         public MarkerEditViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,6 +133,8 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             markerListNotesTextView = itemView.findViewById(R.id.markerListNotesTextView);
             markerArchivedImage = itemView.findViewById(R.id.markerArchivedImage);
             imageView = itemView.findViewById(R.id.imageView);
+            selectCheckBox = itemView.findViewById(R.id.selectCheckBox);
+
             eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
             eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
             trash = itemView.getContext().getResources().getIdentifier("trash_can", "drawable", itemView.getContext().getPackageName());
