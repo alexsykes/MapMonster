@@ -1,19 +1,13 @@
 package com.alexsykes.mapmonster.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
-import com.alexsykes.mapmonster.MarkerDataAdapter;
 import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
@@ -34,6 +28,7 @@ public class MarkerListActivity extends AppCompatActivity {
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> allMarkers;
+    public static final String TAG = "Info";
 
     RecyclerView recyclerView;
 
@@ -46,8 +41,13 @@ public class MarkerListActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
+        recyclerView = findViewById(R.id.markerListRV);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
-        setupMarkerRV();
+        loadMarkerRV();
     }
 
     private void setupMarkerRV() {
@@ -73,4 +73,16 @@ public class MarkerListActivity extends AppCompatActivity {
         allMarkers = markerViewModel.getAllMarkers();
     }
 
+    public void onArchiveImageCalled(int marker_id, boolean isArchived) {
+//        Log.i(TAG, "onArchiveImageCalled: " + marker_id);
+        markerViewModel.archive(marker_id, isArchived);
+//        Do not refresh RV
+//        loadMarkerRV();
+    }
+
+    private void loadMarkerRV() {
+        allMarkers = markerViewModel.getAllMarkers();
+        final MarkerListAdapter markerListAdapter = new MarkerListAdapter(allMarkers);
+        recyclerView.setAdapter(markerListAdapter);
+    }
 }

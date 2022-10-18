@@ -81,6 +81,9 @@ public interface MarkerDao {
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.markerID = :markerID ")
     MapMarkerDataItem getMMarker(int markerID);
+
+    @Query("UPDATE markers SET isArchived = :isArchived WHERE markerID = :marker_id")
+    void archive(int marker_id, boolean isArchived);
 }
 
 

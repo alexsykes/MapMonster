@@ -3,8 +3,6 @@ package com.alexsykes.mapmonster.data;
 import android.app.Application;
 import android.database.Cursor;
 
-import androidx.lifecycle.LiveData;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -120,5 +118,9 @@ public class MarkerRepository {
 
     public List<MapMarkerDataItem> getAllMarkers() {
         return markerDao.getAllMarkers();
+    }
+
+    public void archive(int marker_id, boolean isArchived) {
+        markerDao.archive(marker_id, isArchived);
     }
 }

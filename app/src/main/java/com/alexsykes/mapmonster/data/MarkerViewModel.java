@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +87,10 @@ public class MarkerViewModel extends AndroidViewModel {
 
     public List<MapMarkerDataItem> getAllMarkers() {
         return markerRepository.getAllMarkers();
+    }
+
+    public void archive(int marker_id, boolean isArchived) {
+        markerRepository.archive(marker_id, isArchived);
     }
 }
 

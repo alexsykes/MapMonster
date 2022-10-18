@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexsykes.mapmonster.activities.MarkerEditActivity;
+import com.alexsykes.mapmonster.activities.MarkerListActivity;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
@@ -38,30 +40,42 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         Context context = holder.imageView.getContext();
         MapMarkerDataItem currentMarker = allMarkers.get(position);
 
-        String markerID = String.valueOf(currentMarker.markerID);
-        holder.markerID_textView.setText(markerID);
+        holder.marker_id = currentMarker.getMarkerID();
+        holder.isArchived = currentMarker.isArchived;
+        holder.isVisible = currentMarker.isVisible;
+        holder.markerID_textView.setText(String.valueOf(holder.marker_id));
         holder.markerNameTextView.setText(currentMarker.placename);
         holder.markerCodeTextView.setText(currentMarker.code);
         holder.markerListNotesTextView.setText(currentMarker.notes);
 
         int resID = context.getResources().getIdentifier(currentMarker.filename, "drawable", context.getPackageName());
         holder.imageView.setImageResource(resID);
-        holder.marker_id = allMarkers.get(position).getLayer_id();
+        holder.marker_id = allMarkers.get(position).getMarkerID();
 
         holder.markerArchivedImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick: " + markerID);
+//                Log.i(TAG, "onClick: " + holder.marker_id);
+                // Toggle image
+
+                Context context = v.getContext();
+                holder.isArchived = !holder.isArchived;
+                if (holder.isArchived) {
+                    holder.markerArchivedImage.setImageResource(holder.archive);
+                } else {
+                    holder.markerArchivedImage.setImageResource(holder.trash);
+                }
+                ((MarkerListActivity) context).onArchiveImageCalled(currentMarker.markerID, holder.isArchived);
             }
         });
 
-        if (currentMarker.isVisible) {
+        if (holder.isVisible) {
             holder.markerToggleImage.setImageResource(holder.eye_open_id);
         } else {
             holder.markerToggleImage.setImageResource(holder.eye_closed_id);
         }
 
-        if (currentMarker.isArchived) {
+        if (holder.isArchived) {
             holder.markerArchivedImage.setImageResource(holder.archive);
         } else {
             holder.markerArchivedImage.setImageResource(holder.trash);
@@ -78,6 +92,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         private final TextView markerNameTextView, markerCodeTextView, markerListNotesTextView;
         private final ImageView imageView, markerToggleImage, markerArchivedImage;
         private  int marker_id;
+        private boolean isVisible, isArchived;
         private int eye_open_id, eye_closed_id, trash, archive;
 
         public MarkerEditViewHolder(@NonNull View itemView) {
