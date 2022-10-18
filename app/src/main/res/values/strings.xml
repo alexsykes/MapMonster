@@ -120,6 +120,7 @@
     <string name="deselect_all">Deselect all</string>
     <string name="archive_selected">Archive selected</string>
     <string name="empty_trash">Empty trash</string>
+    <string name="unarchive_all">Unarchive all</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>

@@ -7,10 +7,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -71,22 +69,36 @@ public class MarkerListActivity extends AppCompatActivity {
                 return true;
 
             case R.id.emptyTrash:
-                deleteSelection();
+                emptyTrash();
+                return true;
+
+            case R.id.unarchiveAll:
+                unarchiveAll();
                 return true;
             default:
         }
         return false;
     }
 
-    private void deleteSelection() {
+    private void unarchiveAll() {
+        markerViewModel.unarchiveAll();
+        loadMarkerRV();
+    }
+
+    private void emptyTrash() {
+        markerViewModel.deleteArchived();
+        loadMarkerRV();
     }
 
     private void archiveSelected() {
-        
+        Log.i(TAG, "archiveSelected: " + theSelected);
+        markerViewModel.archiveSelected(theSelected);
+        selectNone();
     }
 
     private void selectNone() {
-        
+        theSelected.clear();
+        loadMarkerRV();
     }
 
     private void selectAll() {
