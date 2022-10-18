@@ -15,11 +15,11 @@
         android:title="@string/archive_selected"
         app:showAsAction="ifRoom|withText" />
     <item
-        android:id="@+id/emptyTrash"
-        android:title="@string/empty_trash"
-        app:showAsAction="ifRoom|withText" />
-    <item
         android:id="@+id/unarchiveAll"
         android:title="@string/unarchive_all"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/emptyTrash"
+        android:title="@string/empty_trash"
         app:showAsAction="never" />
 </menu>

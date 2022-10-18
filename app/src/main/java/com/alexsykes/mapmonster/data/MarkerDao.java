@@ -88,12 +88,21 @@ public interface MarkerDao {
     @Query("UPDATE markers SET isVisible = :isVisible WHERE markerID = :marker_id")
     void setVisibility(int marker_id, boolean isVisible);
 
-    @Query("UPDATE markers SET isArchived = 1 WHERE markerID IN (:theSelected)")
-    void archiveSelected(ArrayList<Integer> theSelected);
+    @Query("UPDATE markers SET isArchived = 1 WHERE isSelected = 1 ")
+    void archiveSelected();
 
     @Query("DELETE FROM markers WHERE isArchived = 1")
     void deleteArchived();
 
     @Query("UPDATE markers SET isArchived = 0")
     void unarchiveAll();
+
+    @Query("UPDATE markers SET isSelected = 0")
+    void deselectAll();
+
+    @Query("UPDATE markers SET isSelected = :isSelected WHERE markerID = :markerID")
+    void setSelected(int markerID, boolean isSelected);
+
+    @Query("UPDATE markers SET isSelected = 1")
+    void selectAll();
 }

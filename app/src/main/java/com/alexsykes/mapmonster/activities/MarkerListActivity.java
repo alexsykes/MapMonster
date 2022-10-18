@@ -92,17 +92,18 @@ public class MarkerListActivity extends AppCompatActivity {
 
     private void archiveSelected() {
         Log.i(TAG, "archiveSelected: " + theSelected);
-        markerViewModel.archiveSelected(theSelected);
+        markerViewModel.archiveSelected();
         selectNone();
     }
 
     private void selectNone() {
-        theSelected.clear();
+        markerViewModel.deselectAll();
         loadMarkerRV();
     }
 
     private void selectAll() {
-        
+        markerViewModel.selectAll();
+        loadMarkerRV();
     }
 
     private void setupUI() {
@@ -156,13 +157,14 @@ public class MarkerListActivity extends AppCompatActivity {
         markerViewModel.setVisibility(markerID, isVisible);
     }
 
-    public void onSelectedChanged(int markerID, boolean isChecked) {
-        Log.i(TAG, "onSelectedChanged: " + markerID + isChecked);
-        if(isChecked) {
-            theSelected.add(markerID);
-        } else  {
-                theSelected.remove(theSelected.indexOf(markerID));
-            }
-        Log.i(TAG, "theSelected: " + theSelected);
+    public void onSelectedChanged(int markerID, boolean isSelected) {
+//        Log.i(TAG, "onSelectedChanged: " + markerID + isChecked);
+//        if(isChecked) {
+//            theSelected.add(markerID);
+//        } else  {
+//                theSelected.remove(theSelected.indexOf(markerID));
+//            }
+//        Log.i(TAG, "theSelected: " + theSelected);
+        markerViewModel.selected(markerID, isSelected);
     }
 }

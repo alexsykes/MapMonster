@@ -28,6 +28,8 @@ public class MMarker {
     private boolean isUpdated;
     private boolean isNew;
     private boolean isArchived;
+
+    private boolean isSelected;
     private String notes;
 
     public MMarker(double latitude, double longitude, String placename, String code, int layer_id, String notes) {
@@ -41,6 +43,7 @@ public class MMarker {
         isUpdated = false;
         isNew = true;
         isArchived = false;
+        isSelected = false;
     }
 
 
@@ -126,5 +129,13 @@ public class MMarker {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
