@@ -108,6 +108,10 @@ public class MarkerViewModel extends AndroidViewModel {
     public void unarchiveAll() {
         markerRepository.unarchiveAll();
     }
+
+    public void selected(int markerID, boolean isSelected) {
+        markerRepository.setSelected(markerID, isSelected);
+    }
 }
 
 

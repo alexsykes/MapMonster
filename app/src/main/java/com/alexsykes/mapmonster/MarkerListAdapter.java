@@ -49,6 +49,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         holder.markerNameTextView.setText(currentMarker.placename);
         holder.markerCodeTextView.setText(currentMarker.code);
         holder.markerListNotesTextView.setText(currentMarker.notes);
+        holder.selectCheckBox.setChecked(currentMarker.isSelected);
 
         int resID = context.getResources().getIdentifier(currentMarker.filename, "drawable", context.getPackageName());
         holder.imageView.setImageResource(resID);
@@ -58,27 +59,9 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Context context = buttonView.getContext();
-//                int marker_id = holder.marker_id;
                 ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked);
             }
         });
-
-//        holder.markerArchivedImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Log.i(TAG, "onClick: " + holder.marker_id);
-//                // Toggle image
-//
-//                Context context = v.getContext();
-//                holder.isArchived = !holder.isArchived;
-//                if (holder.isArchived) {
-//                    holder.markerArchivedImage.setImageResource(holder.archive);
-//                } else {
-//                    holder.markerArchivedImage.setImageResource(holder.trash);
-//                }
-//                ((MarkerListActivity) context).onArchiveImageCalled(currentMarker.markerID, holder.isArchived);
-//            }
-//        });
 
         holder.markerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override

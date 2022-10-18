@@ -156,13 +156,14 @@ public class MarkerListActivity extends AppCompatActivity {
         markerViewModel.setVisibility(markerID, isVisible);
     }
 
-    public void onSelectedChanged(int markerID, boolean isChecked) {
-        Log.i(TAG, "onSelectedChanged: " + markerID + isChecked);
-        if(isChecked) {
-            theSelected.add(markerID);
-        } else  {
-                theSelected.remove(theSelected.indexOf(markerID));
-            }
-        Log.i(TAG, "theSelected: " + theSelected);
+    public void onSelectedChanged(int markerID, boolean isSelected) {
+//        Log.i(TAG, "onSelectedChanged: " + markerID + isChecked);
+//        if(isChecked) {
+//            theSelected.add(markerID);
+//        } else  {
+//                theSelected.remove(theSelected.indexOf(markerID));
+//            }
+//        Log.i(TAG, "theSelected: " + theSelected);
+        markerViewModel.selected(markerID, isSelected);
     }
 }

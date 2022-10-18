@@ -129,7 +129,7 @@ public class MarkerRepository {
     }
 
     public void archiveSelected(ArrayList<Integer> theSelected) {
-        markerDao.archiveSelected(theSelected);
+        markerDao.archiveSelected();
     }
 
     public void deleteArchived() {
@@ -138,5 +138,9 @@ public class MarkerRepository {
 
     public void unarchiveAll() {
         markerDao.unarchiveAll();
+    }
+
+    public void setSelected(int markerID, boolean isSelected) {
+        markerDao.setSelected(markerID, isSelected);
     }
 }

@@ -6,6 +6,9 @@ public class MapMarkerDataItem {
     public String placename, code;
     public boolean isUpdated, isNew,  isArchived;
     public boolean isVisible;
+
+
+    public boolean isSelected;
     public String notes;
     public String filename, layername;
 
@@ -61,5 +64,12 @@ public class MapMarkerDataItem {
 
     public void setMarkerID(int markerID) {
         this.markerID = markerID;
+    }
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
