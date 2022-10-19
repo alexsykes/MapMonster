@@ -41,7 +41,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
     public void onBindViewHolder(@NonNull MarkerEditViewHolder holder, int position) {
         Context context = holder.imageView.getContext();
         MapMarkerDataItem currentMarker = allMarkers.get(position);
-
+//        holder.setIsRecyclable(false);
         holder.marker_id = currentMarker.getMarkerID();
         holder.isArchived = currentMarker.isArchived;
         holder.isVisible = currentMarker.isVisible;
@@ -55,11 +55,21 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         holder.imageView.setImageResource(resID);
         holder.marker_id = allMarkers.get(position).getMarkerID();
 
-        holder.selectCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//        holder.selectCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                Context context = buttonView.getContext();
+//                currentMarker.setSelected(isChecked);
+//                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked);
+//            }
+//        });
+
+        holder.selectCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Context context = buttonView.getContext();
-                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked);
+            public void onClick(View v) {
+                Context context = v.getContext();
+                boolean isChecked = holder.selectCheckBox.isChecked();
+                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked, position);
             }
         });
 

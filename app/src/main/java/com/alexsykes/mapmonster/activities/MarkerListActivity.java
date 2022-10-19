@@ -31,6 +31,7 @@ public class MarkerListActivity extends AppCompatActivity {
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
+    MarkerListAdapter markerListAdapter;
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> allMarkers;
@@ -149,7 +150,7 @@ public class MarkerListActivity extends AppCompatActivity {
 
     private void loadMarkerRV() {
         allMarkers = markerViewModel.getAllMarkers();
-        final MarkerListAdapter markerListAdapter = new MarkerListAdapter(allMarkers);
+        markerListAdapter = new MarkerListAdapter(allMarkers);
         recyclerView.setAdapter(markerListAdapter);
     }
 
@@ -157,14 +158,12 @@ public class MarkerListActivity extends AppCompatActivity {
         markerViewModel.setVisibility(markerID, isVisible);
     }
 
-    public void onSelectedChanged(int markerID, boolean isSelected) {
-//        Log.i(TAG, "onSelectedChanged: " + markerID + isChecked);
-//        if(isChecked) {
-//            theSelected.add(markerID);
-//        } else  {
-//                theSelected.remove(theSelected.indexOf(markerID));
-//            }
-//        Log.i(TAG, "theSelected: " + theSelected);
+    public void onSelectedChanged(int markerID, boolean isSelected, int pos) {
         markerViewModel.selected(markerID, isSelected);
+
+        allMarkers = markerViewModel.getAllMarkers();
+        markerListAdapter = new MarkerListAdapter(allMarkers);
+        markerListAdapter.notifyItemChanged(pos);
+        recyclerView.setAdapter(markerListAdapter);
     }
 }
