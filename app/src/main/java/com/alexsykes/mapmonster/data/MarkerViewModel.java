@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class MarkerViewModel extends AndroidViewModel {
 //    private final LiveData<List<MMarker>> allMarkers;
     private final List<Integer> markerCountByLayer;
     private final List<MapMarkerDataItem>  markerList;
+    private final LiveData<List<MapMarkerDataItem>> liveMarkerList;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);
@@ -23,6 +25,7 @@ public class MarkerViewModel extends AndroidViewModel {
 //        allMarkers = markerRepository.getAllMarkers();
         markerCountByLayer = markerRepository.getAllMarkersByLayer();
         markerList = markerRepository.getMarkerList();
+        liveMarkerList = markerRepository.getLiveMarkers();
        // visibleMarkerList = markerRepository.getVisibleMarkerList();
     }
 
@@ -37,6 +40,10 @@ public class MarkerViewModel extends AndroidViewModel {
 
     // Accessors
 //    public LiveData<List<MMarker>> getAllMarkers() { return  allMarkers; }
+
+    public LiveData<List<MapMarkerDataItem>> getLiveMarkerList() {
+        return liveMarkerList;
+    }
     public List<Integer> getAllMarkersByLayer() { return  markerCountByLayer; }
     public List<MapMarkerDataItem> getMarkerList() { return markerRepository.getMarkerList(); }
     public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) { return markerRepository.getVisibleMarkerList(visibleLayerList); }

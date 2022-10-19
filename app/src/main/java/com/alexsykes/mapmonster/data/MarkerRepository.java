@@ -3,6 +3,8 @@ package com.alexsykes.mapmonster.data;
 import android.app.Application;
 import android.database.Cursor;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ public class MarkerRepository {
     private List<MMarker> visibleMarkerList;
     private Map<String, List<MMarker>> markerMap;
     private ArrayList<String> layerNames;
+    LiveData<List<MapMarkerDataItem>> liveMarkers;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -24,11 +27,13 @@ public class MarkerRepository {
         markerList = markerDao.getMarkerData();
         markerCountByLayer = markerDao.markerCountByLayer();
         markerMap = markerDao.getMarkersByLayer();
+        liveMarkers = markerDao.getLiveMarkerData();
     }
 
-//    LiveData<List<MMarker>> getAllMarkers() {
-//        return allMarkers;
-//    }
+    LiveData<List<MapMarkerDataItem>> getLiveMarkers() {
+        return liveMarkers;
+    }
+
     List<Integer> getAllMarkersByLayer() {
         return markerCountByLayer;
     }

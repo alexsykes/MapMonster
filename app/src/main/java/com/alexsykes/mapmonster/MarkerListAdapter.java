@@ -64,14 +64,14 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
 //            }
 //        });
 
-        holder.selectCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                boolean isChecked = holder.selectCheckBox.isChecked();
-                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked, position);
-            }
-        });
+//        holder.selectCheckBox.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Context context = v.getContext();
+//                boolean isChecked = holder.selectCheckBox.isChecked();
+//                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked, position);
+//            }
+//        });
 
         holder.markerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +119,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
 
         public MarkerEditViewHolder(@NonNull View itemView) {
             super(itemView);
+
             markerID_textView = itemView.findViewById(R.id.markerID_textView);
             markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
             markerToggleImage = itemView.findViewById(R.id.markerToggleImage);
@@ -132,6 +133,15 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
             trash = itemView.getContext().getResources().getIdentifier("trash_can", "drawable", itemView.getContext().getPackageName());
             archive = itemView.getContext().getResources().getIdentifier("archive", "drawable", itemView.getContext().getPackageName());
+
+            selectCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+                    boolean isChecked = selectCheckBox.isChecked();
+                    ((MarkerListActivity) context).onSelectedChanged(isChecked );
+                }
+            });
         }
     }
 }

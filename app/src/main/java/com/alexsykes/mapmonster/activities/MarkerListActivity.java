@@ -166,4 +166,8 @@ public class MarkerListActivity extends AppCompatActivity {
         markerListAdapter.notifyItemChanged(pos);
         recyclerView.setAdapter(markerListAdapter);
     }
+
+    public void onSelectedChanged(boolean isChecked) {
+        Log.i(TAG, "onSelectedChanged: ");
+    }
 }
