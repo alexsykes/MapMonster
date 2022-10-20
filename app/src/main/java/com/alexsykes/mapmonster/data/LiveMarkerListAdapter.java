@@ -23,11 +23,7 @@ public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListVi
     @Override
     public void onBindViewHolder(@NonNull LiveMarkerListViewHolder holder, int position) {
         MMarker current = getItem(position);
-        holder.bind(current.getPlacename());
-    }
-
-    public void submitList(List<MMarker> mMarkers) {
-
+        holder.bind(current);
     }
 
     public static class MMarkerDiff extends DiffUtil.ItemCallback<MMarker> {

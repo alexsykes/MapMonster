@@ -3,6 +3,7 @@ package com.alexsykes.mapmonster.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,40 +26,22 @@ import java.util.List;
 public class LiveMarkerListActivity extends AppCompatActivity {
     public static final String TAG = "Info";
     MarkerViewModel markerViewModel;
-    LiveData<List<MMarker>> liveData;
-    List<MMarker> mapMarkerDataItems;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_marker_list);
-//        getData();
-
-        FloatingActionButton button = findViewById(R.id.fab);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markerViewModel.insert(new MMarker(1, 1, "aaa", "aaa", 1, "Hello"));
-            }
-        });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         final LiveMarkerListAdapter adapter = new LiveMarkerListAdapter(new LiveMarkerListAdapter.MMarkerDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerViewModel.getLiveMarkerData().observe(this, mMarkers -> {
             adapter.submitList(mMarkers);
         });
-    }
-
-
-    private void getData() {
-        // Get data
-        MMDatabase db = MMDatabase.getDatabase(this);
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-
-        mapMarkerDataItems = liveData.getValue();
-
     }
 }

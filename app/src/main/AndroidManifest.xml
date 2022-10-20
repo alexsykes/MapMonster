@@ -22,8 +22,11 @@
         tools:targetApi="31">
         <activity
             android:name=".activities.LiveMarkerListActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Marker List"
+            android:parentActivityName=".activities.MarkerEditActivity" >
         </activity>
+
         <activity
             android:name=".activities.MarkerListActivity"
             android:exported="false"
@@ -75,7 +78,7 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:exported="true" >
+            android:exported="true">
 
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
