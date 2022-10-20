@@ -12,30 +12,23 @@ import java.util.Map;
 
 public class MarkerRepository {
     private final MarkerDao markerDao;
-//    private final LiveData<List<MMarker>> allMarkers;
+    LiveData<List<MMarker>> liveMarkerData;
     private final List<Integer> markerCountByLayer;
-    private List<MapMarkerDataItem> markerList;
     private List<MMarker> visibleMarkerList;
     private Map<String, List<MMarker>> markerMap;
     private ArrayList<String> layerNames;
-    LiveData<List<MMarker>> liveMarkers;
+//    LiveData<List<MMarker>> liveMarkers;
     public static final String TAG = "Info";
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
 
         markerDao = db.markerDao();
-//        allMarkers = markerDao.allMarkers();
-        markerList = markerDao.getMarkerData();
         markerCountByLayer = markerDao.markerCountByLayer();
         markerMap = markerDao.getMarkersByLayer();
-        liveMarkers = markerDao.getLiveMarkerData();
-        Log.i(TAG, "MarkerRepository: " + liveMarkers);
+        liveMarkerData = markerDao.getLiveMarkerData();
     }
 
-    LiveData<List<MMarker>> getLiveMarkers() {
-        return liveMarkers;
-    }
 
     List<Integer> getAllMarkersByLayer() {
         return markerCountByLayer;
@@ -46,6 +39,9 @@ public class MarkerRepository {
         markerMap = markerDao.getMarkersByLayer();
         return markerMap;  }
 
+    LiveData<List<MMarker>> getLiveMarkerData() {
+        return liveMarkerData;
+    }
     void insert(MMarker marker) {
         MMDatabase.databaseWriteExecutor.execute(()  -> {
             markerDao.insertMarker(marker);

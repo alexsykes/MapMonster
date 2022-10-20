@@ -47,7 +47,7 @@ public class LiveMarkerListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerViewModel.getLiveMarkerList().observe(this, mMarkers -> {
+        markerViewModel.getLiveMarkerData().observe(this, mMarkers -> {
             adapter.submitList(mMarkers);
         });
     }
@@ -58,7 +58,6 @@ public class LiveMarkerListActivity extends AppCompatActivity {
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
 
-        liveData = markerViewModel.getLiveMarkerList();
         mapMarkerDataItems = liveData.getValue();
 
     }

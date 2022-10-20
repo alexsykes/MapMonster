@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import java.util.List;
+
 public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListViewHolder> {
     
     public LiveMarkerListAdapter(@NonNull DiffUtil.ItemCallback<MMarker> diffCallback) {
@@ -22,6 +24,10 @@ public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListVi
     public void onBindViewHolder(@NonNull LiveMarkerListViewHolder holder, int position) {
         MMarker current = getItem(position);
         holder.bind(current.getPlacename());
+    }
+
+    public void submitList(List<MMarker> mMarkers) {
+
     }
 
     public static class MMarkerDiff extends DiffUtil.ItemCallback<MMarker> {
