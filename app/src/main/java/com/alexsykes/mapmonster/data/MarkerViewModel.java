@@ -2,6 +2,7 @@ package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
 import android.database.Cursor;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -13,19 +14,21 @@ import java.util.Map;
 
 public class MarkerViewModel extends AndroidViewModel {
     private final MarkerRepository markerRepository;
-
+    public static final String TAG = "Info";
+;
 //    private final LiveData<List<MMarker>> allMarkers;
     private final List<Integer> markerCountByLayer;
     private final List<MapMarkerDataItem>  markerList;
-    private final LiveData<List<MapMarkerDataItem>> liveMarkerList;
+    private final LiveData<List<MMarker>> liveMarkerList;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);
         markerRepository = new MarkerRepository(application);
-//        allMarkers = markerRepository.getAllMarkers();
+
         markerCountByLayer = markerRepository.getAllMarkersByLayer();
         markerList = markerRepository.getMarkerList();
         liveMarkerList = markerRepository.getLiveMarkers();
+
        // visibleMarkerList = markerRepository.getVisibleMarkerList();
     }
 
@@ -41,7 +44,7 @@ public class MarkerViewModel extends AndroidViewModel {
     // Accessors
 //    public LiveData<List<MMarker>> getAllMarkers() { return  allMarkers; }
 
-    public LiveData<List<MapMarkerDataItem>> getLiveMarkerList() {
+    public LiveData<List<MMarker>> getLiveMarkerList() {
         return liveMarkerList;
     }
     public List<Integer> getAllMarkersByLayer() { return  markerCountByLayer; }
