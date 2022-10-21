@@ -76,29 +76,23 @@ public class LiveMarkerListActivity extends AppCompatActivity {
     private void unarchiveAll() {
         markerViewModel.unarchiveAll();
     }
-
     private void emptyTrash() {
         markerViewModel.deleteArchived();
     }
-
     private void archiveSelected() {
         markerViewModel.archiveSelected();
         selectNone();
     }
-
     private void selectNone() {
         markerViewModel.deselectAll();
     }
-
     private void selectAll() {
         markerViewModel.selectAll();
     }
-
     public void visibilityToggled(MMarker marker) {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerViewModel.setVisibility(marker.getMarker_id(), !marker.isVisible());
     }
-
     public void selectionToggled(MMarker marker) {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerViewModel.selected(marker.getMarker_id(), !marker.isSelected());

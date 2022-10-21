@@ -66,14 +66,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //    private Location lastKnownLocation;
 
     private MarkerViewModel markerViewModel;
-    private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
-    private List<String> visibleLayerList;
-    private List<Icon> iconList;
+   private List<Icon> iconList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,12 +114,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerList = markerViewModel.getMarkerList();
 
         markerList = markerViewModel.getVisibleMarkerDataList();
-        visibleLayerList = layerViewModel.getVisibleLayerList();
         iconList = iconViewModel.getIconList();
 
         Resources resources = this.getResources();
@@ -301,31 +297,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
     @SuppressLint("MissingPermission")
-    private void updateLocationUI() {
-        if (mMap == null) {
-            return;
-        }
-        try {
-            if (locationPermissionGranted) {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            } else {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-                    @Override
-                    public boolean onMyLocationButtonClick() {
-                        Log.i(TAG, "onMyLocationButtonClick: ");
-                        return false;
-                    }
-                });
-//                lastKnownLocation = null;
-                getLocationPermission();
-            }
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }
 
     // Utility methods
     private void setupUIComponents() {
@@ -366,24 +337,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
             Marker marker1 = mMap.addMarker(markerOptions);
             marker1.setTag(marker.getMarkerID());
-        }
-    }
-    private void updateCamera() {
-        LatLng latLng = new LatLng(0,0);
-        if (!markerList.isEmpty()) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            int padding = 100;
-            for (MapMarkerDataItem marker : markerList) {
-                latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-                builder.include(latLng);
-            }
-            if(markerList.size() > 1) {
-                LatLngBounds bounds =
-                        builder.build();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            } else {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-            }
         }
     }
     CameraPosition getSavedCameraPosition() {
