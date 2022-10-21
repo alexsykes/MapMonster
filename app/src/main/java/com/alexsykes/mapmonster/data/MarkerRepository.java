@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class MarkerRepository {
     private final MarkerDao markerDao;
-    LiveData<List<MMarker>> liveMarkerData;
+    LiveData<List<MapMarkerDataItem>> liveMarkerData;
     private final List<Integer> markerCountByLayer;
     private List<MMarker> visibleMarkerList;
     private Map<String, List<MMarker>> markerMap;
@@ -39,7 +39,7 @@ public class MarkerRepository {
         markerMap = markerDao.getMarkersByLayer();
         return markerMap;  }
 
-    LiveData<List<MMarker>> getLiveMarkerData() {
+    LiveData<List<MapMarkerDataItem>> getLiveMarkerData() {
         return liveMarkerData;
     }
     void insert(MMarker marker) {

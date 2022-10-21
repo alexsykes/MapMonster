@@ -18,7 +18,7 @@ public class MarkerViewModel extends AndroidViewModel {
 //    private final LiveData<List<MMarker>> allMarkers;
     private final List<Integer> markerCountByLayer;
     private final List<MapMarkerDataItem>  markerList;
-    LiveData<List<MMarker>> liveMarkerData;
+    LiveData<List<MapMarkerDataItem>> liveMarkerData;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);
@@ -41,7 +41,7 @@ public class MarkerViewModel extends AndroidViewModel {
     }
 
     // Accessors
-    public LiveData<List<MMarker>> getLiveMarkerData() { return liveMarkerData; }
+    public LiveData<List<MapMarkerDataItem>> getLiveMarkerData() { return liveMarkerData; }
     public List<Integer> getAllMarkersByLayer() { return  markerCountByLayer; }
     public List<MapMarkerDataItem> getMarkerList() { return markerRepository.getMarkerList(); }
     public List<MMarker> getVisibleMarkerList(ArrayList<String> visibleLayerList) { return markerRepository.getVisibleMarkerList(visibleLayerList); }
