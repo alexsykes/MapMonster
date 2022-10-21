@@ -1,5 +1,6 @@
 package com.alexsykes.mapmonster.data;
 
+import android.content.Context;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -23,7 +24,8 @@ public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListVi
     @Override
     public void onBindViewHolder(@NonNull LiveMarkerListViewHolder holder, int position) {
         MMarker current = getItem(position);
-        holder.bind(current);
+        Context context = holder.itemView.getContext();
+        holder.bind(current, context);
     }
 
     public static class MMarkerDiff extends DiffUtil.ItemCallback<MMarker> {
