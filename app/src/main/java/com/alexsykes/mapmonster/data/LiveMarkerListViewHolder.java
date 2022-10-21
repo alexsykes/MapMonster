@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
+import com.alexsykes.mapmonster.activities.LiveMarkerListActivity;
+import com.alexsykes.mapmonster.activities.MarkerListActivity;
 
 public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
     final TextView markerID_textView;
@@ -41,7 +43,7 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(MMarker marker, Context context) {
 
-//        int resID = context.getResources().getIdentifier("airplane", "drawable", context.getPackageName());
+       int resID;
 //        imageView.setImageResource(resID);
         markerNameTextView.setText(marker.getPlacename());
         marker_id = marker.getMarker_id();
@@ -52,6 +54,22 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         markerCodeTextView.setText(marker.getCode());
         markerListNotesTextView.setText(marker.getNotes());
         selectCheckBox.setChecked(Boolean.valueOf(marker.isSelected()));
+        if(marker.isVisible()) {
+            resID = eye_open_id;
+        } else {
+            resID = eye_closed_id;
+        }
+
+
+        markerToggleImage.setImageResource(resID);
+        markerToggleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                ((LiveMarkerListActivity) context).onItemClicked(marker);
+
+            }
+        });
     }
 
     public static LiveMarkerListViewHolder create(ViewGroup parent) {
