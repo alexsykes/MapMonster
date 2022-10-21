@@ -39,15 +39,15 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         archive = itemView.getContext().getResources().getIdentifier("archive", "drawable", itemView.getContext().getPackageName());
     }
 
-    public void bind(MapMarkerDataItem marker, Context context) {
+    public void bind(MMarker marker, Context context) {
 
 //        int resID = context.getResources().getIdentifier("airplane", "drawable", context.getPackageName());
 //        imageView.setImageResource(resID);
         markerNameTextView.setText(marker.getPlacename());
-        marker_id = marker.getMarkerID();
+        marker_id = marker.getMarker_id();
         isArchived = marker.isArchived();
         isVisible = marker.isVisible();
-        markerID_textView.setText(String.valueOf(marker.getMarkerID()));
+        markerID_textView.setText(String.valueOf(marker.getMarker_id()));
         markerNameTextView.setText(marker.getPlacename());
         markerCodeTextView.setText(marker.getCode());
         markerListNotesTextView.setText(marker.getNotes());

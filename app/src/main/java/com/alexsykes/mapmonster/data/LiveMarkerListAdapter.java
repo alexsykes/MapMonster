@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import java.util.List;
 
-public class LiveMarkerListAdapter extends ListAdapter<MapMarkerDataItem, LiveMarkerListViewHolder> {
+public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListViewHolder> {
     
-    public LiveMarkerListAdapter(@NonNull DiffUtil.ItemCallback<MapMarkerDataItem> diffCallback) {
+    public LiveMarkerListAdapter(@NonNull DiffUtil.ItemCallback<MMarker> diffCallback) {
         super(diffCallback);
     }
 
@@ -23,20 +23,20 @@ public class LiveMarkerListAdapter extends ListAdapter<MapMarkerDataItem, LiveMa
 
     @Override
     public void onBindViewHolder(@NonNull LiveMarkerListViewHolder holder, int position) {
-        MapMarkerDataItem current = getItem(position);
+        MMarker current = getItem(position);
         Context context = holder.itemView.getContext();
         holder.bind(current, context);
     }
 
-    public static class MMarkerDiff extends DiffUtil.ItemCallback<MapMarkerDataItem> {
+    public static class MMarkerDiff extends DiffUtil.ItemCallback<MMarker> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull MapMarkerDataItem oldItem, @NonNull MapMarkerDataItem newItem) {
+        public boolean areItemsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull MapMarkerDataItem oldItem, @NonNull MapMarkerDataItem newItem) {
+        public boolean areContentsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
             return oldItem.getCode().equals(newItem.getCode());
         }
     }
