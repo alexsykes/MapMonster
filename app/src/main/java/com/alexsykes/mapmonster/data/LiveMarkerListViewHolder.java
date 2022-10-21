@@ -16,10 +16,8 @@ import com.alexsykes.mapmonster.activities.LiveMarkerListActivity;
 public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
     final TextView markerID_textView;
     private final TextView markerNameTextView, markerCodeTextView, markerListNotesTextView;
-    private final ImageView imageView, markerVisibilityImage, markerArchivedImage;
-    private  int marker_id;
-    private boolean isVisible, isArchived;
-    private int eye_open_id, eye_closed_id, trash, archive;
+    private final ImageView markerVisibilityImage, markerArchivedImage;
+    private int eye_open_id, eye_closed_id, trash;
     private CheckBox selectCheckBox;
 
     private LiveMarkerListViewHolder(View itemView) {
@@ -30,35 +28,29 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         markerCodeTextView = itemView.findViewById(R.id.markerCodeTextView);
         markerListNotesTextView = itemView.findViewById(R.id.markerListNotesTextView);
         markerID_textView = itemView.findViewById(R.id.markerID_textView);
-        imageView = itemView.findViewById(R.id.imageView);
         markerVisibilityImage = itemView.findViewById(R.id.markerToggleImage);
         markerArchivedImage = itemView.findViewById(R.id.markerArchivedImage);
 
         eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
         eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
         trash = itemView.getContext().getResources().getIdentifier("trash_can", "drawable", itemView.getContext().getPackageName());
-        archive = itemView.getContext().getResources().getIdentifier("archive", "drawable", itemView.getContext().getPackageName());
-    }
+     }
 
     public void bind(MMarker marker, Context context) {
-
-       int resID;
-//        imageView.setImageResource(resID);
+        int archResID, visResID;
         markerNameTextView.setText(marker.getPlacename());
-        marker_id = marker.getMarker_id();
-        isArchived = marker.isArchived();
-        isVisible = marker.isVisible();
         markerID_textView.setText(String.valueOf(marker.getMarker_id()));
         markerNameTextView.setText(marker.getPlacename());
         markerCodeTextView.setText(marker.getCode());
         markerListNotesTextView.setText(marker.getNotes());
         selectCheckBox.setChecked(Boolean.valueOf(marker.isSelected()));
 
-        resID = marker.isArchived() ? trash : 0;
-        markerArchivedImage.setImageResource(resID);
+        archResID = marker.isArchived() ? trash : 0;
+        markerArchivedImage.setImageResource(archResID);
 
-        resID = marker.isVisible() ? eye_open_id : eye_closed_id;
-        markerVisibilityImage.setImageResource(resID);
+        visResID = marker.isVisible() ? eye_open_id : eye_closed_id;
+
+        markerVisibilityImage.setImageResource(visResID);
         markerVisibilityImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

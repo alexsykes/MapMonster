@@ -439,8 +439,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
-        private List<Layer> layerList;
-        private LayerViewModel layerViewModel;
         private MarkerViewModel markerViewModel;
 
         @Override
@@ -508,7 +506,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         private void destroyData() {
             markerViewModel.archiveAll();
-//            layerViewModel.archiveAll();
         }
 
         private void restoreData() {
