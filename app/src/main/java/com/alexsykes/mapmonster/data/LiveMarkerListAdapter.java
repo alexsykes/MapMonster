@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import java.util.List;
-
 public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListViewHolder> {
     
     public LiveMarkerListAdapter(@NonNull DiffUtil.ItemCallback<MMarker> diffCallback) {

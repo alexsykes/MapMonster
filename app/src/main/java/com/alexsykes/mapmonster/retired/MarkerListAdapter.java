@@ -1,23 +1,18 @@
-package com.alexsykes.mapmonster;
+package com.alexsykes.mapmonster.retired;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.MarkerEditActivity;
-import com.alexsykes.mapmonster.activities.MarkerListActivity;
+import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
-import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.util.List;
 
@@ -55,30 +50,9 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         holder.imageView.setImageResource(resID);
         holder.marker_id = allMarkers.get(position).getMarkerID();
 
-//        holder.selectCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                Context context = buttonView.getContext();
-//                currentMarker.setSelected(isChecked);
-//                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked);
-//            }
-//        });
-
-//        holder.selectCheckBox.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Context context = v.getContext();
-//                boolean isChecked = holder.selectCheckBox.isChecked();
-//                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked, position);
-//            }
-//        });
-
         holder.markerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.i(TAG, "onClick: " + holder.marker_id);
-                // Toggle image
-
                 Context context = v.getContext();
                 holder.isVisible = !holder.isVisible;
                 if (holder.isVisible) {

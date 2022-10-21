@@ -22,7 +22,6 @@ public class LiveMarkerListActivity extends AppCompatActivity {
     public static final String TAG = "Info";
     MarkerViewModel markerViewModel;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +73,10 @@ public class LiveMarkerListActivity extends AppCompatActivity {
 
     private void unarchiveAll() {
         markerViewModel.unarchiveAll();
-//        loadMarkerRV();
     }
 
     private void emptyTrash() {
         markerViewModel.deleteArchived();
-//        loadMarkerRV();
     }
 
     private void archiveSelected() {
@@ -89,12 +86,10 @@ public class LiveMarkerListActivity extends AppCompatActivity {
 
     private void selectNone() {
         markerViewModel.deselectAll();
-//        loadMarkerRV();
     }
 
     private void selectAll() {
         markerViewModel.selectAll();
-//        loadMarkerRV();
     }
 
     public void visibilityToggled(MMarker marker) {
