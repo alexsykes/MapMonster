@@ -1,23 +1,18 @@
-package com.alexsykes.mapmonster;
+package com.alexsykes.mapmonster.retired;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.activities.MarkerEditActivity;
-import com.alexsykes.mapmonster.activities.MarkerListActivity;
+import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
-import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.util.List;
 
@@ -41,7 +36,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
     public void onBindViewHolder(@NonNull MarkerEditViewHolder holder, int position) {
         Context context = holder.imageView.getContext();
         MapMarkerDataItem currentMarker = allMarkers.get(position);
-
+//        holder.setIsRecyclable(false);
         holder.marker_id = currentMarker.getMarkerID();
         holder.isArchived = currentMarker.isArchived;
         holder.isVisible = currentMarker.isVisible;
@@ -55,20 +50,9 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         holder.imageView.setImageResource(resID);
         holder.marker_id = allMarkers.get(position).getMarkerID();
 
-        holder.selectCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Context context = buttonView.getContext();
-                ((MarkerListActivity) context).onSelectedChanged(currentMarker.markerID, isChecked);
-            }
-        });
-
         holder.markerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.i(TAG, "onClick: " + holder.marker_id);
-                // Toggle image
-
                 Context context = v.getContext();
                 holder.isVisible = !holder.isVisible;
                 if (holder.isVisible) {
@@ -109,6 +93,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
 
         public MarkerEditViewHolder(@NonNull View itemView) {
             super(itemView);
+
             markerID_textView = itemView.findViewById(R.id.markerID_textView);
             markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
             markerToggleImage = itemView.findViewById(R.id.markerToggleImage);
@@ -122,6 +107,15 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
             trash = itemView.getContext().getResources().getIdentifier("trash_can", "drawable", itemView.getContext().getPackageName());
             archive = itemView.getContext().getResources().getIdentifier("archive", "drawable", itemView.getContext().getPackageName());
+
+            selectCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+                    boolean isChecked = selectCheckBox.isChecked();
+                    ((MarkerListActivity) context).onSelectedChanged(isChecked );
+                }
+            });
         }
     }
 }

@@ -127,7 +127,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     }
 
     private void goMarkerList() {
-        Intent intent = new Intent(MarkerEditActivity.this, MarkerListActivity.class);
+        Intent intent = new Intent(MarkerEditActivity.this, LiveMarkerListActivity.class);
         startActivity(intent);
     }
     @Override

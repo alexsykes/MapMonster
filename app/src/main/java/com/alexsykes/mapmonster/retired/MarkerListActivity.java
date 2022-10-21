@@ -1,4 +1,4 @@
-package com.alexsykes.mapmonster.activities;
+package com.alexsykes.mapmonster.retired;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.alexsykes.mapmonster.MarkerListAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
@@ -31,6 +30,7 @@ public class MarkerListActivity extends AppCompatActivity {
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
+    MarkerListAdapter markerListAdapter;
     List<Icon> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> allMarkers;
@@ -46,6 +46,7 @@ public class MarkerListActivity extends AppCompatActivity {
         getData();
         setupUI();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -116,17 +117,6 @@ public class MarkerListActivity extends AppCompatActivity {
         loadMarkerRV();
     }
 
-    private void setupMarkerRV() {
-        allMarkers = markerViewModel.getAllMarkers();
-        recyclerView = findViewById(R.id.markerListRV);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(llm);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        final MarkerListAdapter markerListAdapter = new MarkerListAdapter(allMarkers);
-        recyclerView.setAdapter(markerListAdapter);
-    }
-
     // Setup methods
     private void getData() {
         MMDatabase db = MMDatabase.getDatabase(this);
@@ -140,16 +130,9 @@ public class MarkerListActivity extends AppCompatActivity {
         theSelected = new ArrayList<Integer>();
     }
 
-    public void onArchiveImageCalled(int marker_id, boolean isArchived) {
-//        Log.i(TAG, "onArchiveImageCalled: " + marker_id);
-        markerViewModel.archive(marker_id, isArchived);
-//        Do not refresh RV
-//        loadMarkerRV();
-    }
-
     private void loadMarkerRV() {
         allMarkers = markerViewModel.getAllMarkers();
-        final MarkerListAdapter markerListAdapter = new MarkerListAdapter(allMarkers);
+        markerListAdapter = new MarkerListAdapter(allMarkers);
         recyclerView.setAdapter(markerListAdapter);
     }
 
@@ -157,14 +140,7 @@ public class MarkerListActivity extends AppCompatActivity {
         markerViewModel.setVisibility(markerID, isVisible);
     }
 
-    public void onSelectedChanged(int markerID, boolean isSelected) {
-//        Log.i(TAG, "onSelectedChanged: " + markerID + isChecked);
-//        if(isChecked) {
-//            theSelected.add(markerID);
-//        } else  {
-//                theSelected.remove(theSelected.indexOf(markerID));
-//            }
-//        Log.i(TAG, "theSelected: " + theSelected);
-        markerViewModel.selected(markerID, isSelected);
+    public void onSelectedChanged(boolean isChecked) {
+        Log.i(TAG, "onSelectedChanged: ");
     }
 }

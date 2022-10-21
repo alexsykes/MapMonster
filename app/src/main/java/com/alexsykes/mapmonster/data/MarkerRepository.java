@@ -2,6 +2,9 @@ package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
 import android.database.Cursor;
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,26 +12,24 @@ import java.util.Map;
 
 public class MarkerRepository {
     private final MarkerDao markerDao;
-//    private final LiveData<List<MMarker>> allMarkers;
+    LiveData<List<MMarker>> liveMarkerData;
     private final List<Integer> markerCountByLayer;
-    private final List<MapMarkerDataItem> markerList;
     private List<MMarker> visibleMarkerList;
     private Map<String, List<MMarker>> markerMap;
     private ArrayList<String> layerNames;
+//    LiveData<List<MMarker>> liveMarkers;
+    public static final String TAG = "Info";
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
 
         markerDao = db.markerDao();
-//        allMarkers = markerDao.allMarkers();
-        markerList = markerDao.getMarkerData();
         markerCountByLayer = markerDao.markerCountByLayer();
         markerMap = markerDao.getMarkersByLayer();
+        liveMarkerData = markerDao.getLiveMarkerData();
     }
 
-//    LiveData<List<MMarker>> getAllMarkers() {
-//        return allMarkers;
-//    }
+
     List<Integer> getAllMarkersByLayer() {
         return markerCountByLayer;
     }
@@ -38,6 +39,9 @@ public class MarkerRepository {
         markerMap = markerDao.getMarkersByLayer();
         return markerMap;  }
 
+    LiveData<List<MMarker>> getLiveMarkerData() {
+        return liveMarkerData;
+    }
     void insert(MMarker marker) {
         MMDatabase.databaseWriteExecutor.execute(()  -> {
             markerDao.insertMarker(marker);

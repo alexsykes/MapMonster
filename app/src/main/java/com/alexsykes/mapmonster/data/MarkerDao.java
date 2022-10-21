@@ -28,7 +28,7 @@ public interface MarkerDao {
     void deleteMarker(int markerID);
 
     @Query("SELECT * FROM markers ORDER BY placename")
-    LiveData<List<MMarker>> allMarkers();
+    LiveData<List<MapMarkerDataItem>> getAllMarkersLiveData();
 
     @Query("SELECT COUNT(*) FROM markers GROUP BY layer_id ORDER BY layer_id, placename")
     List<Integer> markerCountByLayer();
@@ -45,6 +45,9 @@ public interface MarkerDao {
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
     List<MapMarkerDataItem> getMarkerData();
+
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY placename")
+    LiveData<List<MMarker>>getLiveMarkerData();
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isVisible AND layers.isVisible ORDER BY placename")
     List<MapMarkerDataItem> getVisibleMarkerDataList();
@@ -64,7 +67,7 @@ public interface MarkerDao {
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY layername, placename")
     List<MapMarkerDataItem> getActiveMarkers();
 
-    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY placename")
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY markerID")
     List<MapMarkerDataItem> getAllMarkers();
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 AND layers.isVisible ORDER BY placename")
