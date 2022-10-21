@@ -12,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.activities.LiveMarkerListActivity;
-import com.alexsykes.mapmonster.activities.MarkerListActivity;
 
 public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
     final TextView markerID_textView;
     private final TextView markerNameTextView, markerCodeTextView, markerListNotesTextView;
-    private final ImageView imageView, markerToggleImage, markerArchivedImage;
+    private final ImageView imageView, markerVisibilityImage, markerArchivedImage;
     private  int marker_id;
     private boolean isVisible, isArchived;
     private int eye_open_id, eye_closed_id, trash, archive;
@@ -32,7 +31,7 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         markerListNotesTextView = itemView.findViewById(R.id.markerListNotesTextView);
         markerID_textView = itemView.findViewById(R.id.markerID_textView);
         imageView = itemView.findViewById(R.id.imageView);
-        markerToggleImage = itemView.findViewById(R.id.markerToggleImage);
+        markerVisibilityImage = itemView.findViewById(R.id.markerToggleImage);
         markerArchivedImage = itemView.findViewById(R.id.markerArchivedImage);
 
         eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
@@ -54,20 +53,32 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         markerCodeTextView.setText(marker.getCode());
         markerListNotesTextView.setText(marker.getNotes());
         selectCheckBox.setChecked(Boolean.valueOf(marker.isSelected()));
+        if(marker.isArchived()) {
+            resID = trash;
+        } else {
+            resID = 0;
+        }
+        markerArchivedImage.setImageResource(resID);
+
         if(marker.isVisible()) {
             resID = eye_open_id;
         } else {
             resID = eye_closed_id;
         }
-
-
-        markerToggleImage.setImageResource(resID);
-        markerToggleImage.setOnClickListener(new View.OnClickListener() {
+        markerVisibilityImage.setImageResource(resID);
+        markerVisibilityImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                ((LiveMarkerListActivity) context).onItemClicked(marker);
+                ((LiveMarkerListActivity) context).visibilityToggled(marker);
+            }
+        });
 
+        selectCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                ((LiveMarkerListActivity) context).selectionToggled(marker);
             }
         });
     }
