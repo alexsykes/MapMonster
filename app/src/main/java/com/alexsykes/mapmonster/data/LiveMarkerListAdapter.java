@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import java.util.List;
+import java.util.Objects;
 
 public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListViewHolder> {
     public static final String TAG = "Info";
@@ -20,8 +21,6 @@ public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListVi
     @Override
     public void onCurrentListChanged(@NonNull List<MMarker> previousList, @NonNull List<MMarker> currentList) {
         super.onCurrentListChanged(previousList, currentList);
-//        Log.i(TAG, "onCurrentListChanged: ");
-//        notifyItemChanged(0, null);
     }
 
     @NonNull
@@ -39,15 +38,14 @@ public class LiveMarkerListAdapter extends ListAdapter<MMarker, LiveMarkerListVi
 
     public static class MMarkerDiff extends DiffUtil.ItemCallback<MMarker> {
         @Override
-        // Scrolls entire table
+        // Tests and scrolls entire table
         public boolean areItemsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
-            return true; // oldItem == newItem;
+            return  true; // oldItem == newItem;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull MMarker oldItem, @NonNull MMarker newItem) {
-            return oldItem.equals(newItem);
-          //  return  oldItem.isVisible() == (newItem.isVisible());
+            return Objects.equals(oldItem, newItem);
         }
     }
 }
