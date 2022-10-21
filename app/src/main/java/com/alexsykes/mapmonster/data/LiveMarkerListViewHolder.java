@@ -53,18 +53,11 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         markerCodeTextView.setText(marker.getCode());
         markerListNotesTextView.setText(marker.getNotes());
         selectCheckBox.setChecked(Boolean.valueOf(marker.isSelected()));
-        if(marker.isArchived()) {
-            resID = trash;
-        } else {
-            resID = 0;
-        }
+
+        resID = marker.isArchived() ? trash : 0;
         markerArchivedImage.setImageResource(resID);
 
-        if(marker.isVisible()) {
-            resID = eye_open_id;
-        } else {
-            resID = eye_closed_id;
-        }
+        resID = marker.isVisible() ? eye_open_id : eye_closed_id;
         markerVisibilityImage.setImageResource(resID);
         markerVisibilityImage.setOnClickListener(new View.OnClickListener() {
             @Override

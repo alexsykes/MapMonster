@@ -37,7 +37,9 @@ public class LiveMarkerListActivity extends AppCompatActivity {
         markerViewModel.getLiveMarkerData().observe(this, mMarkers -> {
             adapter.submitList(mMarkers);
         });
-    }    @Override
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.marker_list_menu, menu);
