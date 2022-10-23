@@ -36,10 +36,10 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         trash = itemView.getContext().getResources().getIdentifier("trash_can", "drawable", itemView.getContext().getPackageName());
      }
 
-    public void bind(MMarker marker, Context context) {
+    public void bind(LiveMarkerItem marker, Context context) {
         int archResID, visResID;
         markerNameTextView.setText(marker.getPlacename());
-        markerID_textView.setText(String.valueOf(marker.getMarker_id()));
+        markerID_textView.setText(String.valueOf(marker.getMarkerID()));
         markerNameTextView.setText(marker.getPlacename());
         markerCodeTextView.setText(marker.getCode());
         markerListNotesTextView.setText(marker.getNotes());
@@ -55,7 +55,7 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                ((LiveMarkerListActivity) context).visibilityToggled(marker);
+                ((LiveMarkerListActivity) context).visibilityToggled(marker.getMarkerID());
             }
         });
 
@@ -63,7 +63,7 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                ((LiveMarkerListActivity) context).selectionToggled(marker);
+                ((LiveMarkerListActivity) context).selectionToggled(marker.getMarkerID());
             }
         });
     }

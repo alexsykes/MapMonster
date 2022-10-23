@@ -60,7 +60,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
                 } else {
                     holder.markerToggleImage.setImageResource(holder.eye_closed_id);
                 }
-                ((MarkerListActivity) context).onVisibleImageCalled(currentMarker.markerID, holder.isVisible);
+                ((MarkerListActivity) context).onVisibleImageCalled(currentMarker.markerID);
             }
         });
 

@@ -2,11 +2,9 @@ package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
 import android.database.Cursor;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +13,7 @@ public class MarkerRepository {
     LiveData<List<MMarker>> liveMarkerData;
     private Map<String, List<MMarker>> markerMap;
     public static final String TAG = "Info";
+    LiveData<List<LiveMarkerItem>> liveMarkers;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -22,13 +21,15 @@ public class MarkerRepository {
         markerDao = db.markerDao();
         markerMap = markerDao.getMarkersByLayer();
         liveMarkerData = markerDao.getLiveMarkerData();
+        liveMarkers = markerDao.getLiveMarkers();
     }
 
     void insert(MMarker marker) {
-        MMDatabase.databaseWriteExecutor.execute(()  -> {
+        MMDatabase.databaseWriteExecutor.execute(() -> {
             markerDao.insertMarker(marker);
         });
     }
+
     public void saveCurrentMarker(MapMarkerDataItem currentMarker) {
         int layerID = currentMarker.layer_id;
         double latitude = currentMarker.latitude;
@@ -40,54 +41,76 @@ public class MarkerRepository {
         }
     }
 
+    public LiveData<List<LiveMarkerItem>> getLiveMarkers() {
+        return liveMarkers;
+    }
+
     public List<MapMarkerDataItem> getVisibleMarkerDataList() {
         return markerDao.getVisibleMarkerDataList();
     }
+
     public Cursor getMarkerDataForExport() {
         return markerDao.getMarkerDataForExport();
     }
+
     public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
         return markerDao.getMarkersFromVisibleLayers();
     }
+
     public MapMarkerDataItem getMMarker(int markerID) {
         return markerDao.getMMarker(markerID);
     }
+
     public List<MapMarkerDataItem> getAllMarkers() {
         return markerDao.getAllMarkers();
     }
-    public List<MapMarkerDataItem> getMarkerList() { return markerDao.getMarkerData(); }
+
+    public List<MapMarkerDataItem> getMarkerList() {
+        return markerDao.getMarkerData();
+    }
+
     public Map<String, List<MMarker>> getMarkersByLayer() {
         markerMap = markerDao.getMarkersByLayer();
-        return markerMap;  }
+        return markerMap;
+    }
+
     LiveData<List<MMarker>> getLiveMarkerData() {
         return liveMarkerData;
     }
 
 
-    public void setVisibility(int marker_id, boolean isVisible) {
-        markerDao.setVisibility(marker_id, isVisible);
+    public void toggleVisibility(int marker_id) {
+        markerDao.toggleVisibility(marker_id);
     }
+
     public void archiveSelected() {
         markerDao.archiveSelected();
     }
+
     public void deleteArchived() {
         markerDao.deleteArchived();
     }
+
     public void unarchiveAll() {
         markerDao.unarchiveAll();
     }
-    public void setSelected(int markerID, boolean isSelected) {
-        markerDao.setSelected(markerID, isSelected);
+
+    public void toggleSelected(int markerID) {
+        markerDao.toggleSelected(markerID);
     }
+
     public void deselectAll() {
         markerDao.deselectAll();
     }
+
     public void selectAll() {
         markerDao.selectAll();
     }
+
     public void archiveAllMarkers() {
         markerDao.archiveAllMarkers();
     }
+
     public void restoreAllMarkers() {
         markerDao.restoreAllMarkers();
     }
@@ -96,3 +119,4 @@ public class MarkerRepository {
         markerDao.toggle(marker_id);
     }
 }
+

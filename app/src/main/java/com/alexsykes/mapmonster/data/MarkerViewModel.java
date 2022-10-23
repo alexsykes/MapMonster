@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +14,13 @@ public class MarkerViewModel extends AndroidViewModel {
     private final MarkerRepository markerRepository;
     public static final String TAG = "Info";
     LiveData<List<MMarker>> liveMarkerData;
+    LiveData<List<LiveMarkerItem>> liveMarkers;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);
         markerRepository = new MarkerRepository(application);
         liveMarkerData = markerRepository.getLiveMarkerData();
+        liveMarkers = markerRepository.getLiveMarkers();
     }
 
     // Mutators
@@ -29,6 +30,7 @@ public class MarkerViewModel extends AndroidViewModel {
     }
 
     // Accessors
+    public LiveData<List<LiveMarkerItem>> getLiveMarkers() { return liveMarkers; };
     public LiveData<List<MMarker>> getLiveMarkerData() { return liveMarkerData; }
     public List<MapMarkerDataItem> getMarkerList() { return markerRepository.getMarkerList(); }
     public Map<String, List<MMarker>> getMarkersByLayer() {  return markerRepository.getMarkersByLayer();    }
@@ -52,8 +54,8 @@ public class MarkerViewModel extends AndroidViewModel {
     }
 
     // Utility
-    public void setVisibility(int marker_id, boolean isVisible) {
-        markerRepository.setVisibility(marker_id, isVisible);
+    public void toggleVisibility(int marker_id) {
+        markerRepository.toggleVisibility(marker_id);
     }
     public void archiveSelected() {
         markerRepository.archiveSelected();
@@ -64,8 +66,8 @@ public class MarkerViewModel extends AndroidViewModel {
     public void unarchiveAll() {
         markerRepository.unarchiveAll();
     }
-    public void selected(int markerID, boolean isSelected) {
-        markerRepository.setSelected(markerID, isSelected);
+    public void toggleSelected(int markerID) {
+        markerRepository.toggleSelected(markerID);
     }
     public void deselectAll() {
         markerRepository.deselectAll();

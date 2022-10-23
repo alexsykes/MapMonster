@@ -8,14 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.LiveMarkerListAdapter;
-import com.alexsykes.mapmonster.data.MMarker;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 public class LiveMarkerListActivity extends AppCompatActivity {
@@ -34,7 +32,7 @@ public class LiveMarkerListActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerViewModel.getLiveMarkerData().observe(this, mMarkers -> {
+        markerViewModel.getLiveMarkers().observe(this, mMarkers -> {
             adapter.submitList(mMarkers);
         });
     }
@@ -89,12 +87,14 @@ public class LiveMarkerListActivity extends AppCompatActivity {
     private void selectAll() {
         markerViewModel.selectAll();
     }
-    public void visibilityToggled(MMarker marker) {
+
+
+    public void visibilityToggled(int markerID) {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerViewModel.setVisibility(marker.getMarker_id(), !marker.isVisible());
+        markerViewModel.toggleVisibility(markerID);
     }
-    public void selectionToggled(MMarker marker) {
+    public void selectionToggled(int markerID) {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerViewModel.selected(marker.getMarker_id(), !marker.isSelected());
+        markerViewModel.toggleSelected(markerID);
     }
 }

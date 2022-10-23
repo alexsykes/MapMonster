@@ -9,7 +9,6 @@ import androidx.room.MapInfo;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,9 @@ public interface MarkerDao {
     @MapInfo(keyColumn = "layername", valueColumn = "placename")
     @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.layer_id WHERE markers.isArchived = 0 ORDER BY layername, placename")
     Map<String, List<MMarker>> getMarkersByLayer();
+
+    @Query("SELECT markers.*, icons.iconFilename FROM markers, layers, icons  WHERE markers.layer_id = layers.layerID AND icons.iconID = layers.icon_id")
+    LiveData<List<LiveMarkerItem>> getLiveMarkers();
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")
     List<MapMarkerDataItem> getMarkerData();
@@ -58,6 +60,9 @@ public interface MarkerDao {
     @Query("UPDATE markers SET isVisible = :isVisible WHERE markerID = :marker_id")
     void setVisibility(int marker_id, boolean isVisible);
 
+    @Query("UPDATE markers SET isVisible = NOT isVisible WHERE markerID = :marker_id")
+    void toggleVisibility(int marker_id);
+
     @Query("UPDATE markers SET isArchived = 1 WHERE isSelected = 1 ")
     void archiveSelected();
 
@@ -67,8 +72,8 @@ public interface MarkerDao {
     @Query("UPDATE markers SET isSelected = 0")
     void deselectAll();
 
-    @Query("UPDATE markers SET isSelected = :isSelected WHERE markerID = :markerID")
-    void setSelected(int markerID, boolean isSelected);
+    @Query("UPDATE markers SET isSelected = NOT isSelected WHERE markerID = :markerID")
+    void toggleSelected(int markerID);
 
     @Query("UPDATE markers SET isSelected = 1")
     void selectAll();
