@@ -11,6 +11,7 @@ import java.util.Set;
 public class LayerRepository {
     private final LayerDao layerDao;
     private final LiveData<List<Layer>> allLabels;
+    private final LiveData<List<LiveLayerItem>> liveLayers;
     private final List<Layer> layerList;
     private final List<String> visibleLayerList;
     private final List<LayerDataItem> layerDataItems;
@@ -27,12 +28,14 @@ public class LayerRepository {
         layerDataItems = layerDao.getLayerData();
         layerListForSpinner = layerDao.getLayerListForSpinner();
         layernamesForSpinner = layerDao.getLayernamesForSpinner();
+        liveLayers = layerDao.getLiveLayers();
 //        layerDataItem = layerDao.getLayerDataItem();
     }
 
     LiveData<List<Layer>> getAllLayers() { return allLabels; }
     public List<Layer> getLayerList() { return layerList; }
     List<String> getVisibleLayerList() { return visibleLayerList; }
+    LiveData<List<LiveLayerItem>> getLiveLayers() { return liveLayers; } ;
 
     List<LayerDataItem> getLayerData() { return layerDao.getLayerData(); }
     LayerDataItem getLayerDataItem(int position) { return layerDao.getLayerDataItem(position); }

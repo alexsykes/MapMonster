@@ -68,4 +68,7 @@ public interface LayerDao {
 
     @Query("SELECT layerID, icon_id, layername, code, isVisible, isArchived FROM layers ORDER BY layerID")
     Cursor getLayerDataForExport();
+
+    @Query("SELECT layers.*, icons.iconFilename AS filename FROM layers, icons WHERE layers.icon_id = icons.iconID ORDER BY layername")
+    LiveData<List<LiveLayerItem>> getLiveLayers();
 }

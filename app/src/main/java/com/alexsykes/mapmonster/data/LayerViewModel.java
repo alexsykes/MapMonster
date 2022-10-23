@@ -108,4 +108,6 @@ public class LayerViewModel extends AndroidViewModel {
     public Cursor getLayerDataForExport() {
         return  layerRepository.getLayerDataForExport();
     }
+
+    public LiveData<List<LiveLayerItem>> getLiveLayers() { return layerRepository.getLiveLayers(); }
 }
