@@ -1,4 +1,4 @@
-package com.alexsykes.mapmonster;
+package com.alexsykes.mapmonster.retired;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.activities.LayerEditActivity;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 

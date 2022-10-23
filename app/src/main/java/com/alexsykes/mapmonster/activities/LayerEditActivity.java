@@ -28,14 +28,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.IconImageAdapter;
-import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
-import com.alexsykes.mapmonster.data.LiveMarkerListAdapter;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -97,7 +95,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         editor = preferences.edit();
         getData();
         setupUI();
-
+        setupIconImageRV();
 
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
         layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
@@ -112,7 +110,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             adapter.submitList(layers);
         });
 //        setupLayerRV();
-//        setupIconImageRV();
     }
 
     @Override
@@ -246,26 +243,18 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
-//    private void setupLayerRV() {
-//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-//        layerDataRV.setLayoutManager(llm);
-//        layerDataRV.setHasFixedSize(true);
-//        allLayers = layerViewModel.getLayerData();
-//        final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
-//        layerDataRV.setAdapter(layerDataAdapter);
-//    }
 
 
 
-//    private void setupIconImageRV() {
-//        iconImageRV = findViewById(R.id.iconImageRV);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
-//        iconImageRV.setLayoutManager(gridLayoutManager);
-//
-//        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
-//        iconImageRV.setAdapter(iconImageAdapter);
-//        iconImageRV.setVisibility(View.GONE);
-//    }
+    private void setupIconImageRV() {
+        iconImageRV = findViewById(R.id.iconImageRV);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
+        iconImageRV.setLayoutManager(gridLayoutManager);
+
+        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
+        iconImageRV.setAdapter(iconImageAdapter);
+        iconImageRV.setVisibility(View.GONE);
+    }
 
     //  Event handling
     public void onLayerClickCalled(int position) {
@@ -482,7 +471,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             // Get values and update currentLayerDataItem
             currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
             currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
-//            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
             currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
 //              Update database
@@ -498,6 +486,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
     }
     private void saveLayerDataItem(LayerDataItem currentLayerDataItem) {
         if (currentLayerDataItem.layerID == 0) {
+            currentLayerDataItem.isVisible = true;
             layerViewModel.insertLayer(currentLayerDataItem);
         } else {
             layerViewModel.updateLayer(currentLayerDataItem);
@@ -529,4 +518,14 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         addVisibleMarkersToMap();
 //        setupLayerRV();
     }
+
+// Redundant
+//    private void setupLayerRV() {
+//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+//        layerDataRV.setLayoutManager(llm);
+//        layerDataRV.setHasFixedSize(true);
+//        allLayers = layerViewModel.getLayerData();
+//        final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
+//        layerDataRV.setAdapter(layerDataAdapter);
+//    }
 }

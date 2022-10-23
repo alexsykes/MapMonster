@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.activities;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.LiveLayerItem;
 
 public class LiveLayerViewHolder extends RecyclerView.ViewHolder {
+    public static final String TAG = "Info";
     final TextView layerNameTextView;
     final ImageView imageView, layerToggleImage;
     private int eye_open_id, eye_closed_id;
@@ -43,5 +45,19 @@ public class LiveLayerViewHolder extends RecyclerView.ViewHolder {
 
         int visResID = current.isVisible() ? eye_open_id : eye_closed_id;
         layerToggleImage.setImageResource(visResID);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LayerEditActivity) context).onLayerClickCalled(current.getLayerID());
+            }
+        });
+
+        layerToggleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LayerEditActivity) context).visibilityToggle(current.getLayerID());
+            }
+        });
     }
 }
