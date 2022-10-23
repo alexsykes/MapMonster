@@ -19,6 +19,7 @@
 
     <TextView
         android:id="@+id/markerID_textView"
+        android:visibility="gone"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:text="@string/marker_id"
@@ -39,6 +40,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/markerID_textView"
         app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/map_marker"
+        android:layout_marginEnd="@dimen/large_margin"
         app:layout_constraintVertical_bias="0.5" />
 
     <TextView

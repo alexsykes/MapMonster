@@ -16,7 +16,7 @@ import com.alexsykes.mapmonster.activities.LiveMarkerListActivity;
 public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
     final TextView markerID_textView;
     private final TextView markerNameTextView, markerCodeTextView, markerListNotesTextView;
-    private final ImageView markerVisibilityImage, markerArchivedImage;
+    private final ImageView markerVisibilityImage, markerArchivedImage, imageView;
     private int eye_open_id, eye_closed_id, trash;
     private CheckBox selectCheckBox;
 
@@ -30,6 +30,8 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
         markerID_textView = itemView.findViewById(R.id.markerID_textView);
         markerVisibilityImage = itemView.findViewById(R.id.markerToggleImage);
         markerArchivedImage = itemView.findViewById(R.id.markerArchivedImage);
+        imageView = itemView.findViewById(R.id.imageView);
+
 
         eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
         eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
@@ -37,7 +39,10 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
      }
 
     public void bind(LiveMarkerItem marker, Context context) {
-        int archResID, visResID;
+        int archResID, visResID, imageID;
+
+        int resID = context.getResources().getIdentifier(marker.getIconFilename(), "drawable", context.getPackageName());
+        imageView.setImageResource(resID);
         markerNameTextView.setText(marker.getPlacename());
         markerID_textView.setText(String.valueOf(marker.getMarkerID()));
         markerNameTextView.setText(marker.getPlacename());
