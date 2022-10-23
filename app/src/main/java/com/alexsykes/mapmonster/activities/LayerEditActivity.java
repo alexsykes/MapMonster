@@ -153,14 +153,9 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
 
     // Setup
     private void getData() {
-        Log.i(TAG, "getData: ");
-
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         allIcons = iconViewModel.getIconList();
-        allLayers = layerViewModel.getLayerData();
-        layerLiveData = layerViewModel.getAllLayers();
 
         // Populate array of icon IDs
         iconIds = new int[allIcons.size()];
@@ -168,6 +163,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             iconIds[i] = getResources().getIdentifier(allIcons.get(i).getIconFilename(), "drawable", getPackageName());
         }
     }
+
     private void setupUI() {
         iconImageButton = findViewById(R.id.iconImageButton);
         newLayerFAB = findViewById(R.id.newLayerFAB);
@@ -439,7 +435,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         layerDetailLinearList.setVisibility(View.VISIBLE);
         buttonLinearLayout.setVisibility(View.VISIBLE);
         newLayerFAB.setVisibility(View.GONE);
-//        toggleEditView(false);
 
         dismissButton.setOnClickListener(v -> {
             showButtons(false);
@@ -473,11 +468,8 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
             currentLayerDataItem.icon_id = currentIcon.getIcon_id();
 
-//              Update database
+//          Update database
             saveLayerDataItem(currentLayerDataItem);
-//
-//            allLayers = layerViewModel.getLayerData();
-//            setupLayerRV();
             showButtons(false);
             toggleEditView(false);
             addVisibleMarkersToMap();
@@ -518,14 +510,4 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         addVisibleMarkersToMap();
 //        setupLayerRV();
     }
-
-// Redundant
-//    private void setupLayerRV() {
-//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-//        layerDataRV.setLayoutManager(llm);
-//        layerDataRV.setHasFixedSize(true);
-//        allLayers = layerViewModel.getLayerData();
-//        final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
-//        layerDataRV.setAdapter(layerDataAdapter);
-//    }
 }

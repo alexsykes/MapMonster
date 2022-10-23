@@ -39,7 +39,6 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-//                int position = holder.getAdapterPosition();
                 ((LayerEditActivity) context).onLayerClickCalled(holder.layer_id);
             }
         });
