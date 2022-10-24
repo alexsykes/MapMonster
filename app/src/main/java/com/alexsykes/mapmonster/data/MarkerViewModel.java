@@ -15,12 +15,14 @@ public class MarkerViewModel extends AndroidViewModel {
     public static final String TAG = "Info";
     LiveData<List<MMarker>> liveMarkerData;
     LiveData<List<LiveMarkerItem>> liveMarkers;
+    LiveData<List<MapMarkerDataItem>> visibleLiveMarkerDataItems;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);
         markerRepository = new MarkerRepository(application);
         liveMarkerData = markerRepository.getLiveMarkerData();
         liveMarkers = markerRepository.getLiveMarkers();
+        visibleLiveMarkerDataItems = markerRepository.visibleLiveMarkerDataItems;
     }
 
     // Mutators
@@ -80,6 +82,9 @@ public class MarkerViewModel extends AndroidViewModel {
     }
     public void toggle(int marker_id) {
         markerRepository.toggle(marker_id);
+    }
+
+    public LiveData<List<MapMarkerDataItem>> getLiveMarkerDataItems() { return markerRepository.visibleLiveMarkerDataItems;
     }
 }
 

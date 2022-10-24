@@ -20,6 +20,7 @@ public class MarkerRepository {
     List<MapMarkerDataItem> allMarkers;
     List<MapMarkerDataItem> markerList;
     MapMarkerDataItem markerDataItem;
+    LiveData<List<MapMarkerDataItem>> visibleLiveMarkerDataItems;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -34,6 +35,7 @@ public class MarkerRepository {
         allMarkers = markerDao.getAllMarkers();
         markerList = markerDao.getMarkerData();
         markerMap = markerMap = markerDao.getMarkersByLayer();
+        visibleLiveMarkerDataItems = markerDao.getVisibleLiveMarkerDataList();
     }
 
     void insert(MMarker marker) {
@@ -144,6 +146,9 @@ public class MarkerRepository {
         MMDatabase.databaseWriteExecutor.execute(() -> {
             markerDao.toggle(marker_id);
         });
+    }
+
+    public LiveData<List<MapMarkerDataItem>>  getLiveMarkerDataItems() { return visibleLiveMarkerDataItems;
     }
 }
 

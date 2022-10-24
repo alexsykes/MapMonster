@@ -60,19 +60,15 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final int DEFAULT_ZOOM = 0;
 
     private List<MapMarkerDataItem> markerList;
+    private MarkerViewModel markerViewModel;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-//    private Location lastKnownLocation;
-
-    private MarkerViewModel markerViewModel;
-    private IconViewModel iconViewModel;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
-   private LiveData<List<Icon>> iconList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
 
+        // Stay on Splash screen until data loads
         // Set up an OnPreDrawListener to the root view.
         final View content = findViewById(android.R.id.content);
         content.getViewTreeObserver().addOnPreDrawListener(
@@ -115,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerList = markerViewModel.getMarkerList();
         markerList = markerViewModel.getVisibleMarkerDataList();
 //        iconList = iconViewModel.getIconList();

@@ -534,7 +534,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         Log.i(TAG, "Marker selected: " + markerID);
         saveCameraPosition();
         currentMarker = markerViewModel.getMMarker(markerID);
-        editMarker(currentMarker);
+//        editMarker(currentMarker);
     }
 
     public void visibilityToggle(int marker_id) {
