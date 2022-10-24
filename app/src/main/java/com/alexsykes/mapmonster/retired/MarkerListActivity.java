@@ -2,6 +2,7 @@ package com.alexsykes.mapmonster.retired;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +32,7 @@ public class MarkerListActivity extends AppCompatActivity {
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
     MarkerListAdapter markerListAdapter;
-    List<Icon> allIcons;
+    LiveData<List<Icon>> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> allMarkers;
     public static final String TAG = "Info";

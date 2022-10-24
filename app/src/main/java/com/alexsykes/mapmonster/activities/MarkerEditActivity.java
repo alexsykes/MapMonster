@@ -26,6 +26,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -67,7 +68,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     private MarkerViewModel markerViewModel;
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
-    List<Icon> allIcons;
+    LiveData<List<Icon>> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> visibleMarkers;
     List<MapMarkerDataItem> activeMarkers;

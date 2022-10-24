@@ -2,12 +2,14 @@ package com.alexsykes.mapmonster.data;
 
 import android.app.Application;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
 public class IconRepository {
     private final IconDao iconDao;
     private Icon icon;
-    private List<Icon> iconList;
+    private LiveData<List<Icon>> iconList;
 
     public IconRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -15,7 +17,7 @@ public class IconRepository {
         iconList = iconDao.getIconList();
     }
 
-    public List<Icon> getIconList() {
+    public LiveData<List<Icon>> getIconList() {
         return iconList;
     }
 

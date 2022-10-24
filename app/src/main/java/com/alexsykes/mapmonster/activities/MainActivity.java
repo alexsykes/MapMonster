@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alexsykes.mapmonster.R;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
-   private List<Icon> iconList;
+   private LiveData<List<Icon>> iconList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,17 +117,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerList = markerViewModel.getMarkerList();
-
         markerList = markerViewModel.getVisibleMarkerDataList();
-        iconList = iconViewModel.getIconList();
+//        iconList = iconViewModel.getIconList();
 
-        Resources resources = this.getResources();
+//        Resources resources = this.getResources();
 //      Image from database - https://stackoverflow.com/questions/42992989/storing-image-resource-id-in-sqlite-database-and-retrieving-it-in-int-array
 //        https://stackoverflow.com/questions/21402275/best-way-to-store-resource-id-in-database-on-android
-        for (Icon item: iconList) {
-            int resID = resources.getIdentifier(item.getIconFilename() , "drawable", this.getPackageName());
-//            Log.i(TAG, "refID: " + resID);
-        }
+//        for (Icon item: iconList.getValue()) {
+//            int resID = resources.getIdentifier(item.getIconFilename() , "drawable", this.getPackageName());
+////            Log.i(TAG, "refID: " + resID);
+//        }
 
     }
 

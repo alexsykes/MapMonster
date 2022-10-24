@@ -62,10 +62,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
     Icon currentIcon;
     private boolean compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
 
-    List<Icon> allIcons;
-    List<LayerDataItem> allLayers;
-    LiveData<List<Layer>> layerLiveData;
-    int[] iconIds;
     private MarkerViewModel markerViewModel;
     LayerDataItem currentLayerDataItem;
 
@@ -95,7 +91,15 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         editor = preferences.edit();
         getData();
         setupUI();
-        setupIconImageRV();
+//        setupIconImageRV();
+
+
+        iconImageRV = findViewById(R.id.iconImageRV);
+        final LiveIconListAdapter liveIconListAdapter = new LiveIconListAdapter(new LiveIconListAdapter.IconDiff());
+        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
+        iconViewModel.getIconList().observe(this, icons -> {
+            liveIconListAdapter.submitList(icons);
+        });
 
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
         layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
@@ -155,13 +159,13 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
     private void getData() {
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        allIcons = iconViewModel.getIconList();
-
-        // Populate array of icon IDs
-        iconIds = new int[allIcons.size()];
-        for (int i = 0; i < allIcons.size(); i++) {
-            iconIds[i] = getResources().getIdentifier(allIcons.get(i).getIconFilename(), "drawable", getPackageName());
-        }
+//        allIcons = iconViewModel.getIconList();
+//
+//        // Populate array of icon IDs
+//        iconIds = new int[allIcons.getValue().size()];
+//        for (int i = 0; i < allIcons.getValue().size(); i++) {
+//            iconIds[i] = getResources().getIdentifier(allIcons.getValue().get(i).getIconFilename(), "drawable", getPackageName());
+//        }
     }
 
     private void setupUI() {
@@ -242,15 +246,15 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
 
 
 
-    private void setupIconImageRV() {
-        iconImageRV = findViewById(R.id.iconImageRV);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
-        iconImageRV.setLayoutManager(gridLayoutManager);
-
-        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
-        iconImageRV.setAdapter(iconImageAdapter);
-        iconImageRV.setVisibility(View.GONE);
-    }
+//    private void setupIconImageRV() {
+//        iconImageRV = findViewById(R.id.iconImageRV);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
+//        iconImageRV.setLayoutManager(gridLayoutManager);
+//
+//        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
+//        iconImageRV.setAdapter(iconImageAdapter);
+//        iconImageRV.setVisibility(View.GONE);
+//    }
 
     //  Event handling
     public void onLayerClickCalled(int position) {
