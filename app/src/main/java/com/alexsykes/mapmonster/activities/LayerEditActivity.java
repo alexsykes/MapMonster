@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.IconImageAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
@@ -96,7 +95,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
 
         iconImageRV = findViewById(R.id.iconImageRV);
         final LiveIconListAdapter adapter = new LiveIconListAdapter(new LiveIconListAdapter.IconDiff());
-        iconImageRV.setVisibility(View.VISIBLE);
+        iconImageRV.setVisibility(View.GONE);
         iconImageRV.setAdapter(adapter);
         iconImageRV.setLayoutManager(new GridLayoutManager(this, 6));
 
@@ -498,7 +497,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             listTitleView.setVisibility(View.GONE);
             layerDataRV.setVisibility(View.GONE);
             layerDetailLinearList.setVisibility(View.VISIBLE);
-//            iconImageRV.setVisibility(View.VISIBLE);
+            iconImageRV.setVisibility(View.VISIBLE);
             layerDetailLinearList.setVisibility(View.VISIBLE);
             newLayerFAB.setVisibility(View.GONE);
         } else {
@@ -506,7 +505,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             layerDataRV.setVisibility(View.VISIBLE);
             newLayerFAB.setVisibility(View.VISIBLE);
             layerDetailLinearList.setVisibility(View.GONE);
-//            iconImageRV.setVisibility(View.GONE);
+            iconImageRV.setVisibility(View.GONE);
             layerDetailLinearList.setVisibility(View.GONE);
             iconImageRV.setVisibility(View.GONE);
         }
@@ -517,5 +516,14 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         layerViewModel.toggle(layer_id);
         addVisibleMarkersToMap();
 //        setupLayerRV();
+    }
+
+    public void iconSelected(int resID, int iconID, String filename) {
+        Log.i(TAG, "resID: " + resID);
+        Log.i(TAG, "iconID: " + iconID);
+        currentLayerDataItem.setIcon_id(resID);
+        iconImageRV.setVisibility(View.GONE);
+        iconImageButton.setImageResource(resID);
+        iconNameTextView.setText(filename);
     }
 }

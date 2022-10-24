@@ -29,7 +29,7 @@ public class LiveIconViewHolder extends RecyclerView.ViewHolder {
         iconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ((LayerEditActivity) context).visibilityToggle(current.getLayerID());
+                ((LayerEditActivity) context).iconSelected(resID, current.getIcon_id(), current.getIconFilename());
             }
         });
     }

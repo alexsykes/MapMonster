@@ -11,10 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.alexsykes.mapmonster.IconImageAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.LiveMarkerListAdapter;
 
 public class ScratchActivity extends AppCompatActivity {
     public static final String TAG = "Info";
