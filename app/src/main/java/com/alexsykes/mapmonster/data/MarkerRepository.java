@@ -14,6 +14,12 @@ public class MarkerRepository {
     private Map<String, List<MMarker>> markerMap;
     public static final String TAG = "Info";
     LiveData<List<LiveMarkerItem>> liveMarkers;
+    List<MapMarkerDataItem> visibleMarkerList;
+    Cursor markerDataForExport;
+    List<MapMarkerDataItem> markersFromVisibleLayers;
+    List<MapMarkerDataItem> allMarkers;
+    List<MapMarkerDataItem> markerList;
+    MapMarkerDataItem markerDataItem;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -22,6 +28,12 @@ public class MarkerRepository {
         markerMap = markerDao.getMarkersByLayer();
         liveMarkerData = markerDao.getLiveMarkerData();
         liveMarkers = markerDao.getLiveMarkers();
+        visibleMarkerList = markerDao.getVisibleMarkerDataList();
+        markerDataForExport = markerDao.getMarkerDataForExport();
+        markersFromVisibleLayers = markerDao.getMarkersFromVisibleLayers();
+        allMarkers = markerDao.getAllMarkers();
+        markerList = markerDao.getMarkerData();
+        markerMap = markerMap = markerDao.getMarkersByLayer();
     }
 
     void insert(MMarker marker) {
@@ -44,79 +56,94 @@ public class MarkerRepository {
     public LiveData<List<LiveMarkerItem>> getLiveMarkers() {
         return liveMarkers;
     }
-
     public List<MapMarkerDataItem> getVisibleMarkerDataList() {
-        return markerDao.getVisibleMarkerDataList();
+        return visibleMarkerList;
     }
-
     public Cursor getMarkerDataForExport() {
-        return markerDao.getMarkerDataForExport();
+        return markerDataForExport;
     }
-
     public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
-        return markerDao.getMarkersFromVisibleLayers();
+        return markersFromVisibleLayers;
     }
-
-    public MapMarkerDataItem getMMarker(int markerID) {
-        return markerDao.getMMarker(markerID);
-    }
-
     public List<MapMarkerDataItem> getAllMarkers() {
-        return markerDao.getAllMarkers();
+        return allMarkers;
     }
-
     public List<MapMarkerDataItem> getMarkerList() {
-        return markerDao.getMarkerData();
+        return markerList;
     }
-
     public Map<String, List<MMarker>> getMarkersByLayer() {
-        markerMap = markerDao.getMarkersByLayer();
         return markerMap;
     }
-
     LiveData<List<MMarker>> getLiveMarkerData() {
         return liveMarkerData;
     }
 
+    public MapMarkerDataItem getMMarker(int markerID) {
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDataItem = markerDao.getMMarker(markerID);
+        });
+        return markerDataItem;
+    }
 
     public void toggleVisibility(int marker_id) {
-        markerDao.toggleVisibility(marker_id);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.toggleVisibility(marker_id);
+        });
+
     }
 
     public void archiveSelected() {
-        markerDao.archiveSelected();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.archiveSelected();
+        });
     }
 
     public void deleteArchived() {
-        markerDao.deleteArchived();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.deleteArchived();
+        });
     }
 
     public void unarchiveAll() {
-        markerDao.unarchiveAll();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.unarchiveAll();
+        });
     }
 
     public void toggleSelected(int markerID) {
-        markerDao.toggleSelected(markerID);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.toggleSelected(markerID);
+        });
     }
 
     public void deselectAll() {
-        markerDao.deselectAll();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.deselectAll();
+        });
     }
 
     public void selectAll() {
-        markerDao.selectAll();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.selectAll();
+        });
     }
 
     public void archiveAllMarkers() {
-        markerDao.archiveAllMarkers();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.archiveAllMarkers();
+        });
     }
 
     public void restoreAllMarkers() {
-        markerDao.restoreAllMarkers();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.restoreAllMarkers();
+        });
     }
 
     public void toggle(int marker_id) {
-        markerDao.toggle(marker_id);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            markerDao.toggle(marker_id);
+        });
     }
 }
 

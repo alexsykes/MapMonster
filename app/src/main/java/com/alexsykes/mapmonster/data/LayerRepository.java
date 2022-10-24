@@ -14,10 +14,10 @@ public class LayerRepository {
     private final LiveData<List<LiveLayerItem>> liveLayers;
     private final List<Layer> layerList;
     private final List<String> visibleLayerList;
-    private final List<LayerDataItem> layerDataItems;
-    private LayerDataItem layerDataItem;
     private final List<SpinnerData> layerListForSpinner;
     private final List<String> layernamesForSpinner;
+    LiveData<List<Layer>>  liveLayerList;
+    Cursor layerDataForExport;
 
     LayerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -25,23 +25,41 @@ public class LayerRepository {
         allLabels = layerDao.allLayers();
         layerList = layerDao.getLayerList();
         visibleLayerList = layerDao.getVisibleLayerList();
-        layerDataItems = layerDao.getLayerData();
         layerListForSpinner = layerDao.getLayerListForSpinner();
         layernamesForSpinner = layerDao.getLayernamesForSpinner();
         liveLayers = layerDao.getLiveLayers();
-//        layerDataItem = layerDao.getLayerDataItem();
+        liveLayerList = layerDao.getLiveLayerList();
     }
 
-    LiveData<List<Layer>> getAllLayers() { return allLabels; }
-    public List<Layer> getLayerList() { return layerList; }
-    List<String> getVisibleLayerList() { return visibleLayerList; }
-    LiveData<List<LiveLayerItem>> getLiveLayers() { return liveLayers; } ;
+    LiveData<List<Layer>> getAllLayers() {
+        return allLabels;
+    }
 
-    List<LayerDataItem> getLayerData() { return layerDao.getLayerData(); }
-    LayerDataItem getLayerDataItem(int position) { return layerDao.getLayerDataItem(position); }
+    public List<Layer> getLayerList() {
+        return layerList;
+    }
+
+    List<String> getVisibleLayerList() {
+        return visibleLayerList;
+    }
+
+    LiveData<List<LiveLayerItem>> getLiveLayers() {
+        return liveLayers;
+    }
+
+
+    List<LayerDataItem> getLayerData() {
+        return layerDao.getLayerData();
+    }
+
+    LayerDataItem getLayerDataItem(int position) {
+        return layerDao.getLayerDataItem(position);
+    }
+
     List<MapMarkerDataItem> getMapMarkerItems(int position) {
         return layerDao.getMapMarkerItems(position);
     }
+
     void insert(Layer layer) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
             layerDao.insertLayer(layer);
@@ -49,57 +67,80 @@ public class LayerRepository {
     }
 
     public void setVisibility(boolean isVisible, int layerID) {
-        layerDao.setVisibility(isVisible,layerID);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.setVisibility(isVisible, layerID);
+        });
     }
 
     public void setVisibility(String layerName, boolean visibility) {
-        layerDao.setVisibility(layerName, visibility);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.setVisibility(layerName, visibility);
+        });
     }
 
     public void setVisibilityForAll(boolean b) {
-        layerDao.setVisibilityForAll(b);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.setVisibilityForAll(b);
+        });
     }
 
     public void updateLayerVisibility(Set<String> newValues) {
-        layerDao.setVisibilityForAll(false);
-        String[] values = newValues.toArray(new String [newValues.size()]);
-        layerDao.updateLayerVisibility(values);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.setVisibilityForAll(false);
+            String[] values = newValues.toArray(new String[newValues.size()]);
+            layerDao.updateLayerVisibility(values);
+        });
     }
 
     public void archiveAllLayers() {
-        layerDao.archiveAllLayers();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.archiveAllLayers();
+        });
     }
 
     public void updateLayer(LayerDataItem currentLayerDataItem) {
-        layerDao.updateLayerData(currentLayerDataItem.layerID, currentLayerDataItem.icon_id, currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.isVisible);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.updateLayerData(currentLayerDataItem.layerID, currentLayerDataItem.icon_id, currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.isVisible);
+        });
     }
 
     public LiveData<List<Layer>> getLiveLayerList() {
-        return  layerDao.getLiveLayerList();
+        return liveLayerList;
     }
 
+
     public void insertLayer(LayerDataItem currentLayerDataItem) {
-        Layer layer = new Layer(currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.icon_id, currentLayerDataItem.isVisible);
-        layerDao.insertLayer(layer);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            Layer layer = new Layer(currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.icon_id, currentLayerDataItem.isVisible);
+            layerDao.insertLayer(layer);
+        });
+
     }
 
     public void deleteAllLayers() {
-        layerDao.deleteAllLayers();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.deleteAllLayers();
+        });
     }
 
     public List<SpinnerData> getLayerListForSpinner() {
-        return layerListForSpinner;
+            return layerListForSpinner;
     }
 
     public List<String> getLayernamesForSpinner() {
-        return layernamesForSpinner;
-    }
+            return layernamesForSpinner;
+    };
 
     public void toggle(int layer_id) {
-        layerDao.toggle(layer_id);
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDao.toggle(layer_id);
+        });
     }
 
     public Cursor getLayerDataForExport() {
-        return layerDao.getLayerDataForExport();
+        MMDatabase.databaseWriteExecutor.execute(() -> {
+            layerDataForExport   = layerDao.getLayerDataForExport();
+        });
+        return layerDataForExport;
     }
 }
