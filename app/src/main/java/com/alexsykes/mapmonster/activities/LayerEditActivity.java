@@ -20,7 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -30,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
@@ -222,17 +220,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
-//        visibilitySwitch = findViewById(R.id.visibilitySwitch);
-//        visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                saveChangesButton.setEnabled(true);
-//            }
-//        });
-
-
-//        layerDataRV = findViewById(R.id.layerDataRecyclerView);
-//        layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
         newLayerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,18 +233,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
-
-
-
-//    private void setupIconImageRV() {
-//        iconImageRV = findViewById(R.id.iconImageRV);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
-//        iconImageRV.setLayoutManager(gridLayoutManager);
-//
-//        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
-//        iconImageRV.setAdapter(iconImageAdapter);
-//        iconImageRV.setVisibility(View.GONE);
-//    }
 
     //  Event handling
     public void onLayerClickCalled(int position) {
@@ -279,24 +254,13 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         saveChangesButton.setEnabled(false);
         dismissButton.setEnabled(true);
     }
-    public void onIconClicked(int resid) {
-        Log.i(TAG, "onIconClicked: ");
-//      Change icon on button
-        iconImageButton.setImageResource(resid);
-        saveChangesButton.setEnabled(true);
-
-//      Get icon name from
-        String filename = getResources().getResourceEntryName(resid);
-        String label = filename.replace("_", " ");
-        label = label.substring(0, 1).toUpperCase() + label.substring(1);
-        iconNameTextView.setText(label);
-        currentIcon = iconViewModel.getIconByFilename(filename);
+    public void onIconSelected(int resID, Icon icon) {
+        Log.i(TAG, "iconSelected: " + icon.getIconFilename());
+        currentLayerDataItem.setIcon_id(icon.getIcon_id());
         iconImageRV.setVisibility(View.GONE);
-
-//        if(currentLayerDataItem != null) {
-        currentLayerDataItem.setIconFilename(filename);
-        currentLayerDataItem.setName(label);
-//        }
+        iconImageButton.setImageResource(resID);
+        iconNameTextView.setText(icon.getName());
+        saveChangesButton.setEnabled(true);
     }
 
     //  Utility methods
@@ -473,7 +437,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             // Get values and update currentLayerDataItem
             currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
             currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
-            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+            currentLayerDataItem.icon_id = currentLayerDataItem.getIcon_id();
 
 //          Update database
             saveLayerDataItem(currentLayerDataItem);
@@ -515,15 +479,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         Log.i(TAG, "visibilityToggle: " + layer_id);
         layerViewModel.toggle(layer_id);
         addVisibleMarkersToMap();
-//        setupLayerRV();
     }
 
-    public void iconSelected(int resID, int iconID, String filename) {
-        Log.i(TAG, "resID: " + resID);
-        Log.i(TAG, "iconID: " + iconID);
-        currentLayerDataItem.setIcon_id(resID);
-        iconImageRV.setVisibility(View.GONE);
-        iconImageButton.setImageResource(resID);
-        iconNameTextView.setText(filename);
-    }
 }

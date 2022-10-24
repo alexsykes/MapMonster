@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
-import com.alexsykes.mapmonster.data.LiveLayerItem;
 
 public class LiveIconViewHolder extends RecyclerView.ViewHolder {
     public static final String TAG = "Info";
@@ -23,13 +22,14 @@ public class LiveIconViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Icon current, Context context) {
+        Icon icon = current;
         int resID = context.getResources().getIdentifier(current.getIconFilename(), "drawable", context.getPackageName());
         iconImageButton.setImageResource(resID);
 
         iconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((LayerEditActivity) context).iconSelected(resID, current.getIcon_id(), current.getIconFilename());
+                ((LayerEditActivity) context).onIconSelected(resID, icon);
             }
         });
     }
