@@ -95,6 +95,8 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
 
 
         iconImageRV = findViewById(R.id.iconImageRV);
+        iconImageRV.setVisibility(View.VISIBLE);
+
         final LiveIconListAdapter liveIconListAdapter = new LiveIconListAdapter(new LiveIconListAdapter.IconDiff());
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         iconViewModel.getIconList().observe(this, icons -> {
@@ -494,7 +496,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             listTitleView.setVisibility(View.GONE);
             layerDataRV.setVisibility(View.GONE);
             layerDetailLinearList.setVisibility(View.VISIBLE);
-            iconImageRV.setVisibility(View.VISIBLE);
+//            iconImageRV.setVisibility(View.VISIBLE);
             layerDetailLinearList.setVisibility(View.VISIBLE);
             newLayerFAB.setVisibility(View.GONE);
         } else {
@@ -502,7 +504,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             layerDataRV.setVisibility(View.VISIBLE);
             newLayerFAB.setVisibility(View.VISIBLE);
             layerDetailLinearList.setVisibility(View.GONE);
-            iconImageRV.setVisibility(View.GONE);
+//            iconImageRV.setVisibility(View.GONE);
             layerDetailLinearList.setVisibility(View.GONE);
             iconImageRV.setVisibility(View.GONE);
         }

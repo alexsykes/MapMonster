@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.activities;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.LiveLayerItem;
 
 import java.util.List;
+import java.util.Objects;
 
 public class LiveIconListAdapter extends ListAdapter<Icon, LiveIconViewHolder> {
 
@@ -46,7 +48,7 @@ public class LiveIconListAdapter extends ListAdapter<Icon, LiveIconViewHolder> {
 
         @Override
         public boolean areContentsTheSame(@NonNull Icon oldItem, @NonNull Icon newItem) {
-            return true; //oldItem.getWord().equals(newItem.getWord());
+            return Objects.equals(oldItem, newItem);
         }
     }
 }
