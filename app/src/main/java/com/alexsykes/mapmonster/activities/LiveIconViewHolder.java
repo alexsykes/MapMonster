@@ -22,12 +22,6 @@ public class LiveIconViewHolder extends RecyclerView.ViewHolder {
         iconImageButton = itemView.findViewById(R.id.iconImageButton);
     }
 
-    public static LiveIconViewHolder create(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.icon_image_item, parent, false);
-        return new LiveIconViewHolder(view);
-    }
-
     public void bind(Icon current, Context context) {
         int resID = context.getResources().getIdentifier(current.getIconFilename(), "drawable", context.getPackageName());
         iconImageButton.setImageResource(resID);
@@ -38,6 +32,12 @@ public class LiveIconViewHolder extends RecyclerView.ViewHolder {
 //                ((LayerEditActivity) context).visibilityToggle(current.getLayerID());
             }
         });
+    }
+
+    public static LiveIconViewHolder create(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.icon_image_item, parent, false);
+        return new LiveIconViewHolder(view);
     }
 
 }

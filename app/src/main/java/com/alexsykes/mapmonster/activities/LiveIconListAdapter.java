@@ -43,7 +43,7 @@ public class LiveIconListAdapter extends ListAdapter<Icon, LiveIconViewHolder> {
 
         @Override
         public boolean areItemsTheSame(@NonNull Icon oldItem, @NonNull Icon newItem) {
-            return true; // oldItem == newItem;
+            return  oldItem == newItem;
         }
 
         @Override

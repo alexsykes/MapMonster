@@ -95,25 +95,27 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
 
 
         iconImageRV = findViewById(R.id.iconImageRV);
+        final LiveIconListAdapter adapter = new LiveIconListAdapter(new LiveIconListAdapter.IconDiff());
         iconImageRV.setVisibility(View.VISIBLE);
+        iconImageRV.setAdapter(adapter);
+        iconImageRV.setLayoutManager(new GridLayoutManager(this, 6));
 
-        final LiveIconListAdapter liveIconListAdapter = new LiveIconListAdapter(new LiveIconListAdapter.IconDiff());
-        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
+       iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         iconViewModel.getIconList().observe(this, icons -> {
-            liveIconListAdapter.submitList(icons);
+            adapter.submitList(icons);
         });
 
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
         layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
-        final LiveLayerListAdapter adapter = new LiveLayerListAdapter(new LiveLayerListAdapter.LiveLayerDiff());
-        layerDataRV.setAdapter(adapter);
+        final LiveLayerListAdapter liveLayerListAdapter = new LiveLayerListAdapter(new LiveLayerListAdapter.LiveLayerDiff());
+        layerDataRV.setAdapter(liveLayerListAdapter);
         layerDataRV.setLayoutManager(new LinearLayoutManager(this));
 
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         layerViewModel.getLiveLayers().observe(this, layers -> {
             Log.i(TAG, "onCreate: ");
-            adapter.submitList(layers);
+            liveLayerListAdapter.submitList(layers);
         });
 //        setupLayerRV();
     }
