@@ -1,6 +1,7 @@
 package com.alexsykes.mapmonster.activities;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class LiveLayerListAdapter extends ListAdapter<LiveLayerItem, LiveLayerViewHolder> {
+    public static final String TAG = "Info";
     protected LiveLayerListAdapter(@NonNull DiffUtil.ItemCallback<LiveLayerItem> diffCallback) {
         super(diffCallback);
     }
@@ -38,11 +40,17 @@ public class LiveLayerListAdapter extends ListAdapter<LiveLayerItem, LiveLayerVi
     public static class LiveLayerDiff extends DiffUtil.ItemCallback<LiveLayerItem> {
         @Override
         public boolean areItemsTheSame(@NonNull LiveLayerItem oldItem, @NonNull LiveLayerItem newItem) {
+            if(oldItem.isVisible() != newItem.isVisible() ) {
+                Log.i(TAG, "areItemsTheSame = Visibility changed: " + oldItem.getLayerID());
+            }
             return true;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull LiveLayerItem oldItem, @NonNull LiveLayerItem newItem) {
+            if(oldItem.isVisible() != newItem.isVisible() ) {
+                Log.i(TAG, "areContentsTheSame = Visibility changed: ");
+            }
             return Objects.equals(oldItem, newItem);
         }
     }

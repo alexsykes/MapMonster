@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +39,7 @@ import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.LiveMarkerListAdapter;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
@@ -81,7 +83,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     private boolean compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
 
     // UIComponents
-    RecyclerView markerDataRV;
+    RecyclerView markerListRV;
     TextView listTitleView, markerTitleView, latLabel, lngLabel;
     TextInputEditText markerNameTextInput, markerCodeTextInput, markerNotesTextInput;
     Button dismissButton, saveChangesButton;
@@ -99,11 +101,25 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_edit);
+
+        markerListRV = findViewById(R.id.markerDataRecyclerView);
+        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+
+        final LiveMarkerListAdapter liveMarkerListAdapter =
+                new LiveMarkerListAdapter(new com.alexsykes.mapmonster.activities.LiveMarkerListAdapter.LiveMarkerDiff());
+
+        markerListRV.setAdapter(liveMarkerListAdapter);
+        markerListRV.setLayoutManager(new LinearLayoutManager(this));
+
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        markerViewModel.getLiveMarkers().observe(this, markers -> {
+            liveMarkerListAdapter.submitList(markers);
+        });
         setupMap();
         getData();
         setupUI();
-        setupMarkerRV();
-        currentMarker = new MapMarkerDataItem();
+//        setupMarkerRV();
+//        currentMarker = new MapMarkerDataItem();
     }
 
 
@@ -286,7 +302,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 
         newMarkerFAB.setVisibility(View.GONE);
         markerDetailLL.setVisibility(View.VISIBLE);
-        markerDataRV.setVisibility(View.GONE);
+        markerListRV.setVisibility(View.GONE);
         listTitleView.setVisibility(View.GONE);
 
         // redraw map with marker
@@ -326,8 +342,8 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         allLayers = layerViewModel.getLayerData();
         layerListForSpinner = layerViewModel.getLayerListForSpinner();
         layernamesForSpinner = layerViewModel.getLayernamesForSpinner();
-        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
-        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
+//        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
+//        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
     }
 
     private void setupMap() {
@@ -393,7 +409,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 
                 markerViewModel.saveCurrentMarker(currentMarker);
                 markerDetailLL.setVisibility(View.GONE);
-                markerDataRV.setVisibility(View.VISIBLE);
+                markerListRV.setVisibility(View.VISIBLE);
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
 
@@ -407,7 +423,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
             @Override
             public void onClick(View v) {
                 markerDetailLL.setVisibility(View.GONE);
-                markerDataRV.setVisibility(View.VISIBLE);
+                markerListRV.setVisibility(View.VISIBLE);
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
                 updateMarkerRV();
@@ -506,19 +522,19 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 
     private void setupMarkerRV() {
         markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
-        markerDataRV = findViewById(R.id.markerDataRecyclerView);
+        markerListRV = findViewById(R.id.markerDataRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        markerDataRV.setLayoutManager(llm);
-        markerDataRV.setHasFixedSize(true);
-        markerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        markerListRV.setLayoutManager(llm);
+        markerListRV.setHasFixedSize(true);
+        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
-        markerDataRV.setAdapter(markerDataAdapter);
+        markerListRV.setAdapter(markerDataAdapter);
     }
 
     private void updateMarkerRV() {
         markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
         final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
-        markerDataRV.setAdapter(markerDataAdapter);
+        markerListRV.setAdapter(markerDataAdapter);
     }
 
     @Override
@@ -530,19 +546,23 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         return false;
     }
 
+    public void visibilityToggle(int marker_id) {
+        Log.i(TAG, "visibilityToggle: " + marker_id);
+        markerViewModel.toggle(marker_id);
+
+//        updateMarkerRV();
+        addMarkersToMap();
+//        setupLayerRV();
+    }
+
+    public void onLayerClickCalled(int markerID) {
+        Log.i(TAG, "onLayerClickCalled: " +  markerID);
+    }
+
     public void onMarkerClickCalled(int markerID) {
         Log.i(TAG, "Marker selected: " + markerID);
         saveCameraPosition();
         currentMarker = markerViewModel.getMMarker(markerID);
 //        editMarker(currentMarker);
-    }
-
-    public void visibilityToggle(int marker_id) {
-        Log.i(TAG, "visibilityToggle: " + marker_id);
-        markerViewModel.toggle(marker_id);
-
-        updateMarkerRV();
-        addMarkersToMap();
-//        setupLayerRV();
     }
 }
