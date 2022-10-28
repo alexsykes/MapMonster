@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +38,7 @@ import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
-import com.alexsykes.mapmonster.data.LiveMarkerListAdapter;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 import com.alexsykes.mapmonster.data.MMDatabase;
 import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
@@ -73,7 +72,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     LiveData<List<Icon>> allIcons;
     List<LayerDataItem> allLayers;
     List<MapMarkerDataItem> visibleMarkers;
-    List<MapMarkerDataItem> activeMarkers;
+    List<LiveMarkerItem> activeMarkers;
     List<MapMarkerDataItem> markersFromVisibleLayers;
 
     List<SpinnerData> layerListForSpinner;
@@ -105,19 +104,23 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         markerListRV = findViewById(R.id.markerDataRecyclerView);
         markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
-        final LiveMarkerListAdapter liveMarkerListAdapter =
-                new LiveMarkerListAdapter(new com.alexsykes.mapmonster.activities.LiveMarkerListAdapter.LiveMarkerDiff());
+        final LiveMarkerEditListAdapter liveMarkerListAdapter =
+                new LiveMarkerEditListAdapter(new LiveMarkerEditListAdapter.LiveMarkerDiff());
 
         markerListRV.setAdapter(liveMarkerListAdapter);
         markerListRV.setLayoutManager(new LinearLayoutManager(this));
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+//        activeMarkers = markerViewModel.getLiveMarkers().getValue();
+
         markerViewModel.getLiveMarkers().observe(this, markers -> {
             liveMarkerListAdapter.submitList(markers);
+            Log.i(TAG, "onCreate: MarkerEditActivity");
+//            activeMarkers = markers;
         });
         setupMap();
         getData();
-        setupUI();
+//        setupUI();
 //        setupMarkerRV();
 //        currentMarker = new MapMarkerDataItem();
     }
@@ -547,17 +550,17 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     }
 
     public void visibilityToggle(int marker_id) {
-        Log.i(TAG, "visibilityToggle: " + marker_id);
+        Log.i(TAG, "markerVisibilityToggle: " + marker_id);
         markerViewModel.toggle(marker_id);
 
 //        updateMarkerRV();
         addMarkersToMap();
 //        setupLayerRV();
     }
-
-    public void onLayerClickCalled(int markerID) {
-        Log.i(TAG, "onLayerClickCalled: " +  markerID);
-    }
+//
+//    public void onLayerClickCalled(int markerID) {
+//        Log.i(TAG, "onLayerClickCalled: " +  markerID);
+//    }
 
     public void onMarkerClickCalled(int markerID) {
         Log.i(TAG, "Marker selected: " + markerID);

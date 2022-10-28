@@ -8,16 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.alexsykes.mapmonster.data.LiveLayerItem;
 import com.alexsykes.mapmonster.data.LiveMarkerItem;
-import com.alexsykes.mapmonster.data.LiveMarkerListViewHolder;
 
 import java.util.List;
 import java.util.Objects;
 
-public class LiveMarkerListAdapter extends ListAdapter<LiveMarkerItem, LiveMarkerListViewHolder> {
+public class LiveMarkerEditListAdapter extends ListAdapter<LiveMarkerItem, LiveMarkerEditListViewHolder> {
     public static final String TAG = "Info";
-    protected LiveMarkerListAdapter(@NonNull DiffUtil.ItemCallback<LiveMarkerItem> diffCallback) {
+    protected LiveMarkerEditListAdapter(@NonNull DiffUtil.ItemCallback<LiveMarkerItem> diffCallback) {
         super(diffCallback);
     }
 
@@ -29,12 +27,12 @@ public class LiveMarkerListAdapter extends ListAdapter<LiveMarkerItem, LiveMarke
 
     @NonNull
     @Override
-    public LiveMarkerListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return LiveMarkerListViewHolder.create(parent);
+    public LiveMarkerEditListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return LiveMarkerEditListViewHolder.create(parent);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LiveMarkerListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LiveMarkerEditListViewHolder holder, int position) {
         LiveMarkerItem current = getItem(position);
         Context context = holder.itemView.getContext();
         holder.bind(current, context);
