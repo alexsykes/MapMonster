@@ -555,11 +555,11 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 //        Log.i(TAG, "onLayerClickCalled: " +  markerID);
 //    }
 
-    // Method to edit marker v=from RecyclerView
+    // Method to edit marker from RecyclerView
     public void onMarkerClickCalled(int markerID) {
         Log.i(TAG, "Marker selected: " + markerID);
         saveCameraPosition();
-        currentMarker = markerViewModel.getMMarker(markerID);
+        currentMarker = markerViewModel.getCurrentMarker(markerID);
         editMarker(currentMarker);
     }
 

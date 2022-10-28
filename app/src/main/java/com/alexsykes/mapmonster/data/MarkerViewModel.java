@@ -48,8 +48,8 @@ public class MarkerViewModel extends AndroidViewModel {
     public List<LiveMarkerItem> getMarkersFromVisibleLayers() {
         return markerRepository.getMarkersFromVisibleLayers();
     }
-    public LiveMarkerItem getMMarker(int markerID) {
-        return markerRepository.getMMarker(markerID);
+    public LiveMarkerItem getCurrentMarker(int markerID) {
+        return markerRepository.getCurrentMarker(markerID);
     }
     public List<LiveMarkerItem> getAllMarkers() {
         return markerRepository.getAllMarkers();

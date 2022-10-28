@@ -84,9 +84,9 @@ public class MarkerRepository {
         return liveMarkerData;
     }
 
-    public LiveMarkerItem getMMarker(int markerID) {
+    public LiveMarkerItem getCurrentMarker(int markerID) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
-            markerDataItem = markerDao.getMMarker(markerID);
+            markerDataItem = markerDao.getCurrentMarker(markerID);
         });
         return markerDataItem;
     }

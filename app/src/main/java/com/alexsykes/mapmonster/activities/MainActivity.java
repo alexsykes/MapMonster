@@ -106,18 +106,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerList = markerViewModel.getMarkerList();
         markerList = markerViewModel.getVisibleMarkerDataList();
-//        iconList = iconViewModel.getIconList();
-
-//        Resources resources = this.getResources();
-//      Image from database - https://stackoverflow.com/questions/42992989/storing-image-resource-id-in-sqlite-database-and-retrieving-it-in-int-array
-//        https://stackoverflow.com/questions/21402275/best-way-to-store-resource-id-in-database-on-android
-//        for (Icon item: iconList.getValue()) {
-//            int resID = resources.getIdentifier(item.getIconFilename() , "drawable", this.getPackageName());
-////            Log.i(TAG, "refID: " + resID);
-//        }
-
     }
 
     @Override

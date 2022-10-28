@@ -36,7 +36,7 @@ public interface MarkerDao {
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY placename")
     LiveData<List<MMarker>>getLiveMarkerData();
 
-    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isVisible AND layers.isVisible ORDER BY placename")
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isVisible AND layers.isVisible ORDER BY placename")
     List<LiveMarkerItem> getVisibleMarkerDataList();
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers, layers, icons WHERE markers.layer_id = layers.layerID AND layers.icon_id = icons.iconID AND markers.isVisible AND layers.isVisible ORDER BY placename")
@@ -51,13 +51,13 @@ public interface MarkerDao {
     @Query("UPDATE markers SET isVisible = NOT isVisible WHERE markerID = :marker_id ")
     void toggle(int marker_id);
 
-    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY markerID")
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename  FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID ORDER BY markerID")
     List<LiveMarkerItem> getAllMarkers();
 
-    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.markerID = :markerID ")
-    LiveMarkerItem getMMarker(int markerID);
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.markerID = :markerID ")
+    LiveMarkerItem getCurrentMarker(int markerID);
 
-    @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 AND layers.isVisible ORDER BY placename")
+    @Query("SELECT markers.*, layers.layername, icons.iconFilename  FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 AND layers.isVisible ORDER BY placename")
     List<LiveMarkerItem> getMarkersFromVisibleLayers();
 
     @Query("UPDATE markers SET isVisible = :isVisible WHERE markerID = :marker_id")
