@@ -40,7 +40,6 @@ import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
 import com.alexsykes.mapmonster.data.LiveMarkerItem;
 import com.alexsykes.mapmonster.data.MMDatabase;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.alexsykes.mapmonster.data.SpinnerData;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -71,9 +70,9 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     private IconViewModel iconViewModel;
     LiveData<List<Icon>> allIcons;
     List<LayerDataItem> allLayers;
-    List<MapMarkerDataItem> visibleMarkers;
+    List<LiveMarkerItem> visibleMarkers;
     List<LiveMarkerItem> activeMarkers;
-    List<MapMarkerDataItem> markersFromVisibleLayers;
+    List<LiveMarkerItem> markersFromVisibleLayers;
 
     List<SpinnerData> layerListForSpinner;
     ArrayAdapter<String> spinnerAdapter;
@@ -93,7 +92,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private GoogleMap mMap;
-    private MapMarkerDataItem currentMarker;
+    private LiveMarkerItem currentMarker;
     Marker currentLocation;
 
     @Override
@@ -120,7 +119,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         });
         setupMap();
         getData();
-//        setupUI();
+        setupUI();
 //        setupMarkerRV();
 //        currentMarker = new MapMarkerDataItem();
     }
@@ -140,15 +139,9 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
             case R.id.marker_list_menuitem :
                 goMarkerList();
                 return true;
-
             default:
         }
         return false;
-    }
-
-    private void goMarkerList() {
-        Intent intent = new Intent(MarkerEditActivity.this, LiveMarkerListActivity.class);
-        startActivity(intent);
     }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -254,12 +247,12 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         editor.putFloat("zoom", zoom);
         editor.apply();
     }
-    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
+    private void updateCamera(List<LiveMarkerItem> mapMarkerDataItems) {
         LatLng latLng;
         if (!mapMarkerDataItems.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
-            for (MapMarkerDataItem marker : mapMarkerDataItems) {
+            for (LiveMarkerItem marker : mapMarkerDataItems) {
                 latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
                 builder.include(latLng);
             }
@@ -273,7 +266,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
             }
         }
     }
-
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
 
@@ -285,23 +277,23 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void editMarker(MapMarkerDataItem mapMarkerDataItem) {
+    private void editMarker(LiveMarkerItem mapMarkerDataItem) {
         currentMarker = mapMarkerDataItem;
         Log.i(TAG, "editMarker: " + currentMarker.getPlacename());
-        markerTitleView.setText("Editing " + currentMarker.placename);
+        markerTitleView.setText("Editing " + currentMarker.getPlacename());
 
         // Populate UI with data
-        markerNameTextInput.setText(mapMarkerDataItem.placename);
-        markerCodeTextInput.setText(mapMarkerDataItem.code);
+        markerNameTextInput.setText(mapMarkerDataItem.getPlacename());
+        markerCodeTextInput.setText(mapMarkerDataItem.getCode());
         markerNotesTextInput.setText(mapMarkerDataItem.getNotes());
 
         // Need to set layer in layerSpinner
-        layerSpinner.setSelection(spinnerAdapter.getPosition(mapMarkerDataItem.layername));
+        layerSpinner.setSelection(spinnerAdapter.getPosition(mapMarkerDataItem.getLayerName()));
 
         final DecimalFormat df = new DecimalFormat("#.#####°");
 
-        latLabel.setText(df.format(currentMarker.latitude));
-        lngLabel.setText(df.format(currentMarker.longitude));
+        latLabel.setText(df.format(currentMarker.getLatitude()));
+        lngLabel.setText(df.format(currentMarker.getLongitude()));
 
         newMarkerFAB.setVisibility(View.GONE);
         markerDetailLL.setVisibility(View.VISIBLE);
@@ -321,7 +313,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         MarkerOptions markerOptions = new MarkerOptions()
                 .draggable(true)
                 .position(position)
-                .title(mapMarkerDataItem.placename);
+                .title(mapMarkerDataItem.getPlacename());
 
         currentLocation = mMap.addMarker(markerOptions);
 //        mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
@@ -371,14 +363,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         newMarkerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentMarker = new MapMarkerDataItem();
-                currentMarker.placename = "New marker";
-                currentMarker.code = "Code";
-                currentMarker.notes = "Add description here…";
-                currentMarker.layer_id = 1;
-                currentMarker.latitude = mMap.getCameraPosition().target.latitude;
-                currentMarker.longitude = mMap.getCameraPosition().target.longitude;
-                editMarker(currentMarker);
+                Log.i(TAG, "FAB clicked");
             }
         });
 
@@ -393,7 +378,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                Log.i(TAG, "onItemClick: " + layerListForSpinner.get(position).getLayerID());
-                currentMarker.layer_id = layerListForSpinner.get(position).getLayerID();
+                currentMarker.setLayer_id(layerListForSpinner.get(position).getLayerID());
             }
 
             @Override
@@ -407,8 +392,8 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentMarker.longitude = currentLocation.getPosition().longitude;
-                currentMarker.latitude = currentLocation.getPosition().latitude;
+                currentMarker.setLongitude(currentLocation.getPosition().longitude);
+                currentMarker.setLatitude(currentLocation.getPosition().latitude);
 
                 markerViewModel.saveCurrentMarker(currentMarker);
                 markerDetailLL.setVisibility(View.GONE);
@@ -443,7 +428,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                currentMarker.placename = s.toString();
+                currentMarker.setPlacename(s.toString());
             }
 
             @Override
@@ -459,7 +444,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                currentMarker.code = s.toString();
+                currentMarker.setCode(s.toString());
             }
 
             @Override
@@ -475,7 +460,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                currentMarker.notes = s.toString();
+                currentMarker.setNotes(s.toString());
             }
 
             @Override
@@ -484,6 +469,12 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
             }
         });
     }
+
+    private void goMarkerList() {
+        Intent intent = new Intent(MarkerEditActivity.this, LiveMarkerListActivity.class);
+        startActivity(intent);
+    }
+
 
     private void addMarkersToMap() {
         markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
@@ -502,11 +493,11 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         String filename;
         boolean isVisible;
 
-        for (MapMarkerDataItem marker : markersFromVisibleLayers) {
+        for (LiveMarkerItem marker : markersFromVisibleLayers) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
-            filename = marker.getFilename();
-            isVisible = marker.isVisible;
+            filename = marker.getIconFilename();
+            isVisible = marker.isVisible();
 
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
 
@@ -540,15 +531,17 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         markerListRV.setAdapter(markerDataAdapter);
     }
 
+    // Method to edit Marker from map location
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        currentMarker = (MapMarkerDataItem) marker.getTag();
+        currentMarker = (LiveMarkerItem) marker.getTag();
         Log.i(TAG, "onMarkerClick: " + marker.getTag());
         saveCameraPosition();
-        editMarker(currentMarker);
+//        editMarker(currentMarker);
         return false;
     }
 
+    // Toggle marker visibility - working
     public void visibilityToggle(int marker_id) {
         Log.i(TAG, "markerVisibilityToggle: " + marker_id);
         markerViewModel.toggle(marker_id);
@@ -562,10 +555,24 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 //        Log.i(TAG, "onLayerClickCalled: " +  markerID);
 //    }
 
+    // Method to edit marker v=from RecyclerView
     public void onMarkerClickCalled(int markerID) {
         Log.i(TAG, "Marker selected: " + markerID);
         saveCameraPosition();
         currentMarker = markerViewModel.getMMarker(markerID);
-//        editMarker(currentMarker);
+        editMarker(currentMarker);
+    }
+
+//  Add new marker from FAB
+    private void newMarker() {
+        Log.i(TAG, "newMarker: from FAB");
+        currentMarker = new LiveMarkerItem();
+        currentMarker.setPlacename("New marker");
+        currentMarker.setCode("Code");
+        currentMarker.setNotes("Add description here…");
+        currentMarker.setLayer_id(1);
+        currentMarker.setLatitude(mMap.getCameraPosition().target.latitude);
+        currentMarker.setLongitude(mMap.getCameraPosition().target.longitude);
+        editMarker(currentMarker);
     }
 }

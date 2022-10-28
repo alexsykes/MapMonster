@@ -56,7 +56,7 @@ public class LayerRepository {
         return layerDao.getLayerDataItem(position);
     }
 
-    List<MapMarkerDataItem> getMapMarkerItems(int position) {
+    List<LiveMarkerItem> getMapMarkerItems(int position) {
         return layerDao.getMapMarkerItems(position);
     }
 

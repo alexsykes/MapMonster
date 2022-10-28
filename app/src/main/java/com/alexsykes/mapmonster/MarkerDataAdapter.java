@@ -12,13 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.activities.MarkerEditActivity;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 
 import java.util.List;
 
 public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.MarkerDataViewHolder> {
 
-    List<MapMarkerDataItem> markersFromVisibleLayers;
+    List<LiveMarkerItem> markersFromVisibleLayers;
     public static final String TAG = "Info";
 
     @SuppressLint("RecyclerView")
@@ -26,18 +26,19 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
     // Consider adding marker_identifier to MarkerDataViewHolder
     public void onBindViewHolder(@NonNull MarkerDataViewHolder holder, int position) {
         Context context = holder.imageView.getContext();
-        MapMarkerDataItem currentMarker = markersFromVisibleLayers.get(position);
-        int resID = context.getResources().getIdentifier(currentMarker.filename, "drawable", context.getPackageName());
+        LiveMarkerItem currentMarker = markersFromVisibleLayers.get(position);
+        int resID = context.getResources().getIdentifier(currentMarker.getIconFilename(), "drawable",
+                context.getPackageName());
         holder.imageView.setImageResource(resID);
         holder.marker_id = markersFromVisibleLayers.get(position).getLayer_id();
 
-        if (currentMarker.isVisible) {
+        if (currentMarker.isVisible()) {
             holder.markerToggleImage.setImageResource(holder.eye_open_id);
         } else {
             holder.markerToggleImage.setImageResource(holder.eye_closed_id);
         }
 
-        holder.getMarkerNameTextView().setText(currentMarker.placename);
+        holder.getMarkerNameTextView().setText(currentMarker.getPlacename());
         holder.marker_id = markersFromVisibleLayers.get(position).getMarkerID();
 //        holder.marker_id = position;
         holder.getMarkerNameTextView().setOnClickListener(new View.OnClickListener() {
@@ -58,7 +59,7 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
     }
 
 
-    public MarkerDataAdapter(List<MapMarkerDataItem> allMarkers) {
+    public MarkerDataAdapter(List<LiveMarkerItem> allMarkers) {
         markersFromVisibleLayers = allMarkers;
     }
 

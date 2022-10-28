@@ -80,7 +80,7 @@ public class LayerViewModel extends AndroidViewModel {
         return layerRepository.getLayerDataItem(position);
     }
 
-    public List<MapMarkerDataItem> getMapMarkerItems(int position) {
+    public List<LiveMarkerItem> getMapMarkerItems(int position) {
         return layerRepository.getMapMarkerItems(position);
     }
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -23,15 +22,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alexsykes.mapmonster.R;
-import com.alexsykes.mapmonster.data.Icon;
-import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 import com.alexsykes.mapmonster.data.MMDatabase;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,7 +37,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 0;
 
-    private List<MapMarkerDataItem> markerList;
+    private List<LiveMarkerItem> markerList;
     private MarkerViewModel markerViewModel;
 
     // The entry point to the Fused Location Provider.
@@ -312,12 +306,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         int layer_id;
         String filename;
         mMap.clear();
-        for (MapMarkerDataItem marker : markerList) {
+        for (LiveMarkerItem marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             layer_id = marker.getLayer_id();
             String snippet = marker.getNotes();
-            filename = marker.getFilename();
+            filename = marker.getIconFilename();
 
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
 

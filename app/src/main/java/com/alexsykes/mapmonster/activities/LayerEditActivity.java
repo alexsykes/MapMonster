@@ -31,7 +31,7 @@ import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -239,7 +239,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         // Display details
 //       get layerData and markerData for layer
         currentLayerDataItem = layerViewModel.getLayerDataItem(position);
-        List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
+        List<LiveMarkerItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
 //      Get icon resource from resources
         int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
@@ -290,12 +290,12 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         editor.putFloat("zoom", zoom);
         editor.apply();
     }
-    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
+    private void updateCamera(List<LiveMarkerItem> mapMarkerDataItems) {
         LatLng latLng;
         if (!mapMarkerDataItems.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
-            for (MapMarkerDataItem marker : mapMarkerDataItems) {
+            for (LiveMarkerItem marker : mapMarkerDataItems) {
                 latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
                 builder.include(latLng);
             }
@@ -335,7 +335,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
-    private void addMarkersToMap(List<MapMarkerDataItem> mapMarkerDataItems, int resID) {
+    private void addMarkersToMap(List<LiveMarkerItem> mapMarkerDataItems, int resID) {
         mMap.clear();
         if (mapMarkerDataItems.size() == 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -348,7 +348,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         String marker_title, code;
         LatLng latLng;
 
-        for (MapMarkerDataItem marker : mapMarkerDataItems) {
+        for (LiveMarkerItem marker : mapMarkerDataItems) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
 
@@ -366,7 +366,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void addVisibleMarkersToMap() {
-        List<MapMarkerDataItem> mapMarkerDataItems = markerViewModel.getVisibleMarkerDataList();
+        List<LiveMarkerItem> mapMarkerDataItems = markerViewModel.getVisibleMarkerDataList();
 
         mMap.clear();
         if (mapMarkerDataItems.size() == 0) {
@@ -380,10 +380,10 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         String marker_title, code, filename;
         LatLng latLng;
 
-        for (MapMarkerDataItem marker : mapMarkerDataItems) {
+        for (LiveMarkerItem marker : mapMarkerDataItems) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
-            filename = marker.filename;
+            filename = marker.getIconFilename();
 
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
             marker_title = marker.getPlacename();

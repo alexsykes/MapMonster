@@ -14,13 +14,13 @@ public class MarkerRepository {
     private Map<String, List<MMarker>> markerMap;
     public static final String TAG = "Info";
     LiveData<List<LiveMarkerItem>> liveMarkers;
-    List<MapMarkerDataItem> visibleMarkerList;
+    List<LiveMarkerItem> visibleMarkerList;
     Cursor markerDataForExport;
-    List<MapMarkerDataItem> markersFromVisibleLayers;
-    List<MapMarkerDataItem> allMarkers;
-    List<MapMarkerDataItem> markerList;
-    MapMarkerDataItem markerDataItem;
-    LiveData<List<MapMarkerDataItem>> visibleLiveMarkerDataItems;
+    List<LiveMarkerItem> markersFromVisibleLayers;
+    List<LiveMarkerItem> allMarkers;
+    List<LiveMarkerItem> markerList;
+    LiveMarkerItem markerDataItem;
+    LiveData<List<LiveMarkerItem>> visibleLiveMarkerDataItems;
 
     MarkerRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);
@@ -44,33 +44,37 @@ public class MarkerRepository {
         });
     }
 
-    public void saveCurrentMarker(MapMarkerDataItem currentMarker) {
-        int layerID = currentMarker.layer_id;
-        double latitude = currentMarker.latitude;
+    public void saveCurrentMarker(LiveMarkerItem currentMarker) {
+        int layerID = currentMarker.getLayer_id();
+        double latitude = currentMarker.getLatitude();
 
-        if (currentMarker.markerID != 0) {
-            markerDao.saveCurrentMarker(currentMarker.markerID, currentMarker.latitude, currentMarker.longitude, currentMarker.placename, currentMarker.code, currentMarker.layer_id, currentMarker.getNotes());
+        if (currentMarker.getMarkerID() != 0) {
+            markerDao.saveCurrentMarker(currentMarker.getMarkerID(), currentMarker.getLatitude(),
+                    currentMarker.getLongitude(), currentMarker.getPlacename(), currentMarker.getCode(),
+                    currentMarker.getLayer_id(), currentMarker.getNotes());
         } else {
-            markerDao.insertMarker(new MMarker(currentMarker.latitude, currentMarker.longitude, currentMarker.placename, currentMarker.code, currentMarker.layer_id, currentMarker.getNotes()));
+            markerDao.insertMarker(new MMarker(currentMarker.getLatitude(), currentMarker.getLongitude(),
+                    currentMarker.getPlacename(), currentMarker.getCode(), currentMarker.getLayer_id(),
+                    currentMarker.getNotes()));
         }
     }
 
     public LiveData<List<LiveMarkerItem>> getLiveMarkers() {
         return liveMarkers;
     }
-    public List<MapMarkerDataItem> getVisibleMarkerDataList() {
+    public List<LiveMarkerItem> getVisibleMarkerDataList() {
         return visibleMarkerList;
     }
     public Cursor getMarkerDataForExport() {
         return markerDataForExport;
     }
-    public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
+    public List<LiveMarkerItem> getMarkersFromVisibleLayers() {
         return markersFromVisibleLayers;
     }
-    public List<MapMarkerDataItem> getAllMarkers() {
+    public List<LiveMarkerItem> getAllMarkers() {
         return allMarkers;
     }
-    public List<MapMarkerDataItem> getMarkerList() {
+    public List<LiveMarkerItem> getMarkerList() {
         return markerList;
     }
     public Map<String, List<MMarker>> getMarkersByLayer() {
@@ -80,7 +84,7 @@ public class MarkerRepository {
         return liveMarkerData;
     }
 
-    public MapMarkerDataItem getMMarker(int markerID) {
+    public LiveMarkerItem getMMarker(int markerID) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
             markerDataItem = markerDao.getMMarker(markerID);
         });
@@ -148,7 +152,7 @@ public class MarkerRepository {
         });
     }
 
-    public LiveData<List<MapMarkerDataItem>>  getLiveMarkerDataItems() { return visibleLiveMarkerDataItems;
+    public LiveData<List<LiveMarkerItem>>  getLiveMarkerDataItems() { return visibleLiveMarkerDataItems;
     }
 }
 
