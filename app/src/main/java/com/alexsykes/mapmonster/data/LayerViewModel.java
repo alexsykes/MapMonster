@@ -19,6 +19,7 @@ public class LayerViewModel extends AndroidViewModel {
     private  LayerDataItem layerDataItem;
     private final LiveData<List<Layer>> liveLayerList;
     private final List<String> layernamesForSpinner;
+    List<SpinnerData> layerListForSpinner;
 
     public LayerViewModel(@NonNull Application application) {
         super(application);
@@ -29,22 +30,12 @@ public class LayerViewModel extends AndroidViewModel {
         visibleLayerList = layerRepository.getVisibleLayerList();
         liveLayerList = layerRepository.getLiveLayerList();
         layernamesForSpinner = layerRepository.getLayernamesForSpinner();
+        layerListForSpinner = layerRepository.getLayerListForSpinner();
     }
 
-    public LiveData<List<Layer>> getAllLayers() {
-        return allLayers;
-    }
-
-    public List<Layer> getLayerList() {
-        return layerRepository.getLayerList();
-    }
 
     public List<LayerDataItem> getLayerData() {
         return layerRepository.getLayerData();
-    }
-
-    public List<String> getVisibleLayerList() {
-        return layerRepository.getVisibleLayerList();
     }
 
     public List<String> getLayernamesForSpinner() {
@@ -54,26 +45,6 @@ public class LayerViewModel extends AndroidViewModel {
 
     public void insert(Layer layer) {
         layerRepository.insert(layer);
-    }
-
-    public void setVisibility(boolean isVisible, int layerID) {
-        layerRepository.setVisibility(isVisible, layerID);
-    }
-
-    public void setVisibility(String layerName, boolean visibility) {
-        layerRepository.setVisibility(layerName, visibility);
-    }
-
-    public void setVisibilityForAll(boolean b) {
-        layerRepository.setVisibilityForAll(b);
-    }
-
-    public void updateLayerVisibility(Set<String> newValue) {
-        layerRepository.updateLayerVisibility(newValue);
-    }
-
-    public void archiveAll() {
-        layerRepository.archiveAllLayers();
     }
 
     public LayerDataItem getLayerDataItem(int position) {
@@ -92,12 +63,8 @@ public class LayerViewModel extends AndroidViewModel {
         layerRepository.insertLayer(currentLayerDataItem);
     }
 
-    public void deleteAll() {
-        layerRepository.deleteAllLayers();
-    }
-
     public List<SpinnerData> getLayerListForSpinner() {
-        return layerRepository.getLayerListForSpinner();
+        return layerListForSpinner;
     }
 
 
@@ -110,4 +77,40 @@ public class LayerViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<LiveLayerItem>> getLiveLayers() { return layerRepository.getLiveLayers(); }
+
+//    public void deleteAll() {
+//        layerRepository.deleteAllLayers();
+//    }
+//
+//    public void setVisibility(boolean isVisible, int layerID) {
+//        layerRepository.setVisibility(isVisible, layerID);
+//    }
+//
+//    public void setVisibility(String layerName, boolean visibility) {
+//        layerRepository.setVisibility(layerName, visibility);
+//    }
+//
+//    public void setVisibilityForAll(boolean b) {
+//        layerRepository.setVisibilityForAll(b);
+//    }
+//
+//    public void updateLayerVisibility(Set<String> newValue) {
+//        layerRepository.updateLayerVisibility(newValue);
+//    }
+//
+//    public void archiveAll() {
+//        layerRepository.archiveAllLayers();
+//    }
+//
+//public LiveData<List<Layer>> getAllLayers() {
+//    return allLayers;
+//}
+//
+//    public List<Layer> getLayerList() {
+//        return layerRepository.getLayerList();
+//    }
+//
+//    public List<String> getVisibleLayerList() {
+//        return layerRepository.getVisibleLayerList();
+//    }
 }
