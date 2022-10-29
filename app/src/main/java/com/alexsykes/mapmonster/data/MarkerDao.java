@@ -27,7 +27,7 @@ public interface MarkerDao {
     @Query("SELECT layers.layername AS layername, layers.isVisible AS isVisible, markers.* FROM layers JOIN markers ON layers.layername = markers.layer_id WHERE markers.isArchived = 0 ORDER BY layername, placename")
     Map<String, List<MMarker>> getMarkersByLayer();
 
-    @Query("SELECT markers.*, icons.iconFilename FROM markers, layers, icons  WHERE markers.layer_id = layers.layerID AND icons.iconID = layers.icon_id ORDER BY placename")
+    @Query("SELECT markers.*, icons.iconFilename, layers.layername AS layerName FROM markers, layers, icons  WHERE markers.layer_id = layers.layerID AND icons.iconID = layers.icon_id ORDER BY placename")
     LiveData<List<LiveMarkerItem>> getLiveMarkers();
 
     @Query("SELECT markers.*, layers.layername, icons.iconFilename AS filename FROM markers JOIN layers ON markers.layer_id = layers.layerID JOIN icons ON layers.icon_id = icons.iconID WHERE markers.isArchived = 0 ORDER BY placename")

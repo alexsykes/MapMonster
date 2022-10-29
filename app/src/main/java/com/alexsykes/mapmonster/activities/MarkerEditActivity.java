@@ -277,23 +277,24 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void editMarker(LiveMarkerItem mapMarkerDataItem) {
-        currentMarker = mapMarkerDataItem;
-        Log.i(TAG, "editMarker: " + currentMarker.getPlacename());
-        markerTitleView.setText("Editing " + currentMarker.getPlacename());
+    private void editMarker(LiveMarkerItem currentMarker) {
+        this.currentMarker = currentMarker;
+        Log.i(TAG, "editMarker: " + this.currentMarker.getPlacename());
+        markerTitleView.setText("Editing " + this.currentMarker.getPlacename());
 
         // Populate UI with data
-        markerNameTextInput.setText(mapMarkerDataItem.getPlacename());
-        markerCodeTextInput.setText(mapMarkerDataItem.getCode());
-        markerNotesTextInput.setText(mapMarkerDataItem.getNotes());
+        markerNameTextInput.setText(currentMarker.getPlacename());
+        markerCodeTextInput.setText(currentMarker.getCode());
+        markerNotesTextInput.setText(currentMarker.getNotes());
 
         // Need to set layer in layerSpinner
-        layerSpinner.setSelection(spinnerAdapter.getPosition(mapMarkerDataItem.getLayerName()));
+        Log.i(TAG, "editMarker: " + currentMarker.getLayerName());
+        layerSpinner.setSelection(spinnerAdapter.getPosition(currentMarker.getLayerName()));
 
         final DecimalFormat df = new DecimalFormat("#.#####°");
 
-        latLabel.setText(df.format(currentMarker.getLatitude()));
-        lngLabel.setText(df.format(currentMarker.getLongitude()));
+        latLabel.setText(df.format(this.currentMarker.getLatitude()));
+        lngLabel.setText(df.format(this.currentMarker.getLongitude()));
 
         newMarkerFAB.setVisibility(View.GONE);
         markerDetailLL.setVisibility(View.VISIBLE);
@@ -308,12 +309,12 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
                 return false;
             }
         });
-        LatLng position = new LatLng(currentMarker.getLatitude(), currentMarker.getLongitude());
+        LatLng position = new LatLng(this.currentMarker.getLatitude(), this.currentMarker.getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions()
                 .draggable(true)
                 .position(position)
-                .title(mapMarkerDataItem.getPlacename());
+                .title(currentMarker.getPlacename());
 
         currentLocation = mMap.addMarker(markerOptions);
 //        mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
@@ -363,7 +364,12 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         newMarkerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LiveMarkerItem newMarker = new LiveMarkerItem();
+                LatLng mapCentre = mMap.getCameraPosition().target;
+                newMarker.setLatitude(mapCentre.latitude);
+                newMarker.setLongitude(mapCentre.longitude);
                 Log.i(TAG, "FAB clicked");
+                editMarker(newMarker);
             }
         });
 
@@ -401,7 +407,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
 
-                updateMarkerRV();
+//                updateMarkerRV();
                 addMarkersToMap();
 //                updateCamera(visibleMarkers);
             }
@@ -515,20 +521,20 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     }
 
     private void setupMarkerRV() {
-        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
-        markerListRV = findViewById(R.id.markerDataRecyclerView);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        markerListRV.setLayoutManager(llm);
-        markerListRV.setHasFixedSize(true);
-        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
-        markerListRV.setAdapter(markerDataAdapter);
+//        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
+//        markerListRV = findViewById(R.id.markerDataRecyclerView);
+//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+//        markerListRV.setLayoutManager(llm);
+//        markerListRV.setHasFixedSize(true);
+//        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+//        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
+//        markerListRV.setAdapter(markerDataAdapter);
     }
 
     private void updateMarkerRV() {
-        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
-        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
-        markerListRV.setAdapter(markerDataAdapter);
+//        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
+//        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
+//        markerListRV.setAdapter(markerDataAdapter);
     }
 
     // Method to edit Marker from map location
@@ -556,10 +562,9 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 //    }
 
     // Method to edit marker from RecyclerView
-    public void onMarkerClickCalled(int markerID) {
-        Log.i(TAG, "Marker selected: " + markerID);
+    public void onMarkerClickCalled(LiveMarkerItem currentMarker) {
+        Log.i(TAG, "Marker selected: " + currentMarker);
         saveCameraPosition();
-        currentMarker = markerViewModel.getCurrentMarker(markerID);
         editMarker(currentMarker);
     }
 

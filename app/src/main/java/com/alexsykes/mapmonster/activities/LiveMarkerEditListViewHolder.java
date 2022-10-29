@@ -15,6 +15,7 @@ import com.alexsykes.mapmonster.data.LiveMarkerItem;
 
 public class LiveMarkerEditListViewHolder extends  RecyclerView.ViewHolder {
     public static final String TAG = "Info";
+    LiveMarkerItem currentMarker;
     ImageView imageView, markerToggleImage;
     TextView markerNameTextView;
     private int eye_open_id, eye_closed_id;
@@ -36,6 +37,7 @@ public class LiveMarkerEditListViewHolder extends  RecyclerView.ViewHolder {
     }
 
     public void bind(LiveMarkerItem current, Context context) {
+        currentMarker = current;
         int resID = context.getResources().getIdentifier(current.getIconFilename(), "drawable",
                 context.getPackageName());
         imageView.setImageResource(resID);
@@ -47,7 +49,7 @@ public class LiveMarkerEditListViewHolder extends  RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MarkerEditActivity) context).onMarkerClickCalled(current.getMarkerID());
+                ((MarkerEditActivity) context).onMarkerClickCalled(currentMarker);
             }
         });
 

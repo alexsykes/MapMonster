@@ -46,7 +46,7 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                ((MarkerEditActivity) context).onMarkerClickCalled(holder.marker_id);
+//                ((MarkerEditActivity) context).onMarkerClickCalled(holder.marker_id);
             }
         });
 
