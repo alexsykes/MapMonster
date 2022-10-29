@@ -41,17 +41,17 @@ public class LiveMarkerEditListAdapter extends ListAdapter<LiveMarkerItem, LiveM
     public static class LiveMarkerDiff extends DiffUtil.ItemCallback<LiveMarkerItem> {
         @Override
         public boolean areItemsTheSame(@NonNull LiveMarkerItem oldItem, @NonNull LiveMarkerItem newItem) {
-            if(oldItem.isVisible() != newItem.isVisible() ) {
-                Log.i(TAG, "areItemsTheSame = Visibility changed: " + oldItem.getMarkerID());
-            }
+//            if(oldItem.getPlacename() != newItem.getPlacename() ) {
+//                Log.i(TAG, "areItemsTheSame = placename changed: " + oldItem.getMarkerID());
+//            }
             return true;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull LiveMarkerItem oldItem, @NonNull LiveMarkerItem newItem) {
-            if(oldItem.isVisible() != newItem.isVisible() ) {
-                Log.i(TAG, "areContentsTheSame = Visibility changed: ");
-            }
+//            if(oldItem.getPlacename() != newItem.getPlacename()  ) {
+//                Log.i(TAG, "areContentsTheSame = placename changed: ");
+//            }
             return Objects.equals(oldItem, newItem);
         }
     }

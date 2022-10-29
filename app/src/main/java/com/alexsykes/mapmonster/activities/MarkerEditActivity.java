@@ -110,7 +110,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         markerListRV.setLayoutManager(new LinearLayoutManager(this));
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-//        activeMarkers = markerViewModel.getLiveMarkers().getValue();
 
         markerViewModel.getLiveMarkers().observe(this, markers -> {
             liveMarkerListAdapter.submitList(markers);
