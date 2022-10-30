@@ -42,7 +42,7 @@ public class LiveMarkerEditListAdapter extends ListAdapter<LiveMarkerItem, LiveM
         @Override
         public boolean areItemsTheSame(@NonNull LiveMarkerItem oldItem, @NonNull LiveMarkerItem newItem) {
             if(oldItem != newItem ) {
-                Log.i(TAG, "oldItem != newItem");
+//                Log.i(TAG, "oldItem != newItem");
             }
             return true;
         }
@@ -50,7 +50,7 @@ public class LiveMarkerEditListAdapter extends ListAdapter<LiveMarkerItem, LiveM
         @Override
         public boolean areContentsTheSame(@NonNull LiveMarkerItem oldItem, @NonNull LiveMarkerItem newItem) {
             if(oldItem.getPlacename() != newItem.getPlacename()  ) {
-                Log.i(TAG, "areContentsTheSame = placename changed: ");
+//                Log.i(TAG, "areContentsTheSame = placename changed: ");
             }
             return Objects.equals(oldItem, newItem);
         }

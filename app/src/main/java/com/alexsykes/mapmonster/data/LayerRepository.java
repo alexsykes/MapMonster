@@ -29,6 +29,7 @@ public class LayerRepository {
         layernamesForSpinner = layerDao.getLayernamesForSpinner();
         liveLayers = layerDao.getLiveLayers();
         liveLayerList = layerDao.getLiveLayerList();
+        layerDataForExport = layerDao.getLayerDataForExport();
     }
 
     LiveData<List<Layer>> getAllLayers() {
@@ -66,38 +67,6 @@ public class LayerRepository {
         });
     }
 
-    public void setVisibility(boolean isVisible, int layerID) {
-        MMDatabase.databaseWriteExecutor.execute(() -> {
-            layerDao.setVisibility(isVisible, layerID);
-        });
-    }
-
-    public void setVisibility(String layerName, boolean visibility) {
-        MMDatabase.databaseWriteExecutor.execute(() -> {
-            layerDao.setVisibility(layerName, visibility);
-        });
-    }
-
-    public void setVisibilityForAll(boolean b) {
-        MMDatabase.databaseWriteExecutor.execute(() -> {
-            layerDao.setVisibilityForAll(b);
-        });
-    }
-
-    public void updateLayerVisibility(Set<String> newValues) {
-        MMDatabase.databaseWriteExecutor.execute(() -> {
-            layerDao.setVisibilityForAll(false);
-            String[] values = newValues.toArray(new String[newValues.size()]);
-            layerDao.updateLayerVisibility(values);
-        });
-    }
-
-    public void archiveAllLayers() {
-        MMDatabase.databaseWriteExecutor.execute(() -> {
-            layerDao.archiveAllLayers();
-        });
-    }
-
     public void updateLayer(LayerDataItem currentLayerDataItem) {
         MMDatabase.databaseWriteExecutor.execute(() -> {
             layerDao.updateLayerData(currentLayerDataItem.layerID, currentLayerDataItem.icon_id, currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.isVisible);
@@ -114,7 +83,6 @@ public class LayerRepository {
             Layer layer = new Layer(currentLayerDataItem.layername, currentLayerDataItem.code, currentLayerDataItem.icon_id, currentLayerDataItem.isVisible);
             layerDao.insertLayer(layer);
         });
-
     }
 
     public void deleteAllLayers() {
@@ -138,9 +106,7 @@ public class LayerRepository {
     }
 
     public Cursor getLayerDataForExport() {
-        MMDatabase.databaseWriteExecutor.execute(() -> {
-            layerDataForExport   = layerDao.getLayerDataForExport();
-        });
         return layerDataForExport;
+
     }
 }

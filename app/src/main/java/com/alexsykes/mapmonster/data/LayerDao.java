@@ -32,18 +32,18 @@ public interface LayerDao {
 
     @Query("UPDATE layers SET isVisible = :visibility WHERE layerID = :layerID")
     void setVisibility (boolean visibility, int layerID);
-
-    @Query("UPDATE layers SET isVisible = :visibility WHERE layername = :layer")
-    void setVisibility (String layer, boolean visibility);
+//
+//    @Query("UPDATE layers SET isVisible = :visibility WHERE layername = :layer")
+//    void setVisibility (String layer, boolean visibility);
 
     @Query("SELECT layername FROM layers WHERE isVisible = '1' AND isArchived = 0" )
     List<String> getVisibleLayerList();
-
-    @Query("UPDATE layers SET isVisible = :b")
-    void setVisibilityForAll(boolean b);
-
-    @Query("UPDATE layers SET isVisible = 1 WHERE layername IN (:values) ")
-    void updateLayerVisibility(String[] values);
+//
+//    @Query("UPDATE layers SET isVisible = :b")
+//    void setVisibilityForAll(boolean b);
+//
+//    @Query("UPDATE layers SET isVisible = 1 WHERE layername IN (:values) ")
+//    void updateLayerVisibility(String[] values);
 
     @Query("SELECT layers.*, icons.iconFilename, icons.name AS iconName FROM layers JOIN icons ON layers.icon_id = icons.iconID WHERE isArchived = 0 ORDER BY layername" )
     List<LayerDataItem> getLayerData();

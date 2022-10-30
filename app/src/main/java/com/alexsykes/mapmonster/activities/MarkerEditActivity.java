@@ -59,7 +59,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,
+public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLoadedCallback,
         OnMapReadyCallback {
     private static final String TAG = "Info";
 
@@ -110,6 +110,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         markerViewModel.getLiveMarkers().observe(this, markers -> {
             liveMarkerListAdapter.submitList(markers);
             markersFromVisibleLayers = markers;
+            Log.i(TAG, ".observe");
             addMarkersToMap(markers);
         });
 
@@ -165,6 +166,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         mMap.getUiSettings().setMapToolbarEnabled(mapToolbarEnabled);
         mMap.getUiSettings().setCompassEnabled(compassEnabled);
 
+        Log.i(TAG, "onMapReady: ");
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             final DecimalFormat df = new DecimalFormat("#.#####");
@@ -212,6 +214,11 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 //        addMarkersToMap(markers);
     }
 
+    @Override
+    public void onMapLoaded() {
+        Log.i(TAG, "onMapLoaded: ");
+//        addMarkersToMap(markersFromVisibleLayers);
+    }
     //  Utility methods
     private CameraPosition getSavedCameraPosition() {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
