@@ -69,8 +69,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     private IconViewModel iconViewModel;
     LiveData<List<Icon>> allIcons;
     List<LayerDataItem> allLayers;
-    List<LiveMarkerItem> visibleMarkers;
-    LiveData<List<LiveMarkerItem>> activeMarkers;
     List<LiveMarkerItem> markersFromVisibleLayers;
 
     List<SpinnerData> layerListForSpinner;
@@ -109,12 +107,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         markerListRV.setLayoutManager(new LinearLayoutManager(this));
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-
-//        markerViewModel.getLiveMarkers().observe(this, markers -> {
-//            liveMarkerListAdapter.submitList(markers);
-//            Log.i(TAG, "onCreate: MarkerEditActivity");
-//        });
-
         markerViewModel.getLiveMarkers().observe(this, markers -> {
             liveMarkerListAdapter.submitList(markers);
             markersFromVisibleLayers = markers;
@@ -124,8 +116,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         setupMap();
         getData();
         setupUI();
-//        setupMarkerRV();
-//        currentMarker = new MapMarkerDataItem();
     }
 
 
@@ -139,11 +129,9 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     // Navigation
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.marker_list_menuitem :
-                goMarkerList();
-                return true;
-            default:
+        if (item.getItemId() == R.id.marker_list_menuitem) {
+            goMarkerList();
+            return true;
         }
         return false;
     }
@@ -321,8 +309,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
                 .title(currentMarker.getPlacename());
 
         currentLocation = mMap.addMarker(markerOptions);
-//        mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
-
         mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
     }
     @Override
@@ -342,8 +328,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         allLayers = layerViewModel.getLayerData();
         layerListForSpinner = layerViewModel.getLayerListForSpinner();
         layernamesForSpinner = layerViewModel.getLayernamesForSpinner();
-//        visibleMarkers = markerViewModel.getVisibleMarkerDataList();
-//        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
     }
 
     private void setupMap() {
@@ -518,23 +502,6 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
             marker1.setTag(marker);
         }
     }
-
-//    private void setupMarkerRV() {
-////        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
-////        markerListRV = findViewById(R.id.markerDataRecyclerView);
-////        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-////        markerListRV.setLayoutManager(llm);
-////        markerListRV.setHasFixedSize(true);
-////        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-////        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
-////        markerListRV.setAdapter(markerDataAdapter);
-//    }
-//
-//    private void updateMarkerRV() {
-//        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
-//        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
-//        markerListRV.setAdapter(markerDataAdapter);
-//    }
 
     // Method to edit Marker from map location
     @Override

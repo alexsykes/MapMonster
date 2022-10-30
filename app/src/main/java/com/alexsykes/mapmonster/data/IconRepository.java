@@ -9,7 +9,7 @@ import java.util.List;
 public class IconRepository {
     private final IconDao iconDao;
     private Icon icon;
-    private LiveData<List<Icon>> iconList;
+    private final LiveData<List<Icon>> iconList;
 
     public IconRepository(Application application) {
         MMDatabase db = MMDatabase.getDatabase(application);

@@ -75,7 +75,8 @@ public class LayerDataAdapter extends RecyclerView.Adapter<LayerDataAdapter.Laye
         private final TextView layerNameTextView;
         private final ImageView imageView, layerToggleImage;
         private int layer_id;
-        private int eye_open_id, eye_closed_id;
+        private final int eye_open_id;
+        private final int eye_closed_id;
 //        private boolean isVisible;
 
 

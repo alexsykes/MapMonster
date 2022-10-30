@@ -18,8 +18,10 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
     final TextView markerID_textView;
     private final TextView markerNameTextView, markerCodeTextView, markerListNotesTextView;
     private final ImageView markerVisibilityImage, markerArchivedImage, imageView;
-    private int eye_open_id, eye_closed_id, trash;
-    private CheckBox selectCheckBox;
+    private final int eye_open_id;
+    private final int eye_closed_id;
+    private final int trash;
+    private final CheckBox selectCheckBox;
 
     private LiveMarkerListViewHolder(View itemView) {
         super(itemView);

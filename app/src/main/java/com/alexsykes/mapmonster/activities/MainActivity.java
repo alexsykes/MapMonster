@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
          mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
-//        mapFragment.getMapAsync(this);
         setupUIComponents();
     }
 
@@ -150,9 +149,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             Log.e(TAG, "Style parsing failed.");
         }
 
-        // Position the map's camera near Sydney, Australia.
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-34, 151)));
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String maptype = preferences.getString("map_view_type","NORMAL");
 
@@ -199,17 +195,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         CameraPosition cameraPosition = getSavedCameraPosition();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-//        addMarkersToMap();
-        Log.i(TAG, "onMapReady: " + markerList.size() + " markers loaded");
     }
 
     @Override
     public void onMapLoaded() {
         Log.i(TAG, "onMapLoaded: ");
-//        loadMarkerList();
         addMarkersToMap();
-//        updateCamera();
     }
 
     // Navigation

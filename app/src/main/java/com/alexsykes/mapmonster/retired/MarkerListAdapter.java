@@ -89,8 +89,11 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
         private final ImageView imageView, markerToggleImage, markerArchivedImage;
         private  int marker_id;
         private boolean isVisible, isArchived;
-        private int eye_open_id, eye_closed_id, trash, archive;
-        private CheckBox selectCheckBox;
+        private final int eye_open_id;
+        private final int eye_closed_id;
+        private final int trash;
+        private final int archive;
+        private final CheckBox selectCheckBox;
 
         public MarkerEditViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -190,7 +190,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             // Get current data
             while (exportData.moveToNext()) {
-                String arrStr[] = new String[exportData.getColumnCount()];
+                String[] arrStr = new String[exportData.getColumnCount()];
                 for (int i = 0; i < exportData.getColumnCount(); i++)
                     arrStr[i] = exportData.getString(i);
                 csvWriter.writeNext(arrStr);
@@ -306,7 +306,7 @@ public class SettingsActivity extends AppCompatActivity {
             csvWriter.writeNext(markerHeaderRecord);
 
             while (markersForExport.moveToNext()) {
-                String arrStr[] = new String[markersForExport.getColumnCount()];
+                String[] arrStr = new String[markersForExport.getColumnCount()];
                 for (int i = 0; i < markersForExport.getColumnCount(); i++)
                     arrStr[i] = markersForExport.getString(i);
                 csvWriter.writeNext(arrStr);
@@ -319,7 +319,7 @@ public class SettingsActivity extends AppCompatActivity {
             csvWriter.writeNext(layerHeaderRecord);
 
             while (layersForExport.moveToNext()) {
-                String arrStr[] = new String[layersForExport.getColumnCount()];
+                String[] arrStr = new String[layersForExport.getColumnCount()];
                 for (int i = 0; i < layersForExport.getColumnCount(); i++)
                     arrStr[i] = layersForExport.getString(i);
                 csvWriter.writeNext(arrStr);
@@ -422,7 +422,8 @@ public class SettingsActivity extends AppCompatActivity {
     private Cursor getMarkersForExport() {
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        return markerViewModel.getMarkerDataForExport();
+        Cursor cursor = markerViewModel.getMarkerDataForExport();
+        return cursor;
     }
 
     private Cursor getLayersForExport() {

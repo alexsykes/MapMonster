@@ -82,7 +82,8 @@ public class MarkerDataAdapter extends RecyclerView.Adapter<MarkerDataAdapter.Ma
         private final TextView markerNameTextView;
         private final ImageView imageView, markerToggleImage;
         private  int marker_id;
-        private int eye_open_id, eye_closed_id;
+        private final int eye_open_id;
+        private final int eye_closed_id;
 
         public MarkerDataViewHolder(@NonNull View itemView) {
             super(itemView);

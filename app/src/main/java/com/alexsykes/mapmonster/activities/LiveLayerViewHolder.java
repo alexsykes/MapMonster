@@ -18,7 +18,8 @@ public class LiveLayerViewHolder extends RecyclerView.ViewHolder {
     public static final String TAG = "Info";
     final TextView layerNameTextView;
     final ImageView imageView, layerToggleImage;
-    private int eye_open_id, eye_closed_id;
+    private final int eye_open_id;
+    private final int eye_closed_id;
 
     public LiveLayerViewHolder(@NonNull View itemView) {
         super(itemView);

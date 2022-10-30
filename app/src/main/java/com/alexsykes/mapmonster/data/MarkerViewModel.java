@@ -32,7 +32,8 @@ public class MarkerViewModel extends AndroidViewModel {
     }
 
     // Accessors
-    public LiveData<List<LiveMarkerItem>> getLiveMarkers() { return liveMarkers; };
+    public LiveData<List<LiveMarkerItem>> getLiveMarkers() { return liveMarkers; }
+
     public LiveData<List<MMarker>> getLiveMarkerData() { return liveMarkerData; }
     public List<LiveMarkerItem> getMarkerList() { return markerRepository.getMarkerList(); }
     public Map<String, List<MMarker>> getMarkersByLayer() {  return markerRepository.getMarkersByLayer();    }

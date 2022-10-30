@@ -18,7 +18,8 @@ public class LiveMarkerEditListViewHolder extends  RecyclerView.ViewHolder {
     LiveMarkerItem currentMarker;
     ImageView imageView, markerToggleImage;
     TextView markerNameTextView;
-    private int eye_open_id, eye_closed_id;
+    private final int eye_open_id;
+    private final int eye_closed_id;
 
     public LiveMarkerEditListViewHolder(@NonNull View itemView) {
         super(itemView);
