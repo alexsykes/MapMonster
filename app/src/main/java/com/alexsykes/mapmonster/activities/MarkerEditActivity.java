@@ -32,7 +32,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.MarkerDataAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
@@ -71,7 +70,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     LiveData<List<Icon>> allIcons;
     List<LayerDataItem> allLayers;
     List<LiveMarkerItem> visibleMarkers;
-    List<LiveMarkerItem> activeMarkers;
+    LiveData<List<LiveMarkerItem>> activeMarkers;
     List<LiveMarkerItem> markersFromVisibleLayers;
 
     List<SpinnerData> layerListForSpinner;
@@ -111,11 +110,17 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
 
+//        markerViewModel.getLiveMarkers().observe(this, markers -> {
+//            liveMarkerListAdapter.submitList(markers);
+//            Log.i(TAG, "onCreate: MarkerEditActivity");
+//        });
+
         markerViewModel.getLiveMarkers().observe(this, markers -> {
             liveMarkerListAdapter.submitList(markers);
-            Log.i(TAG, "onCreate: MarkerEditActivity");
-//            activeMarkers = markers;
+            markersFromVisibleLayers = markers;
+            addMarkersToMap(markers);
         });
+
         setupMap();
         getData();
         setupUI();
@@ -216,7 +221,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
 //                markerNotesEditText.setText(currentMarker.getNotes());
             }
         });
-        addMarkersToMap();
+//        addMarkersToMap(markers);
     }
 
     //  Utility methods
@@ -402,7 +407,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
                 newMarkerFAB.setVisibility(View.VISIBLE);
 
 //                updateMarkerRV();
-                addMarkersToMap();
+//                addMarkersToMap(markers);
 //                updateCamera(visibleMarkers);
             }
         });
@@ -415,7 +420,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
 //                updateMarkerRV();
-                addMarkersToMap();
+//                addMarkersToMap(markers);
 //                updateCamera(visibleMarkers);
             }
         });
@@ -476,8 +481,8 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
     }
 
 
-    private void addMarkersToMap() {
-        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
+    private void addMarkersToMap(List<LiveMarkerItem> markers) {
+        markersFromVisibleLayers = markers;
         mMap.clear();
         mMap.setOnMarkerClickListener(this);
         if (markersFromVisibleLayers.size() == 0) {
@@ -547,7 +552,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         markerViewModel.toggle(marker_id);
 
 //        updateMarkerRV();
-        addMarkersToMap();
+//        addMarkersToMap(markers);
 //        setupLayerRV();
     }
 
