@@ -20,23 +20,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alexsykes.mapmonster.IconImageAdapter;
-import com.alexsykes.mapmonster.LayerDataAdapter;
 import com.alexsykes.mapmonster.R;
 import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.Layer;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
-import com.alexsykes.mapmonster.data.LiveMarkerListAdapter;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,10 +59,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
     Icon currentIcon;
     private boolean compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
 
-    List<Icon> allIcons;
-    List<LayerDataItem> allLayers;
-    LiveData<List<Layer>> layerLiveData;
-    int[] iconIds;
     private MarkerViewModel markerViewModel;
     LayerDataItem currentLayerDataItem;
 
@@ -97,22 +88,33 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         editor = preferences.edit();
         getData();
         setupUI();
+//        setupIconImageRV();
 
+
+        iconImageRV = findViewById(R.id.iconImageRV);
+        final LiveIconListAdapter adapter = new LiveIconListAdapter(new LiveIconListAdapter.IconDiff());
+        iconImageRV.setVisibility(View.GONE);
+        iconImageRV.setAdapter(adapter);
+        iconImageRV.setLayoutManager(new GridLayoutManager(this, 6));
+
+       iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
+        iconViewModel.getIconList().observe(this, icons -> {
+            adapter.submitList(icons);
+        });
 
         layerDataRV = findViewById(R.id.layerDataRecyclerView);
         layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
-        final LiveLayerListAdapter adapter = new LiveLayerListAdapter(new LiveLayerListAdapter.LiveLayerDiff());
-        layerDataRV.setAdapter(adapter);
+        final LiveLayerListAdapter liveLayerListAdapter = new LiveLayerListAdapter(new LiveLayerListAdapter.LiveLayerDiff());
+        layerDataRV.setAdapter(liveLayerListAdapter);
         layerDataRV.setLayoutManager(new LinearLayoutManager(this));
 
         layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         layerViewModel.getLiveLayers().observe(this, layers -> {
             Log.i(TAG, "onCreate: ");
-            adapter.submitList(layers);
+            liveLayerListAdapter.submitList(layers);
         });
 //        setupLayerRV();
-//        setupIconImageRV();
     }
 
     @Override
@@ -156,21 +158,17 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
 
     // Setup
     private void getData() {
-        Log.i(TAG, "getData: ");
-
-        layerViewModel = new ViewModelProvider(this).get(LayerViewModel.class);
         iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        allIcons = iconViewModel.getIconList();
-        allLayers = layerViewModel.getLayerData();
-        layerLiveData = layerViewModel.getAllLayers();
-
-        // Populate array of icon IDs
-        iconIds = new int[allIcons.size()];
-        for (int i = 0; i < allIcons.size(); i++) {
-            iconIds[i] = getResources().getIdentifier(allIcons.get(i).getIconFilename(), "drawable", getPackageName());
-        }
+//        allIcons = iconViewModel.getIconList();
+//
+//        // Populate array of icon IDs
+//        iconIds = new int[allIcons.getValue().size()];
+//        for (int i = 0; i < allIcons.getValue().size(); i++) {
+//            iconIds[i] = getResources().getIdentifier(allIcons.getValue().get(i).getIconFilename(), "drawable", getPackageName());
+//        }
     }
+
     private void setupUI() {
         iconImageButton = findViewById(R.id.iconImageButton);
         newLayerFAB = findViewById(R.id.newLayerFAB);
@@ -222,17 +220,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
-//        visibilitySwitch = findViewById(R.id.visibilitySwitch);
-//        visibilitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                saveChangesButton.setEnabled(true);
-//            }
-//        });
-
-
-//        layerDataRV = findViewById(R.id.layerDataRecyclerView);
-//        layerDataRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 
         newLayerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,33 +233,13 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
-//    private void setupLayerRV() {
-//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-//        layerDataRV.setLayoutManager(llm);
-//        layerDataRV.setHasFixedSize(true);
-//        allLayers = layerViewModel.getLayerData();
-//        final LayerDataAdapter layerDataAdapter = new LayerDataAdapter(allLayers);
-//        layerDataRV.setAdapter(layerDataAdapter);
-//    }
-
-
-
-//    private void setupIconImageRV() {
-//        iconImageRV = findViewById(R.id.iconImageRV);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 6);
-//        iconImageRV.setLayoutManager(gridLayoutManager);
-//
-//        final IconImageAdapter iconImageAdapter = new IconImageAdapter(iconIds);
-//        iconImageRV.setAdapter(iconImageAdapter);
-//        iconImageRV.setVisibility(View.GONE);
-//    }
 
     //  Event handling
     public void onLayerClickCalled(int position) {
         // Display details
 //       get layerData and markerData for layer
         currentLayerDataItem = layerViewModel.getLayerDataItem(position);
-        List<MapMarkerDataItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
+        List<LiveMarkerItem> mapMarkerDataItems = layerViewModel.getMapMarkerItems(position);
 
 //      Get icon resource from resources
         int resID = getResources().getIdentifier(currentLayerDataItem.iconFilename, "drawable", getPackageName());
@@ -287,24 +254,13 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         saveChangesButton.setEnabled(false);
         dismissButton.setEnabled(true);
     }
-    public void onIconClicked(int resid) {
-        Log.i(TAG, "onIconClicked: ");
-//      Change icon on button
-        iconImageButton.setImageResource(resid);
-        saveChangesButton.setEnabled(true);
-
-//      Get icon name from
-        String filename = getResources().getResourceEntryName(resid);
-        String label = filename.replace("_", " ");
-        label = label.substring(0, 1).toUpperCase() + label.substring(1);
-        iconNameTextView.setText(label);
-        currentIcon = iconViewModel.getIconByFilename(filename);
+    public void onIconSelected(int resID, Icon icon) {
+        Log.i(TAG, "iconSelected: " + icon.getIconFilename());
+        currentLayerDataItem.setIcon_id(icon.getIcon_id());
         iconImageRV.setVisibility(View.GONE);
-
-//        if(currentLayerDataItem != null) {
-        currentLayerDataItem.setIconFilename(filename);
-        currentLayerDataItem.setName(label);
-//        }
+        iconImageButton.setImageResource(resID);
+        iconNameTextView.setText(icon.getName());
+        saveChangesButton.setEnabled(true);
     }
 
     //  Utility methods
@@ -334,12 +290,12 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         editor.putFloat("zoom", zoom);
         editor.apply();
     }
-    private void updateCamera(List<MapMarkerDataItem> mapMarkerDataItems) {
+    private void updateCamera(List<LiveMarkerItem> mapMarkerDataItems) {
         LatLng latLng;
         if (!mapMarkerDataItems.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
-            for (MapMarkerDataItem marker : mapMarkerDataItems) {
+            for (LiveMarkerItem marker : mapMarkerDataItems) {
                 latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
                 builder.include(latLng);
             }
@@ -379,7 +335,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
-    private void addMarkersToMap(List<MapMarkerDataItem> mapMarkerDataItems, int resID) {
+    private void addMarkersToMap(List<LiveMarkerItem> mapMarkerDataItems, int resID) {
         mMap.clear();
         if (mapMarkerDataItems.size() == 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -392,7 +348,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         String marker_title, code;
         LatLng latLng;
 
-        for (MapMarkerDataItem marker : mapMarkerDataItems) {
+        for (LiveMarkerItem marker : mapMarkerDataItems) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
 
@@ -410,7 +366,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void addVisibleMarkersToMap() {
-        List<MapMarkerDataItem> mapMarkerDataItems = markerViewModel.getVisibleMarkerDataList();
+        List<LiveMarkerItem> mapMarkerDataItems = markerViewModel.getVisibleMarkerDataList();
 
         mMap.clear();
         if (mapMarkerDataItems.size() == 0) {
@@ -424,10 +380,10 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         String marker_title, code, filename;
         LatLng latLng;
 
-        for (MapMarkerDataItem marker : mapMarkerDataItems) {
+        for (LiveMarkerItem marker : mapMarkerDataItems) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
-            filename = marker.filename;
+            filename = marker.getIconFilename();
 
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
             marker_title = marker.getPlacename();
@@ -450,7 +406,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         layerDetailLinearList.setVisibility(View.VISIBLE);
         buttonLinearLayout.setVisibility(View.VISIBLE);
         newLayerFAB.setVisibility(View.GONE);
-//        toggleEditView(false);
 
         dismissButton.setOnClickListener(v -> {
             showButtons(false);
@@ -482,14 +437,10 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
             // Get values and update currentLayerDataItem
             currentLayerDataItem.setLayername(layerNameTextInput.getText().toString());
             currentLayerDataItem.setCode(layerCodeTextInput.getText().toString());
-//            currentLayerDataItem.setVisible(visibilitySwitch.isChecked());
-            currentLayerDataItem.icon_id = currentIcon.getIcon_id();
+            currentLayerDataItem.icon_id = currentLayerDataItem.getIcon_id();
 
-//              Update database
+//          Update database
             saveLayerDataItem(currentLayerDataItem);
-//
-//            allLayers = layerViewModel.getLayerData();
-//            setupLayerRV();
             showButtons(false);
             toggleEditView(false);
             addVisibleMarkersToMap();
@@ -498,6 +449,7 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
     }
     private void saveLayerDataItem(LayerDataItem currentLayerDataItem) {
         if (currentLayerDataItem.layerID == 0) {
+            currentLayerDataItem.isVisible = true;
             layerViewModel.insertLayer(currentLayerDataItem);
         } else {
             layerViewModel.updateLayer(currentLayerDataItem);
@@ -527,6 +479,6 @@ public class LayerEditActivity extends AppCompatActivity implements OnMapReadyCa
         Log.i(TAG, "visibilityToggle: " + layer_id);
         layerViewModel.toggle(layer_id);
         addVisibleMarkersToMap();
-//        setupLayerRV();
     }
+
 }

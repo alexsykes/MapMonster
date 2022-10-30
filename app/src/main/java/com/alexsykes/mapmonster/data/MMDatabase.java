@@ -30,8 +30,8 @@ public abstract class MMDatabase extends RoomDatabase{
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     MMDatabase.class, "mm_database")
-                            .allowMainThreadQueries()
                             .addCallback(roomDatabaseCallback)
+                            .allowMainThreadQueries()
                             .build();
                 }
             }

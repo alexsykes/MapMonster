@@ -18,3 +18,5 @@ local.properties
 app/build/*
 .idea/shelf/Uncommitted_changes_before_Checkout_at_15_10_2022,_11_28_\[Changes\]/shelved.patch
 .idea/shelf/Uncommitted_changes_before_Checkout_at_15_10_2022__11_28__Changes_.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml

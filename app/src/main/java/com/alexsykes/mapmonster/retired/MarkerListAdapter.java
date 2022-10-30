@@ -12,15 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 
 import java.util.List;
 
 public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.MarkerEditViewHolder> {
-    List<MapMarkerDataItem> allMarkers;
+    List<LiveMarkerItem> allMarkers;
     public static final String TAG = "Info";
 
-    public MarkerListAdapter(List<MapMarkerDataItem> markerList) {
+    public MarkerListAdapter(List<LiveMarkerItem> markerList) {
         allMarkers = markerList;
     }
 
@@ -35,18 +35,19 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
     @Override
     public void onBindViewHolder(@NonNull MarkerEditViewHolder holder, int position) {
         Context context = holder.imageView.getContext();
-        MapMarkerDataItem currentMarker = allMarkers.get(position);
+        LiveMarkerItem currentMarker = allMarkers.get(position);
 //        holder.setIsRecyclable(false);
         holder.marker_id = currentMarker.getMarkerID();
-        holder.isArchived = currentMarker.isArchived;
-        holder.isVisible = currentMarker.isVisible;
+        holder.isArchived = currentMarker.isArchived();
+        holder.isVisible = currentMarker.isVisible();
         holder.markerID_textView.setText(String.valueOf(holder.marker_id));
-        holder.markerNameTextView.setText(currentMarker.placename);
-        holder.markerCodeTextView.setText(currentMarker.code);
-        holder.markerListNotesTextView.setText(currentMarker.notes);
-        holder.selectCheckBox.setChecked(currentMarker.isSelected);
+        holder.markerNameTextView.setText(currentMarker.getPlacename());
+        holder.markerCodeTextView.setText(currentMarker.getCode());
+        holder.markerListNotesTextView.setText(currentMarker.getNotes());
+        holder.selectCheckBox.setChecked(currentMarker.isSelected());
 
-        int resID = context.getResources().getIdentifier(currentMarker.filename, "drawable", context.getPackageName());
+        int resID = context.getResources().getIdentifier(currentMarker.getIconFilename(), "drawable",
+                context.getPackageName());
         holder.imageView.setImageResource(resID);
         holder.marker_id = allMarkers.get(position).getMarkerID();
 
@@ -60,7 +61,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
                 } else {
                     holder.markerToggleImage.setImageResource(holder.eye_closed_id);
                 }
-                ((MarkerListActivity) context).onVisibleImageCalled(currentMarker.markerID);
+                ((MarkerListActivity) context).onVisibleImageCalled(currentMarker.getMarkerID());
             }
         });
 

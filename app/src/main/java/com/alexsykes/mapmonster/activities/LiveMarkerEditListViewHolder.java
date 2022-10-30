@@ -1,7 +1,6 @@
 package com.alexsykes.mapmonster.activities;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,51 +11,52 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.mapmonster.R;
-import com.alexsykes.mapmonster.data.LiveLayerItem;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 
-public class LiveLayerViewHolder extends RecyclerView.ViewHolder {
+public class LiveMarkerEditListViewHolder extends  RecyclerView.ViewHolder {
     public static final String TAG = "Info";
-    final TextView layerNameTextView;
-    final ImageView imageView, layerToggleImage;
+    LiveMarkerItem currentMarker;
+    ImageView imageView, markerToggleImage;
+    TextView markerNameTextView;
     private int eye_open_id, eye_closed_id;
 
-    public LiveLayerViewHolder(@NonNull View itemView) {
+    public LiveMarkerEditListViewHolder(@NonNull View itemView) {
         super(itemView);
-
-        layerNameTextView = itemView.findViewById(R.id.layerNameTextView);
         imageView = itemView.findViewById(R.id.imageView);
-        layerToggleImage = itemView.findViewById(R.id.layerToggleImage);
+        markerToggleImage = itemView.findViewById(R.id.markerToggleImage);
+        markerNameTextView = itemView.findViewById(R.id.markerNameTextView);
 
         eye_open_id = itemView.getContext().getResources().getIdentifier("eye_outline", "drawable", itemView.getContext().getPackageName());
         eye_closed_id = itemView.getContext().getResources().getIdentifier("eye_off_outline", "drawable", itemView.getContext().getPackageName());
-
     }
 
-    public static LiveLayerViewHolder create(ViewGroup parent) {
+    public static LiveMarkerEditListViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layer_data_item, parent, false);
-        return new LiveLayerViewHolder(view);
+                .inflate(R.layout.marker_data_item, parent,false);
+        return new LiveMarkerEditListViewHolder(view);
     }
 
-    public void bind(LiveLayerItem current, Context context) {
-        int resID = context.getResources().getIdentifier(current.getFilename(), "drawable", context.getPackageName());
+    public void bind(LiveMarkerItem current, Context context) {
+        currentMarker = current;
+        int resID = context.getResources().getIdentifier(current.getIconFilename(), "drawable",
+                context.getPackageName());
         imageView.setImageResource(resID);
-        layerNameTextView.setText(current.getLayername());
+        markerNameTextView.setText(current.getPlacename());
 
         int visResID = current.isVisible() ? eye_open_id : eye_closed_id;
-        layerToggleImage.setImageResource(visResID);
+        markerToggleImage.setImageResource(visResID);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((LayerEditActivity) context).onLayerClickCalled(current.getLayerID());
+                ((MarkerEditActivity) context).onMarkerClickCalled(currentMarker);
             }
         });
 
-        layerToggleImage.setOnClickListener(new View.OnClickListener() {
+        markerToggleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((LayerEditActivity) context).visibilityToggle(current.getLayerID());
+                ((MarkerEditActivity) context).visibilityToggle(current.getMarkerID());
             }
         });
     }

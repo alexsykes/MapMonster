@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -26,11 +25,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alexsykes.mapmonster.R;
-import com.alexsykes.mapmonster.data.Icon;
-import com.alexsykes.mapmonster.data.IconViewModel;
-import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 import com.alexsykes.mapmonster.data.MMDatabase;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,7 +37,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -58,20 +53,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 0;
 
-    private List<MapMarkerDataItem> markerList;
+    private List<LiveMarkerItem> markerList;
+    private MarkerViewModel markerViewModel;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-//    private Location lastKnownLocation;
-
-    private MarkerViewModel markerViewModel;
-    private IconViewModel iconViewModel;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     private boolean locationPermissionGranted,compassEnabled, mapToolbarEnabled, zoomControlsEnabled;
-   private List<Icon> iconList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
 
+        // Stay on Splash screen until data loads
         // Set up an OnPreDrawListener to the root view.
         final View content = findViewById(android.R.id.content);
         content.getViewTreeObserver().addOnPreDrawListener(
@@ -114,20 +106,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         // Get data
         MMDatabase db = MMDatabase.getDatabase(this);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        iconViewModel = new ViewModelProvider(this).get(IconViewModel.class);
-        markerList = markerViewModel.getMarkerList();
-
         markerList = markerViewModel.getVisibleMarkerDataList();
-        iconList = iconViewModel.getIconList();
-
-        Resources resources = this.getResources();
-//      Image from database - https://stackoverflow.com/questions/42992989/storing-image-resource-id-in-sqlite-database-and-retrieving-it-in-int-array
-//        https://stackoverflow.com/questions/21402275/best-way-to-store-resource-id-in-database-on-android
-        for (Icon item: iconList) {
-            int resID = resources.getIdentifier(item.getIconFilename() , "drawable", this.getPackageName());
-//            Log.i(TAG, "refID: " + resID);
-        }
-
     }
 
     @Override
@@ -316,12 +295,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         int layer_id;
         String filename;
         mMap.clear();
-        for (MapMarkerDataItem marker : markerList) {
+        for (LiveMarkerItem marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
             layer_id = marker.getLayer_id();
             String snippet = marker.getNotes();
-            filename = marker.getFilename();
+            filename = marker.getIconFilename();
 
             int resID = getResources().getIdentifier(filename, "drawable", getPackageName());
 

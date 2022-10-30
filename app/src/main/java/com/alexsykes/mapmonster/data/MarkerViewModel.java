@@ -15,12 +15,14 @@ public class MarkerViewModel extends AndroidViewModel {
     public static final String TAG = "Info";
     LiveData<List<MMarker>> liveMarkerData;
     LiveData<List<LiveMarkerItem>> liveMarkers;
+    LiveData<List<LiveMarkerItem>> visibleLiveMarkerDataItems;
 
     public MarkerViewModel(@NonNull Application application) {
         super(application);
         markerRepository = new MarkerRepository(application);
         liveMarkerData = markerRepository.getLiveMarkerData();
         liveMarkers = markerRepository.getLiveMarkers();
+        visibleLiveMarkerDataItems = markerRepository.visibleLiveMarkerDataItems;
     }
 
     // Mutators
@@ -32,24 +34,24 @@ public class MarkerViewModel extends AndroidViewModel {
     // Accessors
     public LiveData<List<LiveMarkerItem>> getLiveMarkers() { return liveMarkers; };
     public LiveData<List<MMarker>> getLiveMarkerData() { return liveMarkerData; }
-    public List<MapMarkerDataItem> getMarkerList() { return markerRepository.getMarkerList(); }
+    public List<LiveMarkerItem> getMarkerList() { return markerRepository.getMarkerList(); }
     public Map<String, List<MMarker>> getMarkersByLayer() {  return markerRepository.getMarkersByLayer();    }
-    public List<MapMarkerDataItem> getVisibleMarkerDataList() {
+    public List<LiveMarkerItem> getVisibleMarkerDataList() {
         return markerRepository.getVisibleMarkerDataList();
     }
-    public void saveCurrentMarker(MapMarkerDataItem currentMarker) {
+    public void saveCurrentMarker(LiveMarkerItem currentMarker) {
         markerRepository.saveCurrentMarker(currentMarker);
     }
     public Cursor getMarkerDataForExport() {
         return markerRepository.getMarkerDataForExport();
     }
-    public List<MapMarkerDataItem> getMarkersFromVisibleLayers() {
+    public List<LiveMarkerItem> getMarkersFromVisibleLayers() {
         return markerRepository.getMarkersFromVisibleLayers();
     }
-    public MapMarkerDataItem getMMarker(int markerID) {
-        return markerRepository.getMMarker(markerID);
+    public LiveMarkerItem getCurrentMarker(int markerID) {
+        return markerRepository.getCurrentMarker(markerID);
     }
-    public List<MapMarkerDataItem> getAllMarkers() {
+    public List<LiveMarkerItem> getAllMarkers() {
         return markerRepository.getAllMarkers();
     }
 
@@ -80,6 +82,9 @@ public class MarkerViewModel extends AndroidViewModel {
     }
     public void toggle(int marker_id) {
         markerRepository.toggle(marker_id);
+    }
+
+    public LiveData<List<LiveMarkerItem>> getLiveMarkerDataItems() { return markerRepository.visibleLiveMarkerDataItems;
     }
 }
 

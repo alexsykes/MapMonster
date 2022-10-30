@@ -2,6 +2,7 @@ package com.alexsykes.mapmonster.retired;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,8 +19,8 @@ import com.alexsykes.mapmonster.data.Icon;
 import com.alexsykes.mapmonster.data.IconViewModel;
 import com.alexsykes.mapmonster.data.LayerDataItem;
 import com.alexsykes.mapmonster.data.LayerViewModel;
+import com.alexsykes.mapmonster.data.LiveMarkerItem;
 import com.alexsykes.mapmonster.data.MMDatabase;
-import com.alexsykes.mapmonster.data.MapMarkerDataItem;
 import com.alexsykes.mapmonster.data.MarkerViewModel;
 
 import java.util.ArrayList;
@@ -31,9 +32,9 @@ public class MarkerListActivity extends AppCompatActivity {
     private LayerViewModel layerViewModel;
     private IconViewModel iconViewModel;
     MarkerListAdapter markerListAdapter;
-    List<Icon> allIcons;
+    LiveData<List<Icon>> allIcons;
     List<LayerDataItem> allLayers;
-    List<MapMarkerDataItem> allMarkers;
+    List<LiveMarkerItem> allMarkers;
     public static final String TAG = "Info";
     ArrayList<Integer> theSelected;
 

@@ -8,6 +8,7 @@ public class LiveMarkerItem {
     private String iconFilename;
     private String code;
     private String notes;
+    private String layerName;
 
     private int layer_id;
     private boolean isUpdated;
@@ -23,6 +24,15 @@ public class LiveMarkerItem {
     public void setMarkerID(int markerID) {
         this.markerID = markerID;
     }
+
+    public String getLayerName() {
+        return layerName;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName;
+    }
+
 
     public double getLatitude() {
         return latitude;

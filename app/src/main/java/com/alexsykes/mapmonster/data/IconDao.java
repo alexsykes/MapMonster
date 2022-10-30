@@ -1,5 +1,6 @@
 package com.alexsykes.mapmonster.data;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -13,7 +14,7 @@ public interface IconDao {
     void insertIcon(Icon icon);
 
     @Query("SELECT * FROM icons ORDER BY iconID")
-    List<Icon> getIconList();
+    LiveData<List<Icon>> getIconList();
 
     @Query("DELETE FROM icons")
     void deleteAllIcons();

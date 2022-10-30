@@ -1,5 +1,6 @@
 package com.alexsykes.mapmonster.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class LiveMarkerListViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
+
                 ((LiveMarkerListActivity) context).visibilityToggled(marker.getMarkerID());
             }
         });
