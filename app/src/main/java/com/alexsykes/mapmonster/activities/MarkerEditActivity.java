@@ -363,12 +363,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         newMarkerFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LiveMarkerItem newMarker = new LiveMarkerItem();
-                LatLng mapCentre = mMap.getCameraPosition().target;
-                newMarker.setLatitude(mapCentre.latitude);
-                newMarker.setLongitude(mapCentre.longitude);
-                Log.i(TAG, "FAB clicked");
-                editMarker(newMarker);
+                newMarker();
             }
         });
 
@@ -419,7 +414,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
                 markerListRV.setVisibility(View.VISIBLE);
                 listTitleView.setVisibility(View.VISIBLE);
                 newMarkerFAB.setVisibility(View.VISIBLE);
-                updateMarkerRV();
+//                updateMarkerRV();
                 addMarkersToMap();
 //                updateCamera(visibleMarkers);
             }
@@ -519,22 +514,22 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         }
     }
 
-    private void setupMarkerRV() {
+//    private void setupMarkerRV() {
+////        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
+////        markerListRV = findViewById(R.id.markerDataRecyclerView);
+////        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+////        markerListRV.setLayoutManager(llm);
+////        markerListRV.setHasFixedSize(true);
+////        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+////        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
+////        markerListRV.setAdapter(markerDataAdapter);
+//    }
+//
+//    private void updateMarkerRV() {
 //        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
-//        markerListRV = findViewById(R.id.markerDataRecyclerView);
-//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-//        markerListRV.setLayoutManager(llm);
-//        markerListRV.setHasFixedSize(true);
-//        markerListRV.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 //        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
 //        markerListRV.setAdapter(markerDataAdapter);
-    }
-
-    private void updateMarkerRV() {
-//        markersFromVisibleLayers = markerViewModel.getMarkersFromVisibleLayers();
-//        final MarkerDataAdapter markerDataAdapter = new MarkerDataAdapter(markersFromVisibleLayers);
-//        markerListRV.setAdapter(markerDataAdapter);
-    }
+//    }
 
     // Method to edit Marker from map location
     @Override
@@ -542,7 +537,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         currentMarker = (LiveMarkerItem) marker.getTag();
         Log.i(TAG, "onMarkerClick: " + marker.getTag());
         saveCameraPosition();
-//        editMarker(currentMarker);
+        editMarker(currentMarker);
         return false;
     }
 
@@ -555,10 +550,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
         addMarkersToMap();
 //        setupLayerRV();
     }
-//
-//    public void onLayerClickCalled(int markerID) {
-//        Log.i(TAG, "onLayerClickCalled: " +  markerID);
-//    }
+
 
     // Method to edit marker from RecyclerView
     public void onMarkerClickCalled(LiveMarkerItem currentMarker) {
