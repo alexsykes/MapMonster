@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             toast.show();
             return;
         }
-        String marker_title, code, type;
+        String marker_title, code, type, notes;
         LatLng latLng;
         int layer_id;
         String filename;
@@ -289,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         for (LiveMarkerItem marker : markerList) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             code = marker.getCode();
+            notes = marker.getNotes();
             layer_id = marker.getLayer_id();
             String snippet = marker.getNotes();
             filename = marker.getIconFilename();
@@ -301,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     .position(latLng)
                     .title(marker_title)
                     .draggable(false)
-                    .snippet(code)
+                    .snippet(notes)
                     .icon(BitmapFromVector(getApplicationContext(), resID))
                     .visible(true);
 

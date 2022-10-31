@@ -459,14 +459,14 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
             toast.show();
             return;
         }
-        String marker_title, code, type;
+        String marker_title, code, type, notes;
         LatLng latLng;
         String filename;
         boolean isVisible;
 
         for (LiveMarkerItem marker : this.markers) {
             latLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-            code = marker.getCode();
+            notes = marker.getNotes();
             filename = marker.getIconFilename();
             isVisible = marker.isVisible();
 
@@ -477,7 +477,7 @@ public class MarkerEditActivity extends AppCompatActivity implements GoogleMap.O
                     .position(latLng)
                     .title(marker_title)
                     .draggable(false)
-                    .snippet(code)
+                    .snippet(notes)
                     .icon(BitmapFromVector(getApplicationContext(), resID))
                     .visible(isVisible);
             Marker marker1 = mMap.addMarker(markerOptions);

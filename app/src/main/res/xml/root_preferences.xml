@@ -8,7 +8,7 @@
             android:key="mapToolbarEnabled"
             android:title="Show map toolbar" />
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="compassEnabled"
             android:title="Show compass" />
         <SwitchPreference

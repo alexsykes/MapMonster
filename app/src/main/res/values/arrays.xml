@@ -16,14 +16,12 @@
         <item>CSV</item>
         <item>GPX</item>
         <item>KML</item>
-        <item>SQL</item>
     </string-array>
 
     <string-array name="export_items">
         <item>CSV</item>
         <item>GPX</item>
         <item>KML</item>
-        <item>SQL</item>
     </string-array>
 
     <string-array name="layer_values">
